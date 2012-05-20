@@ -101,7 +101,7 @@ INSTALLED_APPS = (
     'website',
     'django.contrib.admin',
     'django_static',
-    'debug_toolbar',
+    #'debug_toolbar',
     'endless_pagination',
 )
 
