@@ -1,0 +1,23 @@
+{% load thumbnail %}
+{% load django_static %}
+
+		<div class="about-right">
+			<img class="top" src="{% staticfile '/images/about-right.png' %}"/>
+			{% for other in teas %}
+				<p class="mail{% if forloop.last %} last{% endif %}">
+					<a href="{% url tea_view other.slug %}"><span class="link"></span></a>
+					{% thumbnail other.image "80x55" crop="center" as im%}
+						<img class="mail-icon" src="{{ im.url }}" />
+					{% endthumbnail %}
+			 		<a class="title" href="{% url tea_view other.slug %}" title="{{ other.name }} - another one of our great Chinese teas">
+			 			{{ other.name }}
+			 		</a>
+			 		<br/>{{ other.super_short_description }}
+			 	</p>
+			 {% endfor %}
+			 
+		</div>
+		
+
+		
+	

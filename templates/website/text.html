@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load endless django_static %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{% staticfile '/js/common.js' %}"></script>
+{% endblock %}
+
+
+{% block extracss %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+
+<div id="text" class="grouped">
+
+    {% if url %}
+    <h1><a id="original-page" href="{{ url }}">Original page</a></h1>
+    {% endif %}
+    
+    {% if obj_list %}
+      {% paginate obj_list %}
+        {% for item in obj_list %}
+    
+        <div id="{{ forloop.counter }}" class="char {% if item.is_punctuation %}punctuation {% endif %}{% if item.is_number %}number {% endif %}" rel="{{ item.wordset }}" {% if item.meaning %}title="{{ item.meaning }}"{% endif %} >
+            <span class="hanzi">{{ item.character }}</span>
+            {% if item.pinyin %}<span class="pinyin">{{ item.pinyin }}</span>{% endif %}
+        </div>
+    
+        {% endfor %}
+        <div id="page-nav">{% show_pages %}</div>
+    {% endif %}
+
+</div>
+
+
+
+{% endblock %}

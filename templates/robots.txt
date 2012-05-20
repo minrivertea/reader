@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /admin-stuff/
+Disallow: /terms-and-conditions/
+Disallow: /privacy/

@@ -1,0 +1,140 @@
+html {
+  border: none;
+  margin: none;
+  padding: none;	
+}
+
+body {
+  font-weight: 0.9em;
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #666;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+  color: #439249;	
+}
+
+a:hover, a:active, a:focus {
+  color: #FFAEAE;
+  text-decoration: none;
+}
+
+img {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;	
+}
+
+#message {
+  float: left;
+  width: 100%;
+  padding: 7px 0 7px 0;
+  text-align: center;
+  color: #fff;
+  background-color:	#439249;
+}
+
+#message p {
+  padding-right: 10px;
+  margin: 0;	
+}
+
+#basket a {
+  color: #ffde00;
+  font-weight: bold;	
+}
+
+#header {
+  margin-bottom: 10px;
+  padding-top: 10px;
+  width: 100%;
+  float: left;	
+}
+
+#logo img {
+  float: left;
+  position: relative;
+  margin: 0 0 5px 5%;	
+}
+
+#nav {
+  width: 93%;	
+  float: left;
+  margin: 10px 0 10px 5%;
+}
+
+#nav a {
+  float: left;
+  margin-right: 10px;
+  background-color:#f1f1f1;
+  padding: 5px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  text-shadow: 0 1px 1px #fff;
+}
+
+#nav a.selected {
+  background-color: #439249;
+  color: #fff;
+  text-shadow: none;	
+}
+
+#banner {
+  background-color: #f1f1f1;
+  width: 100%;
+  padding: 10px 0 10px 0;	
+  margin-bottom: 15px;
+  float: left;
+}
+
+#banner p {
+  margin: 0;
+  padding: 0 10px 0 7%;
+  font-family: Georgia, serif;
+  color: #000;	
+}
+
+#banner h1 {
+  margin: 0 0 0 7%;
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;	
+}
+
+#choices {
+  float: left;
+  width: 100%;
+  background-color: #f1f1f1;	
+}
+
+#choices a {
+  float: left;
+  width: 93%;
+  padding: 10px 0 10px 7%;
+}
+
+#choices a:not(:last-child) {
+  border-bottom: 1px solid #e1e1e1;	
+}
+
+
+.infoblock {
+  float:left;
+  width: 85%;
+  display: block;
+  background-color: #e2eede;
+  margin: 0 0 15px 7%; 
+  border-radius: 5px;
+  -webkit-border-radius: 5px;	
+}
+
+.infoblock p {
+  margin: 0;
+  padding: 10px 12px;
+  color: #36861d;
+  font-size: 12px;	
+}

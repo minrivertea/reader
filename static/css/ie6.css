@@ -1,0 +1,77 @@
+body {
+  url("/images/background-ie6.png") no-repeat fixed left #FFFFFF	
+}
+
+div#container {
+  float: left;
+  position: relative;
+  left: 40px;
+  width: 800px;	
+}
+
+div#headerhome {
+  float: left;	
+}
+
+div#navigation {
+  float: right;
+  display: block;	
+}
+
+ul#nav li {
+	float: left;
+}
+
+div.tea-promo p {
+  width: 190px;	
+}
+
+div.tea-promo h4 {
+  width: 200px;	
+}
+
+div.tea-promo div.price {
+    position: relative;
+    left: 40px;
+}
+
+div.footer-box {
+  width: 220px;	
+}
+
+div#footer ul.footer-links {
+  margin-bottom: 30px;	
+}
+
+div.payments img {
+    margin-left: -15px;
+    position: relative;
+    top: -20px;
+    margin-bottom: -20px;
+}
+
+div.payments p {
+  position: relative;
+  top:-20px;
+}
+
+div.footer-box ul {
+    padding-left: 15px;
+    margin-left: 0px;
+    position: relative;
+}
+
+div.more-info {
+    margin-top: 25px;
+}
+
+div.about-box {
+  padding-right: 0px;	
+  margin: 0 0 20px 0px;
+}
+
+div#basket-full {
+    font-size: 0.9em;
+    width: 500px;
+    float: left;
+}

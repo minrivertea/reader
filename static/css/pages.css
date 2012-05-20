@@ -1,0 +1,375 @@
+
+
+#subnav {
+  width: 100%;
+  background-color: #E1ECF3;
+  height: 45px;
+  float: left;	
+}
+
+#subnav ul {
+  list-style-type: none;
+  margin: 0px 0 0 20px;
+  padding: 0;	
+}
+
+#subnav li {
+  float: left;
+  margin-right: 40px;
+  position: relative;	
+}
+
+#subnav li a:link, #subnav li a:visited   {
+  font-size: 11px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 1px #fff;	
+  color: #666;
+    font-family: Helvetica, sans-serif;
+}
+
+#subnav li a:hover {
+  color: #F37679;	
+}
+
+#subnav li a.selected   {
+  color: #000;
+  font-weight: bold;
+}
+
+#subnav li a.selected:before {
+   content: " ";
+   display: block;
+   width: 0;
+   height: 0;
+   border-top: 25px solid #E1ECF3;     
+   border-bottom: 0;
+   border-left: 25px solid transparent;
+   border-right: 25px solid transparent;
+   position: absolute;
+   bottom: -30px;
+   left: 40%;
+   margin-left: -13px;
+   z-index: 2;
+}
+
+#main-text-wide #left {
+    float: left;
+    margin: 0 0px 20px 0;
+    padding: 0px 0px 0 0px;
+}
+
+h1 {
+  margin-bottom: 20px;	
+}
+
+h1.fimage {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  margin-bottom: 0px;
+  background-color: #fff;
+  padding: 10px 25px;
+}
+
+#feature {
+  height: 100px;
+  float: left;
+  width: 100%;
+  padding-top: 20px;	
+  background-color: #fff;
+}
+
+div.learn-box {
+  float: left;
+  margin: 0 -2px 20px 0;
+  width: 330px;	
+}
+
+div.learn-box div.inner {
+    background-color: #FFFFFF;
+    padding: 30px 40px 15px 50px;
+    height: 420px;
+    border: 1px solid #e1e1e1;
+    border-color: #d1d1d1 #e1e1e1 #e1e1e1 #d1d1d1;
+    position: relative;
+    border-radius: 5px;
+}
+
+div.learn-box div.inner img {
+  margin-bottom: 30px;	
+}
+
+div.learn-box div.inner:after {
+    border-color: transparent transparent transparent #d1d1d1;
+    border-style: solid none solid solid;
+    border-width: 100px 0 100px 30px;
+    content: " ";
+    display: block;
+    height: 0;
+    right: -30px;
+    position: absolute;
+    top: 0px;
+    width: 0;
+    z-index: 1;
+}
+
+div.learn-box div.inner:before {
+    border-color: transparent transparent transparent #fff;
+    border-style: solid none solid solid;
+    border-width: 100px 0 100px 30px;
+    content: " ";
+    display: block;
+    height: 0;
+    right: -29px;
+    position: absolute;
+    top: 0px;
+    width: 0;
+    z-index: 2;
+}
+
+div.learn-box:first-child {
+  width: 300px;	
+}
+
+div.learn-box:first-child div.inner {
+  padding-left: 30px;	
+}
+
+div.learn-box:last-child {
+  margin-right: 0;	
+}
+
+div.learn-box:last-child div.inner:after {
+  border: none;	
+}
+
+div.learn-box:last-child div.inner:before {
+  border: none;	
+}
+
+
+#promo {
+    float: right;
+    width: 100%;
+    margin: 30px 0 0;
+    border-top: 3px dotted #e1e1e1;
+    padding-top: 30px;
+}
+
+#main-text-wide #left #promo h3 {
+  font-size: 18px;
+  margin: 0 0 20px 0;
+}
+
+#promo h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px 0 0;
+  padding: 0 5px;	
+}
+
+#promo p {
+  margin: 0;
+  padding: 0 5px;
+  font-size: 14px;
+  line-height: 1.3em;	
+}
+
+#promo div {
+  width: 180px;
+  float: left;
+  margin: 0 20px 20px 0;	
+}
+
+#promo div img {
+  border: 5px solid #fff;
+  box-shadow: 0 1px 3px #999;	
+}
+
+.hoverbox {
+    display: block;
+    float: left;
+    height: 180px;
+    list-style: none outside none;
+    margin: 0 20px 30px 0;
+    overflow: hidden;
+    position: relative;
+    width: 290px;
+    cursor: pointer;
+    border: 1px solid #e1e1e1;
+}
+
+.hoverbox img:hover {
+  opacity: 1;	
+}
+
+.hoverbox h2 {
+  font-size: 20px;
+  margin: 5px 0 5px 10px;
+}
+
+#left .hoverbox p {
+  font-size: 13px;
+  margin-left: 10px;
+  line-height: 1.4em;
+  padding-right: 10px;	
+}
+
+.hoverbox div {
+    background-color: #f1f1f1;
+    left: 0;
+    top:145px;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    border-top: 1px solid #e1e1e1;
+}
+
+
+#banner {
+  margin-bottom: 30px;	
+}
+
+div.tea {
+  float: left;
+  width: 220px;	
+  margin-bottom: 15px;
+}
+
+div.tea div.tea-image {
+  float: left;
+  margin-right: 10px;	
+}
+
+div.tea div.tea-image img {
+  border-radius: 5px;	
+  margin-bottom: 0px;
+}
+
+div.tea div.tea-text {
+  float: left;
+  width: 130px;
+  font-size: 13px;
+  color:#666;
+}
+
+#main-text-wide div#right div.social {
+  float: left;
+  margin-left: 0px;
+
+}
+
+#main-text-wide div#right div.social p {
+	  font-size: 11px;
+}
+
+div.social img {
+  margin-right: 5px;	
+}
+
+div.flatpage div#right div.social p {
+  font-size: 11px;	
+  line-height: 14px;
+}
+
+span.review {
+  color: #333;	
+}
+
+div.about-right {
+    float: left;
+    padding-bottom: 20px;
+    width: 241px;
+    margin: 40px 0 20px 0;
+    background-color: #38a267;
+    border-radius: 0 0 10px 10px;
+}
+
+div.about-right img {
+  border: 2px solid #fff;	
+}
+
+div.about-right img.top {
+    margin-top: -100px;
+    position: relative;
+    border: none;
+}
+
+
+/* position and dimensions of the navigator */
+.navi {
+	margin-left:328px;
+	width:200px;
+	height:20px;
+}
+
+
+/* items inside navigator */
+.navi a {
+	width:8px;
+	height:8px;
+	float:left;
+	margin:3px;
+	background:url(../img/scrollable/arrow/navigator.png) 0 0 no-repeat;
+	display:block;
+	font-size:1px;
+}
+
+/* mouseover state */
+.navi a:hover {
+	background-position:0 -8px;      
+}
+
+/* active state (current page state) */
+.navi a.active {
+	background-position:0 -16px;     
+}
+
+/* root element for single scroll */
+	.scroll {
+		position:relative;
+		overflow:hidden;
+		width: 660px;
+		height: 438px;
+		float:left;
+		margin-bottom: 30px;
+	}
+	
+	/* root element for the scroll pics */
+	.scroll .pics {
+		width:20000em;
+		position:absolute;
+		clear:both;
+	}
+	
+	/* single scroll item */
+	.pics div {
+		float:left;
+		cursor:pointer;
+		width:660px !important;
+		height:438px;
+		margin:0px;
+		border-radius: 10px;
+	}
+	
+#left .pics p {
+    background-color: #FFFFFF;
+    bottom: -20px;
+    color: #333333;
+    float: none;
+    font-size: 15px;
+    opacity: 0.8;
+    padding: 5px 10px;
+    position: absolute;
+    width: 640px;
+}
+
+	.pics span.click {
+	  color: #439249;	
+	}
+	
+	/* possible settings for the active scroll */
+	.scroll.active {
+	
+	}
+
