@@ -29,7 +29,7 @@ h2 {
 p.sub {
   font-size: 20px;
   line-height: 1.8em;  
-  margin: 0 0 50px 0; 
+  margin: 0 0 20px 0; 
 }
 
 #tools div, #userblock div {
@@ -72,7 +72,7 @@ form textarea:focus .submit {
 
 #bookmarklink {
  width: 100%;
- margin: 0 0 70px 0;  
+ margin: 40px 0 70px 0;  
  position: relative; 
 }
 
@@ -113,6 +113,12 @@ span#help2 {
   position: relative;
 }
 
+.chinese-sample {
+ font-size: 16px; 
+ padding: 0 50px;
+ margin: 50px 0 50px 0;  
+}
+
 
 </style>
 {% endblock %}
@@ -137,7 +143,9 @@ span#help2 {
 
 
 <h2>Convert any Chinese characters into well formatted, readable text</h2> 
-<p class="sub">It also works if you just want to paste some text for easier translation or reading - paste the text below and away you go</p>
+<p class="sub">It also works if you just want to paste some text for easier translation or reading - try pasting this into the text box below:</p>
+
+<p class="chinese-sample">据广东因豪科技有限公司的工作人员介绍，该系统包括价格电子公示屏、点菜系统、政府监管后台。消费者可通过平板电脑点菜下单，菜单将通过网络保存至政府监管后台，方便消费者维权和政府监管。如果商家某个海鲜销售价格高于政府最高定价，收银电脑自动报警并不能打印发票。</p>
 
 
 <form action="." method="post">
@@ -146,6 +154,8 @@ span#help2 {
 <input type="submit" value="Convert" id="submit" class="submit button"/>
 
 </form>
+
+
 
 
 
