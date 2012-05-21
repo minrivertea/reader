@@ -203,11 +203,11 @@ def group_words(chars):
                     if search_redis(key):
                         r = search_redis(key)
                     else:
-                        #pass
-                        t2 = search(b, 'Pinyin')
-                        if t2 is not None:
-                            add_to_redis(key, t2)
-                            r = t2
+                        pass
+                        #t2 = search(b, 'Pinyin')
+                        #if t2 is not None:
+                        #    add_to_redis(key, t2)
+                        #    r = t2
                     
                     if r:
                         obj_list[loop+1]['wordset'] = x['wordset']
@@ -224,11 +224,11 @@ def group_words(chars):
                         r = search_redis(key)
                     
                     else:
-                        #pass 
-                        t3 = search(c, 'Pinyin')
-                        if t3 is not None:
-                            r = t3
-                            add_to_redis(key, t3)
+                        pass 
+                        #t3 = search(c, 'Pinyin')
+                        #if t3 is not None:
+                        #    r = t3
+                        #    add_to_redis(key, t3)
     
                     if r:
                         obj_list[loop+2]['wordset'] = x['wordset']
@@ -247,11 +247,11 @@ def group_words(chars):
                         r = search_redis(key)
                         
                     else:
-                        #pass
-                        t4 = search(d, 'Pinyin')
-                        if t4 is not None:
-                            r = t4
-                            add_to_redis(key, t4)
+                        pass
+                        #t4 = search(d, 'Pinyin')
+                        #if t4 is not None:
+                        #    r = t4
+                        #    add_to_redis(key, t4)
     
                     if r:
                         obj_list[loop+3]['wordset'] = x['wordset']
@@ -275,12 +275,12 @@ def group_words(chars):
                         x['pinyin'] = r['pinyin']
                     
                     else:
-                        #pass
-                        t1 = search(a, 'Pinyin')
-                        if t1 is not None:
-                            add_to_redis(key, t1)
-                            x['meaning'] = t1['meaning']
-                            x['pinyin'] = t1['pinyin']
+                        pass
+                        #t1 = search(a, 'Pinyin')
+                        #if t1 is not None:
+                        #    add_to_redis(key, t1)
+                        #    x['meaning'] = t1['meaning']
+                        #    x['pinyin'] = t1['pinyin']
 
                 
         else:
