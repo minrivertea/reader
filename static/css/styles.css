@@ -236,13 +236,14 @@ textarea {
 
 #userblock div .extra {
   position: absolute;
-  left: -320px;
-  width: 280px;
+  left: -330px;
+  width: 250px;
   border: 1px solid #e1e1e1;
   height: 250px; 
-  top: -40px;  
+  top: -35px;  
   display: none;
   background: #fff;
+  padding: 10px 20px;
 }
 
 #userblock div .extra:before {

@@ -60,7 +60,7 @@ function addRemoveUserBlockItem(item) {
         $('#userblock #' + idToRemove).remove();
     } else {
         item.addClass('selected');
-        $('#userblock').append('<div id="'+(item.attr("id"))+'">'+'<div class="extra"></div><span class="title">'+item.attr('chars')+'</span><br/>'+item.attr('title')+'</div>');
+        $('#userblock').append('<div id="'+(item.attr("id"))+'">'+'<div class="extra"><p>Something will go in here about the definition of the word or whatever...</div><span class="title">'+item.attr('chars')+'</span><br/>'+item.attr('title')+'</div>');
         counter += 1;
         selectUBItem($('#userblock #'+item.attr("id")));
     };

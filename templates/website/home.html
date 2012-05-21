@@ -10,7 +10,26 @@
 
 {% block extracss %}
 <style type="text/css">
+h1 {
+ font-weight: normal;
+ font-size: 40px;
+ color: #a01d1d;   
+}
 
+p.sub {
+  font-size: 20px;
+  line-height: 1.8em;   
+}
+
+#tools div, #userblock div {
+   display: none;
+}
+
+img.example {
+  box-shadow: 0 1px 3px #e1e1e1;
+  float: left;
+  margin: 0 40px 0 0;   
+}
 
 
 
@@ -18,6 +37,14 @@
 {% endblock %}
 
 {% block content %}
+
+
+<h1>Turn hard-to-read Chinese articles into clear, readable and pinyin-annotated text.</h1>
+<p class="sub">It's simple - Chinese is hard to read in the first place, and often poorly formatted on the web, which makes things doubly-difficult for a non-native speaker. </p>
+<img class="example" src="{% staticfile '/images/crap-text.jpg' %}"/><img  class="example" src="{% staticfile '/images/good-text.jpg' %}"/>
+
+<p class="sub">This tool helps Chinese learners by formatting characters more clearly, annotating them with pinyin and definitions, and giving you extra tools that advance your learning.</p>
+
 
 
 <form action="." method="post">
@@ -28,22 +55,6 @@
 </form>
 
 
-<div id="text">
-
-    {% if obj_list %}
-      {% paginate obj_list %}
-        {% for item in obj_list %}
-    
-        <div id="{{ forloop.counter }}" class="char {% if item.is_punctuation %}punctuation {% endif %}{% if item.is_number %}number {% endif %}" rel="{{ item.wordset }}" {% if item.meaning %}title="{{ item.meaning }}"{% endif %} >
-            <span class="hanzi">{{ item.character }}</span>
-            {% if item.pinyin %}<span class="pinyin">{{ item.pinyin }}</span>{% endif %}
-        </div>
-    
-        {% endfor %}
-      {% show_pages %}
-    {% endif %}
-
-</div>
 
 
 
