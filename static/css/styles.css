@@ -9,9 +9,7 @@ input, textarea, body {
   background-color: #FAF6F6;  
 }
 
-input.submit:hover {
-  cursor: pointer;   
-}
+
 
 body {
   margin: 0;
@@ -39,9 +37,29 @@ body {
 
 /* forms */
 
-textarea {
- color: #999;   
+input.submit:hover {
+  cursor: pointer;   
 }
+
+form {
+ float: left;
+ width: 100%;
+ text-align: center;  
+ margin: 0px 0 10px 0;
+ display: ; 
+}
+
+textarea {
+ width: 700px;   
+ -moz-box-sizing: content-box;
+ border: 1px solid #E4E4E4;
+ border-radius: 4px 4px 4px 4px;
+ font-size: 32px;
+ padding: 10px;
+ font-family: "Times New Roman", serif;
+}
+
+
 
 
 
@@ -284,39 +302,6 @@ textarea {
 
 /* text formatting styles */
 
-
-form {
- float: left;
- width: 100%;
- text-align: center;  
- margin: 0px 0 10px 0;
- display: ; 
-}
-
-form textarea {
- width: 700px;   
- -moz-box-sizing: content-box;
- border: 1px solid #E4E4E4;
- border-radius: 4px 4px 4px 4px;
- font-size: 32px;
- padding: 10px;
- font-family: "Times New Roman", serif;
-}
-
-form input.submit {
-    float: right;
-    height: 112px;
-    width: 75px;
-    border: none;
-    background: #E4E4E4;
-    border-radius: 0px 4px 4px 0px;
-    position: relative;
-    left: -5px;
-    top: 1px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 30px;
-}
 
 #page-nav {
    width: 100%;

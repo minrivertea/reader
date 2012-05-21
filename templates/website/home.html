@@ -13,12 +13,23 @@
 h1 {
  font-weight: normal;
  font-size: 40px;
- color: #a01d1d;   
+ color: #c10000;
+ text-shadow: 1px 1px 1px #fff;
+  letter-spacing: -1px;    
+}
+
+h2 {
+ font-size: 30px;
+ margin: 0 0 10px 0;
+ font-weight: normal;
+ letter-spacing: -1px;
+ color: #c10000;   
 }
 
 p.sub {
   font-size: 20px;
-  line-height: 1.8em;   
+  line-height: 1.8em;  
+  margin: 0 0 50px 0; 
 }
 
 #tools div, #userblock div {
@@ -26,11 +37,81 @@ p.sub {
 }
 
 img.example {
-  box-shadow: 0 1px 3px #e1e1e1;
-  float: left;
-  margin: 0 40px 0 0;   
+    border: 1px solid #EBCDCD;
+    box-shadow: 0 1px 5px #F1DCDC;
+    float: left;
+    margin: 0 0 50px;
 }
 
+form textarea {
+    border: 1px solid #EBCDCD;
+    box-shadow: 0 1px 5px #F1DCDC inset;
+    float: left;
+    margin: 0 0 20px;
+    background: #fff;
+    padding: 20px 30px;
+    width: 680px;
+    color: #D68585;    
+}
+
+input.submit {
+    float: right;
+    border: 1px solid #EBCDCD;
+    height: auto;
+    width: 200px;
+    border-radius: 5px;
+    padding: 15px 20px;
+    background: #F8F0F0;
+    color: #D68585;
+    font-size: 30px;
+}
+
+form textarea:focus .submit {
+  background: #c10000;   
+}
+
+#bookmarklink {
+ width: 100%;
+ margin: 0 0 70px 0;  
+ position: relative; 
+}
+
+#bookmarklet {
+  font-size: 46px;
+  height: auto;
+  width: 300px;
+  padding: 20px; 
+  float: left;  
+  position: relative;
+  top: 10px;
+  left: 20px;
+}
+
+#bookmarklet:hover {
+ color: #d22828;
+
+ background-color: #ffebeb;
+ box-shadow: 0 1px 15px #ed9797;  
+}
+
+span#help1 {
+ position: absolute;
+ top: 125px; 
+ left: 50px;
+ width: 400px;  
+}
+
+span#help2 {
+ position: absolute;
+ top: 150px; 
+ left: 50px;
+ width: 400px;  
+}
+
+#bookmarklink img {
+  right: -30px;
+  position: relative;
+}
 
 
 </style>
@@ -40,19 +121,35 @@ img.example {
 
 
 <h1>Turn hard-to-read Chinese articles into clear, readable and pinyin-annotated text.</h1>
-<p class="sub">It's simple - Chinese is hard to read in the first place, and often poorly formatted on the web, which makes things doubly-difficult for a non-native speaker. </p>
-<img class="example" src="{% staticfile '/images/crap-text.jpg' %}"/><img  class="example" src="{% staticfile '/images/good-text.jpg' %}"/>
 
-<p class="sub">This tool helps Chinese learners by formatting characters more clearly, annotating them with pinyin and definitions, and giving you extra tools that advance your learning.</p>
+<img class="example" src="{% staticfile '/images/crap-text.jpg' %}"/>
 
+<h2>What does it do?</h2>
+<p class="sub">Chinese is hard to read, especially on the web, so it's doubly-difficult for a non-native speaker. This tool helps Chinese learners by formatting characters more clearly, annotating them with pinyin and definitions, and giving you extra tools that advance your learning.</p>
+
+<div id="bookmarklink">
+
+    <img src="{% staticfile '/images/dragndrop.jpg' %}"/>
+    <span id="help1">(1) drag the button above to your toolbar</span>
+    <span id="help2">(2) if you're on a webpage with a long piece of Chinese text, just click it.</span>
+    <a id="bookmarklet" href="javascript:location.href='http://localhost:8000/?url='+encodeURIComponent(location.href)">CReader</a>
+</div>
+
+
+<h2>Convert any Chinese characters into well formatted, readable text</h2> 
+<p class="sub">It also works if you just want to paste some text for easier translation or reading - paste the text below and away you go</p>
 
 
 <form action="." method="post">
 {% csrf_token %}
-<textarea id="id_char" class="clearMeFocus" title="Enter 汉字 to start..." name="char"></textarea>
-<input type="submit" value="GO" id="submit" class="submit button"/>
+<textarea id="id_char" class="clearMeFocus" title="Start by pasting Chinese text in here" name="char"></textarea>
+<input type="submit" value="Convert" id="submit" class="submit button"/>
 
 </form>
+
+
+
+
 
 
 
