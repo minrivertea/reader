@@ -19,6 +19,7 @@ body {
   position: relative;
   font-size: 13px;
   line-height: normal;
+  background: url('/images/back.jpg');
 }
 
 #container {
@@ -66,14 +67,14 @@ textarea {
 /* toolbar */
 
 #tools, #userblock {
- border: 1px solid #EBCDCD;
- box-shadow: 0 1px 5px #F1DCDC;  
- background: #f8f0f0;
- height: 100%;
- padding: 60px 20px;
- position: fixed;
- top: 0;
- width: 130px;
+    background: none repeat scroll 0 0 #F5F4F0;
+    border: 1px solid #EBCDCD;
+    box-shadow: 0 1px 5px #DBD4B2;
+    height: 100%;
+    padding: 60px 20px;
+    position: fixed;
+    top: 0;
+    width: 130px;
 }
 
 #tools {
@@ -86,7 +87,8 @@ textarea {
  float: left;
  width: 130px;
  margin: 0px;
- padding: 15px 0 15px 0px;   
+ padding: 15px 0 15px 0px;
+ opacity: 1;   
 }
 
 #tools .set:first-child {

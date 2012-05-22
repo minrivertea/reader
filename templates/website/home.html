@@ -12,18 +12,24 @@
 <style type="text/css">
 h1 {
  font-weight: normal;
- font-size: 40px;
- color: #c10000;
+ font-size: 50px;
+ color: #999;
  text-shadow: 1px 1px 1px #fff;
-  letter-spacing: -1px;    
+  letter-spacing: -1px; 
+  margin: 0 0 80px 0;
+  text-align: center;   
 }
 
 h2 {
  font-size: 30px;
- margin: 0 0 10px 0;
+ margin: 0 0 20px 0;
  font-weight: normal;
  letter-spacing: -1px;
- color: #c10000;   
+ color: #c10000;  
+}
+
+h2.centered {
+ text-align: center;   
 }
 
 p.sub {
@@ -32,15 +38,22 @@ p.sub {
   margin: 0 0 20px 0; 
 }
 
-#tools div, #userblock div {
+#tools div {
    display: none;
 }
 
+div.centered {
+  text-align: center;
+  margin: 60px 0 100px 0;   
+}
+
+#text {
+  margin-bottom: 80px;   
+}
+
 img.example {
-    border: 1px solid #EBCDCD;
-    box-shadow: 0 1px 5px #F1DCDC;
     float: left;
-    margin: 0 0 50px;
+    margin: 40px 30px 80px 20px;
 }
 
 form textarea {
@@ -51,7 +64,8 @@ form textarea {
     background: #fff;
     padding: 20px 30px;
     width: 680px;
-    color: #D68585;    
+    color: #e1e1e1; 
+    height: 265px;   
 }
 
 input.submit {
@@ -72,7 +86,8 @@ form textarea:focus .submit {
 
 #bookmarklink {
  width: 100%;
- margin: 40px 0 70px 0;  
+ float: left;
+ margin: 20px 0 70px 0;  
  position: relative; 
 }
 
@@ -83,40 +98,28 @@ form textarea:focus .submit {
   padding: 20px; 
   float: left;  
   position: relative;
-  top: 10px;
-  left: 20px;
+  top: 0px;
+  left: 0px;
+  margin: 0;
 }
 
-#bookmarklet:hover {
+#bookmarklet:hover, input.submit:hover {
  color: #d22828;
-
  background-color: #ffebeb;
  box-shadow: 0 1px 15px #ed9797;  
 }
 
-span#help1 {
- position: absolute;
- top: 125px; 
- left: 50px;
- width: 400px;  
-}
-
-span#help2 {
- position: absolute;
- top: 150px; 
- left: 50px;
- width: 400px;  
-}
 
 #bookmarklink img {
-  right: -30px;
+  right: -20px;
+  top: 5px;
   position: relative;
 }
 
 .chinese-sample {
  font-size: 16px; 
- padding: 0 50px;
- margin: 50px 0 50px 0;  
+ width: 480px;
+ margin: 0 auto 70px; 
 }
 
 
@@ -126,31 +129,36 @@ span#help2 {
 {% block content %}
 
 
-<h1>Turn hard-to-read Chinese articles into clear, readable and pinyin-annotated text.</h1>
-
-<img class="example" src="{% staticfile '/images/crap-text.jpg' %}"/>
-
-<h2>What does it do?</h2>
-<p class="sub">Chinese is hard to read, especially on the web, so it's doubly-difficult for a non-native speaker. This tool helps Chinese learners by formatting characters more clearly, annotating them with pinyin and definitions, and giving you extra tools that advance your learning.</p>
-
-<div id="bookmarklink">
-
-    <img src="{% staticfile '/images/dragndrop.jpg' %}"/>
-    <span id="help1">(1) drag the button above to your toolbar</span>
-    <span id="help2">(2) if you're on a webpage with a long piece of Chinese text, just click it.</span>
-    <a id="bookmarklet" href="javascript:location.href='http://reader.wheninchina.com/?url='+encodeURIComponent(location.href)">CReader</a>
+<div class="centered">
+<h2 class="centered">Learning Chinese, but still scared by this?</h2>
+<p class="chinese-sample">据广东因豪科技有限公司的工作人员介绍，该系统包括价格电子公示屏、点菜系统、政府监管后台。消费者可通过平板电脑点菜下单，菜单将通过网络保存至政府监管后台，方便消费者维权和政府监管。如果商家某个海鲜销售价格高于政府最高定价，收银电脑自动报警并不能打印发票。</p>
 </div>
 
 
-<h2>Convert any Chinese characters into well formatted, readable text</h2> 
-<p class="sub">It also works if you just want to paste some text for easier translation or reading - try pasting this into the text box below:</p>
 
-<p class="chinese-sample">据广东因豪科技有限公司的工作人员介绍，该系统包括价格电子公示屏、点菜系统、政府监管后台。消费者可通过平板电脑点菜下单，菜单将通过网络保存至政府监管后台，方便消费者维权和政府监管。如果商家某个海鲜销售价格高于政府最高定价，收银电脑自动报警并不能打印发票。</p>
+<h2>CReader turns any Chinese characters into easily readable text</h2>
+<p class="sub">Reading Chinese on the web is often pretty hard. Articles are poorly formatted, the characters are really small and there's no handy <em>pinyin</em> or dictionary for words you don't know.</p>
 
+<p class="sub"><strong>CReader</strong> is a simple learning tool that formats Chinese text elegantly, and provides useful on-hand learning aids too. Take any Chinese article, text or document and we'll help you convert it into beautiful, readable, <em>pinyin</em>-annotated text.</p>
 
+    
+    <img class="example" src="{% staticfile '/images/tools.png' %}"/>
+    <img class="example" src="{% staticfile '/images/formatted.png' %}"/>
+    <img class="example" src="{% staticfile '/images/wordlist.png' %}"/>
+
+<h2>(1) Install the bookmarklet to turn webpages into readable articles</h2>
+<p class="sub">Drag-and-drop the bookmark below into your browser's toolbar. When you're on a webpage you want to convert into more readable Chinese text, just click it and we'll do the rest. </p>
+
+<div id="bookmarklink">    
+    <a id="bookmarklet" href="javascript:location.href='http://reader.wheninchina.com/?url='+encodeURIComponent(location.href)">CReader</a>
+    <img src="{% staticfile '/images/dragndrop2.png' %}"/>
+</div>
+
+<h2>(2) Copy and paste any Chinese text below to convert it</h2>
+<p class="sub">Copy and paste text below. Maybe it's text from a document or an email - just paste it in here, and we'll convert it into readable, <em>pinyin</em>-annotated text.</p>
 <form action="." method="post">
 {% csrf_token %}
-<textarea id="id_char" class="clearMeFocus" title="Start by pasting Chinese text in here" name="char"></textarea>
+<textarea id="id_char" class="clearMeFocus" title="eg. 据广东因豪科技有限公司的工作人员介绍，该系统包括价格电子公示屏、点菜系统、政府监管后台。消费者可通过平板电脑点菜下单，菜单将通过网络保存至政府监管后台，方便消费者维权和政府监管。如果商家某个海鲜销售价格高于政府最高定价，收银电脑自动报警并不能打印发票。" name="char"></textarea>
 <input type="submit" value="Convert" id="submit" class="submit button"/>
 
 </form>
