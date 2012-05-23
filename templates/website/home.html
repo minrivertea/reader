@@ -13,22 +13,22 @@
 h1 {
  font-weight: normal;
  font-size: 50px;
- color: #999;
+ color: #c10000;
  text-shadow: 1px 1px 1px #fff;
   letter-spacing: -1px; 
-  margin: 0 0 80px 0;
+  margin: 0 0 20px 0;
   text-align: center;   
 }
 
 h2 {
  font-size: 30px;
- margin: 0 0 20px 0;
+ margin: 30px 0 20px 0;
  font-weight: normal;
  letter-spacing: -1px;
  color: #c10000;  
 }
 
-h2.centered {
+h2.centered, p.centered {
  text-align: center;   
 }
 
@@ -38,8 +38,12 @@ p.sub {
   margin: 0 0 20px 0; 
 }
 
-#tools div {
+#tools div, #userblock {
    display: none;
+}
+
+#tools div#about {
+  display: block;   
 }
 
 div.centered {
@@ -87,7 +91,7 @@ form textarea:focus .submit {
 #bookmarklink {
  width: 100%;
  float: left;
- margin: 20px 0 70px 0;  
+ margin: 20px 0 100px 50px;  
  position: relative; 
 }
 
@@ -103,17 +107,11 @@ form textarea:focus .submit {
   margin: 0;
 }
 
-#bookmarklet:hover, input.submit:hover {
- color: #d22828;
- background-color: #ffebeb;
- box-shadow: 0 1px 15px #ed9797;  
-}
-
-
-#bookmarklink img {
-  right: -20px;
-  top: 5px;
-  position: relative;
+#bookmarklink p.explain {
+  float: left;
+  width: 300px;
+  font-size: 16px;
+  margin: 0 0 0 30px;
 }
 
 .chinese-sample {
@@ -129,33 +127,26 @@ form textarea:focus .submit {
 {% block content %}
 
 
-<div class="centered">
-<h2 class="centered">Learning Chinese, but still scared by this?</h2>
-<p class="chinese-sample">据广东因豪科技有限公司的工作人员介绍，该系统包括价格电子公示屏、点菜系统、政府监管后台。消费者可通过平板电脑点菜下单，菜单将通过网络保存至政府监管后台，方便消费者维权和政府监管。如果商家某个海鲜销售价格高于政府最高定价，收银电脑自动报警并不能打印发票。</p>
-</div>
 
 
 
-<h2>CReader turns any Chinese characters into easily readable text</h2>
-<p class="sub">Reading Chinese on the web is often pretty hard. Articles are poorly formatted, the characters are really small and there's no handy <em>pinyin</em> or dictionary for words you don't know.</p>
 
-<p class="sub"><strong>CReader</strong> is a simple learning tool that formats Chinese text elegantly, and provides useful on-hand learning aids too. Take any Chinese article, text or document and we'll help you convert it into beautiful, readable, <em>pinyin</em>-annotated text.</p>
+<h1 class="centered">CReader makes reading Chinese easier</h1>
+<p class="sub centered">Improve your Chinese reading skills by turning any webpage or article into elegantly-formatted, <em>pinyin</em>-annotated text with dictionary and other language tools on hand.</p>
 
     
     <img class="example" src="{% staticfile '/images/tools.png' %}"/>
     <img class="example" src="{% staticfile '/images/formatted.png' %}"/>
     <img class="example" src="{% staticfile '/images/wordlist.png' %}"/>
 
-<h2>(1) Install the bookmarklet to turn webpages into readable articles</h2>
-<p class="sub">Drag-and-drop the bookmark below into your browser's toolbar. When you're on a webpage you want to convert into more readable Chinese text, just click it and we'll do the rest. </p>
 
 <div id="bookmarklink">    
     <a id="bookmarklet" href="javascript:location.href='http://reader.wheninchina.com/?url='+encodeURIComponent(location.href)">CReader</a>
-    <img src="{% staticfile '/images/dragndrop2.png' %}"/>
+    <p class="explain">&laquo; Drag and drop this link into your browser toolbar, like a bookmark. When you're on a web page with long Chinese text, click the bookmark and we'll take it from there.<br/><a href="">How does it work?</a>  |  <a href="">About</a>
 </div>
 
-<h2>(2) Copy and paste any Chinese text below to convert it</h2>
-<p class="sub">Copy and paste text below. Maybe it's text from a document or an email - just paste it in here, and we'll convert it into readable, <em>pinyin</em>-annotated text.</p>
+<h2>…or copy and paste Chinese text into the box below </h2>
+<p class="sub">Maybe you have text from an email, or a document - just paste it in the box below, and we'll convert it into readable, <em>pinyin</em>-annotated text.</p>
 <form action="." method="post">
 {% csrf_token %}
 <textarea id="id_char" class="clearMeFocus" title="eg. 据广东因豪科技有限公司的工作人员介绍，该系统包括价格电子公示屏、点菜系统、政府监管后台。消费者可通过平板电脑点菜下单，菜单将通过网络保存至政府监管后台，方便消费者维权和政府监管。如果商家某个海鲜销售价格高于政府最高定价，收银电脑自动报警并不能打印发票。" name="char"></textarea>

@@ -22,11 +22,40 @@ body {
   background: url('/images/back.jpg');
 }
 
+a:link, a:visited {
+  text-decoration: underline;
+  color: #D68585;   
+}
+
+a:hover, a:active {
+   #C10000;
+}
+
+#tools div#about {
+  position: fixed;
+  bottom: 30px;
+  width: 130px;
+  float: left;
+  font-size: 14px;   
+}
+
+#tools #about ul {
+  margin: 0 0 0 0px;
+  padding: 0;
+  color:  #D68585;
+  list-style-type:none;  
+  line-height: 1.8em;
+}
+
+#tools #about ul li a:hover {
+  background: none;
+  box-shadow: none
+}
+
 #container {
-    border-radius: 5px 5px 5px 5px;
     float: left;
     height: 100%;
-    left: -490px;
+    left: -455px;
     margin: 40px auto 0 50%;
     min-height: 700px;
     padding: 20px 80px;
@@ -34,6 +63,7 @@ body {
     width: 750px;
     z-index: 0;
 }
+
 
 
 /* forms */
@@ -68,27 +98,29 @@ textarea {
 
 #tools, #userblock {
     background: none repeat scroll 0 0 #F5F4F0;
-    border: 1px solid #EBCDCD;
-    box-shadow: 0 1px 5px #DBD4B2;
+    border: 1px solid #E2DCC2;
+    border-width: 0 1px 0px 1px;
+    box-shadow: 1px 1px 0 #fff;
     height: 100%;
     padding: 60px 20px;
     position: fixed;
     top: 0;
-    width: 130px;
+    width: 50px;
 }
 
 #tools {
- left: 0;   
+ left: 0;
+ width: 50px;
+ padding: 60px 10px;   
 }
 
 #tools .set {
- border-bottom: 1px solid #ecbdbd;
- border-top: 1px solid #fff;
  float: left;
- width: 130px;
+ width: 50px;
  margin: 0px;
- padding: 15px 0 15px 0px;
- opacity: 1;   
+ padding: 8px 0;
+ opacity: 1; 
+ position: relative;  
 }
 
 #tools .set:first-child {
@@ -106,18 +138,16 @@ textarea {
  font-size: 12px;   
 }
 
-#pyonoff, #easy, #hard, #bookmarklet, #group, #userblock div a {
-    background: #f9f1f1;
-    box-shadow: 0 0px 2px #eed4d4;
-    border: 1px solid #e5a7a7;
+#tools .button, #bookmarklet {
+    background: #f2efe4;
+    border: 1px solid #e2dcc2;
     text-shadow: 0 1px 0 #fff;
-    border-radius: 4px;
-    color: #d68585;
+    color: #d0c7a3;
     float: left;
-    font-size: 14px;
+    font-size: 16px;
     height: 15px;
-    margin: 0 10px 0 0px;
-    padding: 8px 0;
+    margin: 0 0px 0 5px;
+    padding: 6px 0 10px;
     position: relative;
     text-align: center;
     width: 35px;
@@ -130,44 +160,74 @@ textarea {
     -o-transition:  300ms; /* Opera */ 
 }
 
-#pyonoff {
- width: 60px;
- margin-left: 10px;   
+#bookmarklet {
+ text-decoration: none;   
 }
 
-#bookmarklet, #group {
- width: 110px;
- text-decoration: none;
- margin-left: 10px;  
-}
-
-#easy {
+#appearance {
   font-size: 16px;
   padding: 6px 0 10px;
+  top: 30%;
 }
 
-#tools .selected {
-  box-shadow: inset 0 1px 3px #e7b2b2; 
-  color: #cf6161; 
-  background: #fbf8f8; 
+#group {
+  top: 30%;   
 }
 
-#tools #pyonoff.selected {
-  text-decoration: line-through;   
+#tools #home {
+  position: absolute;
+ top: 20px;   
 }
 
-#tools div :hover {
+#tools #user {
+  position: absolute;
+  bottom: 140px;   
+}
+
+#tools .button:hover, #bookmarklet:hover {
   cursor: pointer;
-  background:  #fff;
-  border-color: #e16868;
-  color: #e16868;
-  box-shadow: 0 0px 4px #dfa3a3; 
+  background:  #f7f5ec;
+  color: #a08e48; 
 }
 
-#tools div .selected:hover {
-  box-shadow: inset 0 1px 4px #dfa3a3; 
-  color: #e16868;
-  background: #fff; 
+#tools .selected .button {
+  box-shadow: inset 0 1px 1px #a08e48; 
+  color: #a08e48; 
+  background: #f7f5ec; 
+}
+
+
+#tools .selected:hover .button {
+  color: #a08e48;
+  background: #f7f5ec; 
+}
+
+
+
+#user .button {
+ background: url('/images/user.png') no-repeat scroll 7px 4px #f2efe4;   
+}
+
+#user.selected .button {
+ background: url('/images/user.png') no-repeat scroll 7px 4px #fbf8f8;   
+}
+
+#user:hover .button, #user.selected:hover .button {
+ background: url('/images/user.png') no-repeat scroll 7px 4px #fff;   
+}
+
+
+
+#home .button {
+ background: url('/images/home.png') no-repeat scroll 7px 5px #f2efe4;   
+}
+
+#home.selected .button {
+ background: url('/images/home.png') no-repeat scroll 7px 5px #fbf8f8;   
+}
+
+#home:hover .button, #home.selected:hover .button {
+ background: url('/images/home.png') no-repeat scroll 7px 5px #fff;   
 }
 
 
@@ -179,6 +239,13 @@ textarea {
   width: 200px;
   right: 0px;
   z-index: 20;
+  box-shadow: -1px 1px 0 #fff;
+}
+
+#userblock div#wordlist-hint {
+  color: #999; 
+  font-size: 16px;
+  font-style: italic;  
 }
 
 #userblock input {
@@ -254,19 +321,32 @@ textarea {
  display: block;   
 }
 
-#userblock div .extra {
+/* displays the pop-up boxes in the userblock or tools section */
+
+.extra, #userblock div.extra {
   position: absolute;
-  left: -330px;
-  width: 250px;
-  border: 1px solid #e1e1e1;
-  height: 250px; 
-  top: -35px;  
+  border: 1px solid #EBCDCD;
   display: none;
   background: #fff;
   padding: 10px 20px;
+  z-index: 20;
 }
 
-#userblock div .extra:before {
+#userblock div.extra {
+  left: -330px;
+  width: 250px;
+  height: 250px;
+  top: -35px;   
+}
+
+#tools .extra {
+  left: 81px;
+  width: 150px;
+  height: 200px; 
+  top: -25px;     
+}
+
+.extra:before {
   content: " ";
   position: absolute;
   z-index: 2;
@@ -276,12 +356,12 @@ textarea {
   right: -31px;
   top: 24px;
   border-right: 0;
-  border-left: 31px solid #f6f6f6;
+  border-left: 31px solid #EBCDCD;
   border-top: 31px solid transparent;
   border-bottom: 31px solid transparent;
 }
 
-#userblock div .extra:after {
+.extra:after {
   content: " ";
   position: absolute;
   z-index: 3;
@@ -296,7 +376,19 @@ textarea {
   border-bottom: 30px solid transparent;
 }
 
-#userblock div.selected .extra  {
+#tools .extra:before {
+  border-left: 0;
+  border-right: 31px solid #EBCDCD;
+  left: -31px; 
+}
+
+#tools .extra:after {
+  border-left: 0;
+  border-right: 30px solid #fff;
+  left: -30px;   
+}
+
+.selected .extra, #userblock .selected div.extra  {
   display: block;
 }
 

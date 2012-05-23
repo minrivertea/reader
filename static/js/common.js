@@ -1,5 +1,5 @@
 
-$('#pyonoff').click(function() {
+$('#user').click(function() {
    if ($(this).hasClass('selected')) {
       $('.pinyin').css('display', 'block');
       $(this).removeClass('selected');
@@ -10,13 +10,11 @@ $('#pyonoff').click(function() {
    } 
 });
 
-$('#easy').click(function() {
+$('#appearance').click(function() {
    if ($(this).hasClass('selected')) {
-      $('#text').removeClass('easy');
       $(this).removeClass('selected');
    }
    else {
-      $('#text').addClass('easy');
       $(this).addClass('selected');
    } 
 });
@@ -58,6 +56,7 @@ function addRemoveUserBlockItem(item) {
         item.removeClass('selected');
         var idToRemove = item.attr('id');
         $('#userblock #' + idToRemove).remove();
+
     } else {
         item.addClass('selected');
         $('#userblock').append('<div id="'+(item.attr("id"))+'">'+'<div class="extra"><p>Something will go in here about the definition of the word or whatever...</div><span class="title">'+item.attr('chars')+'</span><br/>'+item.attr('title')+'</div>');
