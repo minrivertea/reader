@@ -182,9 +182,8 @@ textarea {
 }
 
 #tools .selected .button {
-  box-shadow: 1px 1px 3px #DFD4A7 inset; 
   color: #a08e48; 
-  background: #f7f5ec; 
+  background: #fff; 
 }
 
 
