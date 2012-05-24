@@ -1,16 +1,27 @@
 
-$('#user').click(function() {
+
+$('#pinyin').click(function() {
+  if ($(this).hasClass('selected')) {
+    $(this).removeClass('selected');
+    $('.pinyin').css('display', 'block');
+  } else {
+    $(this).addClass('selected');
+    $('.pinyin').css('display', 'none');
+  }  
+});
+
+$('#appearance').click(function() {
    if ($(this).hasClass('selected')) {
-      $('.pinyin').css('display', 'block');
+      $('#text').removeClass('easy');
       $(this).removeClass('selected');
    }
    else {
-      $('.pinyin').css('display', 'None');
+      $('#text').addClass('easy');
       $(this).addClass('selected');
    } 
 });
 
-$('#appearance').click(function() {
+$('#user').click(function() {
    if ($(this).hasClass('selected')) {
       $(this).removeClass('selected');
    }
