@@ -6,6 +6,7 @@ import redis
 import os
 PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 
+from redis_helper import get_redis
 
 from bs4 import BeautifulSoup
 
@@ -105,7 +106,7 @@ def _is_number(x):
     
 
 def search_redis(key):
-    r_server = redis.Redis("localhost")
+    r_server = get_redis()
     if r_server.exists(key):
         return r_server.hgetall(key)
     else:
@@ -114,23 +115,20 @@ def search_redis(key):
 
 
 def add_to_redis(key, values):
-    mapping = {
-        'pinyin': values['pinyin'], 
-        'characters': values['characters'], 
-        'meaning': values['meaning'],
-        'id': uuid.uuid1().hex,
-    }
-    r_server = redis.Redis("localhost")
-    r_server.hmset(key, mapping)
+    
+    if search_redis(key) is None:
+    
+        mapping = {
+            'pinyin': values['pinyin'], 
+            'characters': values['characters'], 
+            'meaning': values['meaning'],
+            'id': uuid.uuid1().hex,
+        }
+        r_server = get_redis()
+        r_server.hmset(key, mapping)
+        
     return True
     
-
-def lookup(chars):
-
-    
-    
-    return obj_list
-
 
 def group_words(chars):
     # send me a dict of chars, and I'll return a dict of chars
@@ -203,11 +201,11 @@ def group_words(chars):
                     if search_redis(key):
                         r = search_redis(key)
                     else:
-                        #pass
-                        t2 = search(b, 'Pinyin')
-                        if t2 is not None:
-                            add_to_redis(key, t2)
-                            r = t2
+                        pass
+                        #t2 = search(b, 'Pinyin')
+                        #if t2 is not None:
+                        #    add_to_redis(key, t2)
+                        #    r = t2
                     
                     if r:
                         obj_list[loop+1]['wordset'] = x['wordset']
@@ -224,11 +222,11 @@ def group_words(chars):
                         r = search_redis(key)
                     
                     else:
-                        #pass 
-                        t3 = search(c, 'Pinyin')
-                        if t3 is not None:
-                            r = t3
-                            add_to_redis(key, t3)
+                        pass 
+                        #t3 = search(c, 'Pinyin')
+                        #if t3 is not None:
+                        #    r = t3
+                        #    add_to_redis(key, t3)
     
                     if r:
                         obj_list[loop+2]['wordset'] = x['wordset']
@@ -247,11 +245,11 @@ def group_words(chars):
                         r = search_redis(key)
                         
                     else:
-                        #pass
-                        t4 = search(d, 'Pinyin')
-                        if t4 is not None:
-                            r = t4
-                            add_to_redis(key, t4)
+                        pass
+                        #t4 = search(d, 'Pinyin')
+                        #if t4 is not None:
+                        #    r = t4
+                        #    add_to_redis(key, t4)
     
                     if r:
                         obj_list[loop+3]['wordset'] = x['wordset']
@@ -275,12 +273,12 @@ def group_words(chars):
                         x['pinyin'] = r['pinyin']
                     
                     else:
-                        #pass
-                        t1 = search(a, 'Pinyin')
-                        if t1 is not None:
-                            add_to_redis(key, t1)
-                            x['meaning'] = t1['meaning']
-                            x['pinyin'] = t1['pinyin']
+                        pass
+                        #t1 = search(a, 'Pinyin')
+                        #if t1 is not None:
+                        #    add_to_redis(key, t1)
+                        #    x['meaning'] = t1['meaning']
+                        #    x['pinyin'] = t1['pinyin']
 
                 
         else:
@@ -300,7 +298,6 @@ def copy_dictionary(request):
     file = open('cedict_1_0_ts_utf-8_mdbg.txt')
     
     count = 0
-    words = []
     for line in file:
         if line.startswith("#"):
             pass
@@ -316,11 +313,10 @@ def copy_dictionary(request):
             meanings = line[(line.index('/')+1):(line.rindex('/'))]
 
             # meanings = split((s.index('/') to last s.index('/')), '/') # this should give us a list of meanings ??
-            key = "%sCHARS:" % ( len( (new[1]) ) /3 )
-            
+            key = "%sCHARS:%s" % ((len((new[1]))/3), new[1])
             
             add_to_redis(key, dict(characters=new[1], pinyin=pinyin, meaning=meanings ))
-        
+                
     
     file.close()
     
