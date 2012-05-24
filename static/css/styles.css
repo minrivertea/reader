@@ -199,8 +199,6 @@ textarea {
  background-image: url('/images/user.png');   
 }
 
-
-
 #home .button, #home.selected .button, #home:hover .button, #home.selected:hover .button  {
  background-image: url('/images/home.png');   
 }
@@ -219,12 +217,6 @@ textarea {
   right: 0px;
   z-index: 20;
   box-shadow: -1px 1px 0 #fff;
-}
-
-#userblock div#wordlist-hint {
-  color: #999; 
-  font-size: 16px;
-  font-style: italic;  
 }
 
 #userblock input {
@@ -424,21 +416,19 @@ textarea {
   float: left;
   padding: 5px 0px;
   height: 50px;
-  margin: 0 0 40px 0; 
+  margin: 0 0 20px 0; 
   display: block; 
 }
-
 
 #text .word {
  position: relative;
  z-index: 2000;
- width: auto; 
- margin-left: 0px;  
+ width: auto;  
 }
 
 .char {
  float: left; 
- width: 30px;
+ width: 34px;
  margin: 0px;
  text-align: center;  
 }
@@ -490,22 +480,21 @@ textarea {
     display: block;
     float: left;
     font-family: "Times New Roman",serif;
-    font-size: 14px;
+    font-size: 12px;
     text-shadow: none;
     width: 100%;
     line-height: 1em; 
 }
 
 
-#text.easy .word, #text.easy .punctuation {
+#text.easy .word, #text.easy .char.number, #text.easy .char.punctuation {
    width: auto;
-   height: 60px; 
-   text-align: center;
-   margin: 0 0px 20px 0;  
+   height: 75px; 
+   text-align: center; 
 }
 
 #text.grouped.easy .word {
-  margin-right: 30px;   
+  margin-right: 10px;   
 }
 
 #text.easy .char {
