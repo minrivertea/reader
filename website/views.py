@@ -99,6 +99,13 @@ def _is_punctuation(x):
     return False
 
 def _is_number(x):
+    
+    try:
+        float(x)
+        return True
+    except ValueError:
+        return False
+
     if x.isdigit() or unicodedata.category(x).startswith('N'):
         return True
     
@@ -155,6 +162,10 @@ def group_words(chars):
             # is it a punctuation mark? if so ignore it
             if _is_punctuation(x['character']):
                 x['is_punctuation'] = True
+                
+            
+            if _is_number(x['character']):
+                x['is_number'] = True    
                 try:
                     if _is_number(obj_list[loop+1]['character']):
                         newvalue = (x['character'] + obj_list[loop+1]['character'])
