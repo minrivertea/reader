@@ -308,7 +308,7 @@ def group_words(chars):
 
 def copy_dictionary(request):
     # eg 一中一台 一中一台 [yi1 Zhong1 yi1 Tai2] /first meaning/second meaning/
-    file = open('/var/lib/django/reader/cedict_1_0_ts_utf-8_mdbg.txt')
+    file = open('/home/ubuntu/django/reader/cedict_1_0_ts_utf-8_mdbg.txt')
     
     count = 0
     for line in file:
