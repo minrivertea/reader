@@ -25,6 +25,8 @@ from django.contrib import auth
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.utils import simplejson
+
 
 from cjklib import characterlookup
 from cjklib.dictionary import CEDICT
@@ -337,16 +339,12 @@ def copy_dictionary(request):
 
 def readabilityParser(html):
     text = Document(html).summary()
-    readable_title = Document(html).title()
-            
-           
+    readable_title = Document(html).title()           
     return text
 
 
 def _evaluate_paragraphs(paras):
-    
-    
-    
+
     return
 
 def bsParser(html):
@@ -365,9 +363,6 @@ def bsParser(html):
     
     return  
     
-
-
-
 
 class MLStripper(HTMLParser):
     def __init__(self):
@@ -433,6 +428,13 @@ def home(request):
             
             r_server = redis.Redis("localhost")
             r_server.hmset(key, mapping)
+            
+            if request.is_ajax():
+                
+                things = split_unicode_chrs(form.cleaned_data['char'])
+                obj_list = group_words(things)
+                
+                return HttpResponse(simplejson.dumps(obj_list), mimetype="application/json")
             
             url = reverse('text', args=[this_id])
             return HttpResponseRedirect(url)

@@ -50,37 +50,67 @@
 
 
 
-<body>
+<body class="font1">
 
 
-    <div id="userblock">
-    </div>
-    
-    <div id="tools">
-        <div id="user" class="set">
-            <span class="button"></span>
-            <div class="extra">
-                <p>Stuff in here to edit your user preferences.</p>
-            </div>
-        </div>
-        <div id="home" class="set">
-            <a href="/" class="button"></a>
-        </div>
-        <div id="appearance" class="set">
-            <span class="button"></span>
-        </div>
-        
-        <div id="group" class="set">
-            <span class="button" class="">G</span>
-        </div> 
-        <div id="pinyin" class="set">
-            <span class="button" class="selected">P</span>
-        </div>  
-        
+    <div id="explanation">
+        <p>Improve your Chinese - turn any webpage or article into elegantly-formatted, <em>pinyin</em>-annotated text with dictionary and other language tools on hand.</p>
     </div>
     
     <div id="container">
-	{% block content %}{% endblock %}
+    
+        <div id="userblock">
+        </div>
+    
+        <div id="tools">
+            
+            <div id="home" class="set">
+                <a href="/" class="button"></a>
+            </div>
+            
+            <div id="user" class="set">
+                <span class="button"></span>
+                <div class="extra">
+                    <p>Stuff in here to edit your user preferences.</p>
+                </div>
+            </div>
+            
+            <div id="appearance" class="set">
+                <span class="button"></span>
+                <div class="extra">
+                    <div>
+                        <h4>Change font</h4>
+                        <ul id="fonts">
+                            <li><a href="#" class="font1 selected" onclick="changeFont('font1');" title="KaiTi">汉字</a></li>
+                            <li><a href="#" class="font2" onclick="changeFont('font2');" title="SongTi">汉字</a></li>
+                            <li><a href="#" class="font3" onclick="changeFont('font3');" title="FangSong">汉字</a></li>
+                            <li><a href="#" class="font4" onclick="changeFont('font4');" title="HeiTi">汉字</a></li>
+                        </ul>
+                     </div>
+                     <div>
+                        <h4>Font color</h4>
+                        <ul id="colors">
+                            <li><a href="#" onclick="changeColor('color1');" class="color1" title="Red"></a></li>
+                            <li><a href="#" onclick="changeColor('color2');" class="color2" title="blue"></a></li>
+                            <li><a href="#" onclick="changeColor('color3');" class="color3" title="green"></a></li>
+                            <li><a href="#" onclick="changeColor('color4');" class="color4" title="black"></a></li>
+
+                        </ul>
+                     </div>
+                     
+                </div>
+            </div>
+            
+            <div id="group" class="set">
+                <span class="button" class="">G</span>
+            </div> 
+            <div id="pinyin" class="set">
+                <span class="button" class="selected">P</span>
+            </div>  
+            
+        </div>
+    
+	   {% block content %}{% endblock %}
 	</div>
 
 </div>

@@ -4,88 +4,157 @@
 
 {% block extrajs %}
 <script type="text/javascript" src="{% staticfile '/js/common.js' %}"></script>
+<script type="text/javascript">
+var pS;
 
+function submitForm(e) {
+  var dL = false;
+  var tS = $('#id_char').val();    
+  if (pS == null) {pS = ' ';}
+  
+      
+  if (tS.localeCompare(pS.toString()) != 0) {
+        
+        pS = tS;
+        if ($('#id_char').val().length < 10) {
+          dL = true; 
+        }
+                
+        $.ajax({ 
+        url: $('#id_char').attr('action'),
+        type: 'POST',
+        data: $('form').serialize(),
+        dataType: 'json',
+        success: function(data) {
+            
+            $('#explanation').fadeOut(300);
+            $('form').animate({marginTop: '0px',}, 300);
+            
+            if (dL==true) {
+                var tWS;
+                
+                if ($('#text table').length) {
+                    $('#text table').appendTo('#previous-searches'); 
+                }      
+                
+                $('#text').html('<table></table>');
+                
+                $(data).each( function(k,v) {
+                    if (v.wordset==tWS) {
+                        var wID = v.wordset + "";
+                            $('#text td#char'+wID).append(v.character);
+                            $('#text td#pinyin'+wID).append(' '+v.pinyin);
+                    } else {
+                        tWS = v.wordset;
+                        var html = '<tr><td id="char'+v.wordset+'">'+v.character+'</td><td class="pinyin" id="pinyin'+v.wordset+'">'+v.pinyin+'</td><td>'+v.meaning+'</td></tr>';
+                        $('#text table').append(html);
+                    }
+                    
+                });
+            } else {
+                $('#text').html('');
+                $('#previous-searches').html('');
+                $('#tools').fadeIn(500);
+                var tWS;
+                $(data).each( function(k,v) {
+                    var html;                
+                    var wC = '';
+                    if (v.is_punctuation == true) wC += ' punctuation';
+                    if (v.is_number== true) wC+=' number';
+                    var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.character+'" title="'+v.meaning+'">';
+                    
+                    var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
+                    html+='<span class="hanzi">'+v.character+'</span>';
+                    if (v.pinyin) html+='<span class="pinyin">'+v.pinyin+'</span>';
+                    html+='</div>';
+                    
+                    if (v.wordset==tWS) {
+                        $('#text #word'+v.wordset).append(html);
+                        var newChars = ($('#text #word'+v.wordset).attr('chars') + v.character);
+                        $('#text #word'+v.wordset).attr('chars', newChars);
+                    } else {
+                        html+='</div>';
+                        var newHtml = wW+html;
+                        $('#text').append(newHtml);
+                        tWS = v.wordset;
+                    }
+                });
+            }
+            bindWords();
+        }
+        });
+            return false;   
+      }
+      return false; 
+}
+
+$(document).ready(function() {
+   $('#id_char').focus();
+   $('form').bind('submit', submitForm);
+});
+</script>
 {% endblock %}
 
 
 {% block extracss %}
 <style type="text/css">
-h1 {
- font-weight: normal;
- font-size: 50px;
- color: #c10000;
- text-shadow: 1px 1px 1px #fff;
-  letter-spacing: -1px; 
-  margin: 0 0 20px 0;
-  text-align: center;   
-}
-
-h2 {
- font-size: 30px;
- margin: 30px 0 20px 0;
- font-weight: normal;
- letter-spacing: -1px;
- color: #c10000;  
-}
 
 h2.centered, p.centered {
  text-align: center;   
 }
 
-p.sub {
-  font-size: 20px;
-  line-height: 1.8em;  
-  margin: 0 0 20px 0; 
+#tools {
+  display: none;   
 }
 
-#tools div, #userblock {
-   display: none;
+form {
+  position: relative;
+  margin: 38% 0 50px 0;   
 }
 
-#tools div#about {
-  display: block;   
-}
-
-div.centered {
-  text-align: center;
-  margin: 60px 0 100px 0;   
-}
-
-#text {
-  margin-bottom: 80px;   
-}
-
-img.example {
-    float: left;
-    margin: 40px 30px 80px 20px;
-}
-
-form textarea {
-    border: 1px solid #EBCDCD;
-    box-shadow: 0 1px 5px #F1DCDC inset;
-    float: left;
-    margin: 0 0 20px;
-    background: #fff;
-    padding: 20px 30px;
-    width: 680px;
-    color: #e1e1e1; 
-    height: 265px;   
-}
-
-input.submit {
+form input.submit {
     float: right;
-    border: 1px solid #EBCDCD;
+    border: 1px solid #c1c1c1;
+    border-color: #fff #f1f1f1 #fff #e6e6e6;
+    box-shadow: 0 0 1px #000;
     height: auto;
-    width: 200px;
-    border-radius: 5px;
-    padding: 15px 20px;
+    width: auto;
+    padding: 8px 15px;
     background: #F8F0F0;
-    color: #D68585;
-    font-size: 30px;
+    position: relative;
+    top: 1px;
+    color: #333;
+    text-shadow: 1px 1px 0px #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 3px;
+    background: rgb(238,238,238); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6- */
 }
 
 form textarea:focus .submit {
   background: #c10000;   
+}
+
+form input#id_char {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #D1D1D1;
+    color: #333333;
+    float: left;
+    font-size: 20px;
+    height: 25px;
+    line-height: 1em;
+    margin: 0px;
+    overflow: hidden;
+    padding: 10px 20px;
+    width: 86%;
 }
 
 #bookmarklink {
@@ -93,6 +162,7 @@ form textarea:focus .submit {
  float: left;
  margin: 20px 0 100px 50px;  
  position: relative; 
+ display: none;
 }
 
 #bookmarklet {
@@ -114,12 +184,6 @@ form textarea:focus .submit {
   margin: 0 0 0 30px;
 }
 
-.chinese-sample {
- font-size: 16px; 
- width: 480px;
- margin: 0 auto 70px; 
-}
-
 
 </style>
 {% endblock %}
@@ -129,30 +193,19 @@ form textarea:focus .submit {
 
 
 
+<form action="." method="post">
+    {% csrf_token %}
+    <input id="id_char" class="" title="" name="char" value="" >
+    <input type="submit" value="Go!" id="submit" class="submit button"/>
+</form>
 
-
-<h1 class="centered">CReader makes reading Chinese easier</h1>
-<p class="sub centered">Improve your Chinese reading skills by turning any webpage or article into elegantly-formatted, <em>pinyin</em>-annotated text with dictionary and other language tools on hand.</p>
-
-    
-    <img class="example" src="{% staticfile '/images/tools.png' %}"/>
-    <img class="example" src="{% staticfile '/images/formatted.png' %}"/>
-    <img class="example" src="{% staticfile '/images/wordlist.png' %}"/>
-
+<div id="text" class="easy"></div>
+<div id="previous-searches"></div>
 
 <div id="bookmarklink">    
     <a id="bookmarklet" href="javascript:location.href='http://reader.westiseast.co.uk/?url='+encodeURIComponent(location.href)">CReader</a>
     <p class="explain">&laquo; Drag and drop this link into your browser toolbar, like a bookmark. When you're on a web page with long Chinese text, click the bookmark and we'll take it from there.<br/><a href="">How does it work?</a>  |  <a href="">About</a>
 </div>
-
-<h2>…or copy and paste Chinese text into the box below </h2>
-<p class="sub">Maybe you have text from an email, or a document - just paste it in the box below, and we'll convert it into readable, <em>pinyin</em>-annotated text.</p>
-<form action="." method="post">
-{% csrf_token %}
-<textarea id="id_char" class="clearMeFocus" title="eg. 据广东因豪科技有限公司的工作人员介绍，该系统包括价格电子公示屏、点菜系统、政府监管后台。消费者可通过平板电脑点菜下单，菜单将通过网络保存至政府监管后台，方便消费者维权和政府监管。如果商家某个海鲜销售价格高于政府最高定价，收银电脑自动报警并不能打印发票。" name="char"></textarea>
-<input type="submit" value="Convert" id="submit" class="submit button"/>
-
-</form>
 
 
 

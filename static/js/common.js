@@ -3,32 +3,51 @@
 $('#pinyin').click(function() {
   if ($(this).hasClass('selected')) {
     $(this).removeClass('selected');
-    $('.pinyin').css('display', 'block');
+    $('.pinyin').hide();
   } else {
     $(this).addClass('selected');
-    $('.pinyin').css('display', 'none');
+    $('.pinyin').show();
   }  
 });
 
-$('#appearance').click(function() {
-   if ($(this).hasClass('selected')) {
-      $('#text').removeClass('easy');
-      $(this).removeClass('selected');
+function mySelect(item) {
+   if ($(item).hasClass('selected')) {
+      $(item).removeClass('selected');
    }
    else {
-      $('#text').addClass('easy');
-      $(this).addClass('selected');
-   } 
+      $(item).addClass('selected');
+   }  
+}
+
+$('#appearance .button').click(function() {
+   mySelect($(this).parent());
 });
 
 $('#user').click(function() {
-   if ($(this).hasClass('selected')) {
-      $(this).removeClass('selected');
-   }
-   else {
-      $(this).addClass('selected');
-   } 
+   mySelect(this);
 });
+
+function changeFont(fname) {
+   $('#fonts a').removeClass('selected');
+   $('#fonts .'+fname).addClass('selected');
+   $('body').removeClass(function (index, fc) {
+        var matches = fc.match (/font\d+/g) || [];
+        return (matches.join (' '));
+   }).addClass(fname);
+   mySelect(this);
+   return false;
+}
+
+function changeColor(color) {
+   $('#colors a').removeClass('selected');
+   $('#colors .'+color).addClass('selected');
+   $('body').removeClass(function (index, fc) {
+        var matches = fc.match (/color\d+/g) || [];
+        return (matches.join (' '));
+   }).addClass(color);
+   mySelect(this);
+   return false;
+}
 
 $('#group').click(function() {
    if ($(this).hasClass('selected')) {
@@ -62,7 +81,7 @@ $('.char').not('.punctuation').each(function(index) {
    }  
 });
 
-function addRemoveUserBlockItem(item) {
+function toggleUBI(item) {
     if (item.hasClass('selected')) {
         item.removeClass('selected');
         var idToRemove = item.attr('id');
@@ -119,14 +138,17 @@ function expandUserBlock(item) {
 }
 
 
-$('.word').click( function(e) {
-   
-   if (e.shiftKey) {
-         addEditableWord($(this));     
-   } else {
-       addRemoveUserBlockItem($(this));
-   }
-});
+function bindWords() {
+    $('.word').click( function(e) {
+       if (e.shiftKey) { addEditableWord($(this));} else { toggleUBI($(this)); }
+    });
+    
+    $('.word').hover( function(e) {
+       $('#userblock div#'+this.id).css({'position': 'relative', 'left': '-10px', 'width': '210px', 'color': '#C33636'}); 
+    }, function() {
+       $('#userblock div#'+this.id).attr('style', ' ');   
+    });
+}
 
 
 function clearInput() {

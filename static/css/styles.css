@@ -5,21 +5,18 @@ html {
 }
 
 input, textarea, body {
-  font-family: "Times New Roman", serif;
-  background-color: #FAF6F6;  
+  font-family: Georgia, serif;
+  background-color: #fff;  
 }
-
-
 
 body {
   margin: 0;
   padding: 0;
   color: #333;
-  background-color: #faf6f6;
   position: relative;
   font-size: 13px;
   line-height: normal;
-  background: url('/images/back.jpg');
+  background: #fdfdfa; /* url('/images/back.jpg'); */
 }
 
 a:link, a:visited {
@@ -52,15 +49,34 @@ a:hover, a:active {
   box-shadow: none
 }
 
+#explanation {
+  width: 94%;
+  float: left;
+  position: absolute;
+  top: 300px;
+  left: 0;
+  background-color: #333;
+  color: #fff;
+  padding: 15px 3%;
+  font-family: Helvetica, Arial, sans-serif;
+  z-index: 1;
+}
+
+#explanation p {
+  margin: 0;
+  font-size: 13px;
+  text-align: center;   
+}
+
 #container {
     float: left;
     height: 100%;
-    left: -455px;
-    margin: 40px auto 0 50%;
+    left: -485px;
+    margin: 0px auto 0 50%;
     min-height: 700px;
-    padding: 20px 80px;
+    padding: 40px 60px 20px;
     position: relative;
-    width: 750px;
+    width: 850px;
     z-index: 0;
 }
 
@@ -97,22 +113,24 @@ textarea {
 /* toolbar */
 
 #tools, #userblock {
-    background: none repeat scroll 0 0 #F5F4F0;
-    border: 1px solid #E2DCC2;
-    border-width: 0 1px 0px 1px;
-    box-shadow: 1px 1px 0 #fff;
-    height: 100%;
+    height: 95%;
     padding: 60px 20px;
-    position: fixed;
-    top: 0;
+    position: absolute;
+    top: 40px;
     width: 50px;
 }
 
 #tools {
- left: 0;
+ position: fixed;
+ left: 0px;
+ top: 0;
  width: 50px;
- padding: 60px 10px;   
+ padding: 60px 10px; 
+ background: #e6e6e6;
+ box-shadow: 3px 0px 0px #fff;
+ border-right: 1px solid #d1d1d1;  
 }
+
 
 #tools .set {
  float: left;
@@ -125,18 +143,18 @@ textarea {
 
 
 #tools .button, #bookmarklet {
-    background: #f7f5ec;
-    border: 1px solid #e2dcc2;
+    background: #f6f6f6 no-repeat;
+    border: 1px solid #d1d1d1;
     text-shadow: 0 1px 0 #fff;
-    color: #a08e48;
+    color: #666;
     float: left;
     font-size: 16px;
-    height: 15px;
+    height: 20px;
     margin: 0 0px 0 5px;
-    padding: 6px 0 10px;
+    padding: 10px 0 10px;
     position: relative;
     text-align: center;
-    width: 35px;
+    width: 40px;
     z-index: 2000;
     font-family: "Times New Roman", serif;
     transition:  300ms;
@@ -158,11 +176,15 @@ textarea {
 }
 
 #group, #appearance, #pinyin {
-  top: 30%;   
+  top: 130px;   
+}
+
+#pinyin .button {
+  text-decoration: line-through;   
 }
 
 #pinyin.selected .button {
-  text-decoration: line-through;   
+  text-decoration: none;   
 }
 
 #tools #home {
@@ -177,33 +199,42 @@ textarea {
 
 #tools .button:hover, #bookmarklet:hover {
   cursor: pointer;
-  background:  #fff;
+  background:  #fff no-repeat;
   color: #a08e48; 
 }
 
 #tools .selected .button {
   color: #a08e48; 
-  background: #fff; 
+  background: #fff no-repeat; 
+  width: 41px;
+  border: 1px solid #c1c1c1;
+}
+
+#tools #appearance.selected .button, #tools #user.selected .button {
+  border-right: none;   
 }
 
 
 #tools .selected:hover .button {
   color: #a08e48;
-  background: #fff; 
+  background: #fff no-repeat;
 }
 
 
 
 #user .button, #user.selected .button, #user:hover .button, #user.selected:hover .button {
- background-image: url('/images/user.png');   
+ background-image: url('/images/user.png');  
+ background-position: 3px 4px; 
 }
 
 #home .button, #home.selected .button, #home:hover .button, #home.selected:hover .button  {
- background-image: url('/images/home.png');   
+ background-image: url('/images/home.png');
+ background-position: 2px 4px;   
 }
 
 #appearance .button, #appearance.selected .button, #appearance:hover .button, #appearance.selected:hover .button  {
- background-image: url('/images/appearance.png');   
+ background-image: url('/images/appearance.png'); 
+ background-position: 2px 5px;  
 }
 
 
@@ -212,10 +243,10 @@ textarea {
 
 
 #userblock {
-  width: 200px;
-  right: 0px;
-  z-index: 20;
-  box-shadow: -1px 1px 0 #fff;
+    right: -195px;
+    top: 80px;
+    width: 200px;
+    z-index: 20;
 }
 
 #userblock input {
@@ -231,35 +262,41 @@ textarea {
   width: 200px;  
   border-width: 0 0 1px 0;
   color: #fff;
-  border-bottom: 1px solid #ECBDBD;
-  border-top: 1px solid #fff;
-  padding: 10px 0px;
-  color: #D68585;
+  border-bottom: 1px solid #e1e1e1;
+  padding: 10px 10px 10px 15px;
+  color: #333;
   position: relative;
+  opacity: 1;
 }
 
 #userblock div:first-child {
-  border-top: none;
-  padding-top: 0;   
+  border-top: 1px solid #e1e1e1;   
 }
 
-#userblock div:last-child {
-  border-bottom: none;   
+#userblock div.selected {
+   opacity: 1;
+   z-index: 3;   
 }
 
 #userblock div span.title, #userblock div span.editable {
   font-weight: normal;
-  font-size: 24px;  
+  font-size: 26px;  
 }
+
+
 
 #userblock div span.editable {
   color: #333;
     
 }
 
-#userblock div:hover, #userblock div:hover span.title {
+#userblock div:hover {
   color: #c33636;
-  cursor: pointer;   
+  background: #fff;
+  cursor: pointer; 
+  position: relative;
+  left: -10px;
+  width: 210px;  
 }
 
 #userblock div a.add, #userblock div a.edit, #userblock div a.more {
@@ -295,73 +332,155 @@ textarea {
 
 .extra, #userblock div.extra {
   position: absolute;
-  border: 1px solid #EBCDCD;
+  border: 1px solid #c1c1c1;
   display: none;
   background: #fff;
-  padding: 10px 20px;
+  color: #333;
+  padding: 15px 20px;
   z-index: 20;
 }
 
 #userblock div.extra {
   left: -330px;
   width: 250px;
-  height: 250px;
+  height: 200px;
   top: -35px;   
 }
 
 #tools .extra {
-  left: 81px;
-  width: 150px;
-  height: 200px; 
-  top: -25px;     
+  left: 46px;
+  width: 250px;
+  height: auto; 
+  top: -8px; 
+  font-family: Georgia, serif;    
 }
 
-.extra:before {
-  content: " ";
-  position: absolute;
-  z-index: 2;
-  height: 0;
-  width: 0;
-  display: block;
-  right: -31px;
-  top: 24px;
-  border-right: 0;
-  border-left: 31px solid #EBCDCD;
-  border-top: 31px solid transparent;
-  border-bottom: 31px solid transparent;
+#tools .extra div {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e6e6e6;
+  margin-bottom: 15px;
+  float: left;
+  width: 100%;   
 }
 
-.extra:after {
-  content: " ";
-  position: absolute;
-  z-index: 3;
-  height: 0;
-  width: 0;
-  display: block;
-  right: -30px;
-  top: 25px;
-  border-right: 0;
-  border-left: 30px solid #fff;
-  border-top: 30px solid transparent;
-  border-bottom: 30px solid transparent;
+#tools .extra div:last-child {
+   border-bottom: none;
+   margin-bottom: 0;   
 }
 
-#tools .extra:before {
-  border-left: 0;
-  border-right: 31px solid #EBCDCD;
-  left: -31px; 
+#tools .extra h4 {
+  margin: 0;   
 }
 
-#tools .extra:after {
-  border-left: 0;
-  border-right: 30px solid #fff;
-  left: -30px;   
+#tools .extra ul {
+    font-size: 20px;
+    list-style-type: none;
+    margin: 10px 0 0;
+    padding: 0;
+}
+
+#tools .extra ul li {
+   float: left;
+   background: #FDFDFA;
+   margin: 0 10px 0 0;   
+}
+
+#tools .extra a {
+  color: #333;
+  text-decoration: none; 
+  padding: 5px;
+}
+
+#tools .extra #fonts a:hover {
+  color: #333;
+  background: #EDE7DB;
+}
+
+#tools .extra #fonts a.selected {
+  color: #C33636;   
+}
+
+#tools .extra #colors a:hover {
+  border: 3px solid #666;
 }
 
 .selected .extra, #userblock .selected div.extra  {
   display: block;
+  opacity: 1;
 }
 
+#tools .extra #colors a {
+  padding: 2px;
+  border: 3px solid #fff;
+  box-shadow: 0 0 1px #999;
+  height: 25px;
+  width: 25px;
+  float: left;   
+}
+
+#colors a.color1 {
+  background: #fff;
+}
+
+body.color1 .hanzi {
+  color: #333;   
+}
+
+body.color1 {
+  background: #fff;   
+}
+
+#colors a.color2 {
+  background: #f6f4ed;   
+}
+
+body.color2 .hanzi {
+  color: #5b4a2e;   
+}
+
+body.color2 {
+  background: #f6f4ed;   
+}
+
+body.color2 #tools {
+  background: #e9e5d6;
+  box-shadow: 1px 0 0 #fff;   
+}
+
+#colors a.color3 {
+  background: #3d4d66;   
+}
+
+body.color3 {
+  background: #3d4d66; 
+}
+
+body.color3 #tools {
+  background: #223554;
+    
+}
+
+body.color3 .hanzi {
+  color: #fff; 
+  text-shadow: none;  
+}
+
+#colors a.color4 {
+  background: #f2f5f9;   
+}
+
+body.color4 .hanzi {
+  color: #444444;   
+}
+
+body.color4 {
+  background: #f2f5f9;   
+}
+
+body.color4 #tools {
+  background: #dbe3ee;
+  box-shadow: 1px 0 0 #fff;
+}
 
 
 /* text formatting styles */
@@ -388,12 +507,13 @@ textarea {
      
 }
 
-#text {
+#text, #previous-searches {
     float: left;
-    margin: 0 0 0 10px;
+    margin: 0px 0 0 10%;
     padding: 0;
     text-shadow: 1px 1px 0 #FFFFFF;
-    width: 100%;
+    width: 80%;
+    font-size: 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -403,67 +523,87 @@ textarea {
     user-select: none;
 }
 
-#text.grouped {
- margin-left: -10px;   
+
+#text table tr, #previous-searches table tr {
+  width: 100%;
+  border-bottom: 1px solid #e1e1e1;   
 }
 
-#text.grouped .word {
-  margin-left: 30px;   
+#text table tr:last-child {
+  border-bottom: none;   
 }
 
-#text.grouped .number {
-  position: relative;
-  left: 30px;   
+#previous-searches {
+  margin-top: 20px;
+  color: #666; 
+  font-size: 14px;  
 }
 
-#text .word, #text .char.number, #text .char.punctuation {
+#text table td, #previous-searches table td {
+  width: auto;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e1e1e1;
+  width: 120px; 
+}
+
+#text table td.pinyin, #previous-searches table td.pinyin {
+  text-transform: lowercase;
+  color: #E55C12;
+}
+
+#text table tr td:first-child, #previous-searches table td:first-child {
+  width: 90px;
+  color: #5e4313;
+  text-shadow: 1px 2px 0 #fff;
+  font-size: 24px; 
+}
+
+#text table tr td:last-child, #previous-searches table td:last-child {
+  font-size: 14px; 
+  width: 500px;  
+}
+
+.word {
   float: left;
-  padding: 5px 0px;
+  padding: 0px 0px;
   height: 50px;
-  margin: 0 0 20px 0; 
+  margin: 0; 
   display: block; 
-}
-
-#text .word {
- position: relative;
- z-index: 2000;
- width: auto;  
+  position: relative;
+  width: auto;
 }
 
 .char {
  float: left; 
- width: 34px;
  margin: 0px;
- text-align: center;  
+ padding: 0;
+ text-align: center; 
+ width: 50px; 
 }
 
-
-.char.punctuation {
+.punctuation .char {
   margin: 0px; 
-  color: #999;
-  padding: 0; 
-  width: auto; 
 }
 
 #text .char.number {
  color: #333;
  font-size: 16px; 
- 
+ width: auto;
+ padding: 0; 
 }
 
-#text .word:hover .pinyin {
-  color: #972626;  
+#text .word.selected .pinyin, #text .word.selected .hanzi {
+  color: #b1531f;   
+}
+
+
+#text .word:hover .pinyin, #text .word:hover .hanzi {
+  color: #C33636;  
 }
 
 #text .word:hover {
   cursor: pointer;  
 }
-
-
-#text .word.selected .pinyin {
-  color: #ff0000;   
-}
-
 
 .word.select .hanzi {
    color: red;   
@@ -472,50 +612,84 @@ textarea {
 .char .hanzi {
   font-size: 26px;
   line-height: 1em;
-  width: 100%;
   float: left;
   margin: 0 0 5px 0;
   display: block;
-  font-family: Arial, Helvetica, 微软雅黑;
+  font-family: "STKaiti",华文楷体;
+  color: #444;
+  text-shadow: 1px 2px 0 #fff;
+  width: 50px;
 }
 
 .char .pinyin {
-    color: #999;
-    display: block;
+    color: #E55C12;
+    display: none;
     float: left;
-    font-family: "Times New Roman",serif;
     font-size: 12px;
     text-shadow: none;
-    width: 100%;
     line-height: 1em; 
+    text-transform: lowercase;
+    font-style: italic;
+    font-family: Georgia, serif;
+    width: 50px;
+}
+
+.grouped .char, .grouped .char .hanzi, .grouped .char .pinyin {
+  width: 40px;   
+}
+
+.punctuation .char .hanzi, .punctuation .char {
+  width: 20px;
+}
+
+.number .char .hanzi, .number .char {
+  min-width: 50px;
+  width: auto; 
 }
 
 
-#text.easy .word, #text.easy .char.number, #text.easy .char.punctuation {
-   width: auto;
-   height: 75px; 
-   text-align: center; 
+body.font1 .char .hanzi, #tools ul a.font1, body.font1 #userblock div span.title {
+  font-family: "STKaiti",华文楷体;  
 }
 
-#text.grouped.easy .word {
-  margin-right: 10px;   
+body.font2 .char .hanzi, #tools ul a.font2, body.font2 #userblock div span.title {
+  font-family: "STSong", 华文宋体; 
 }
 
-#text.easy .char {
-  width: 40px;
+body.font3 .char .hanzi, #tools ul a.font3, body.font3 #userblock div span.title {
+  font-family: "STFangsong", 华文仿宋; 
+}
+
+body.font4 .char .hanzi, #tools ul a.font4, body.font4 #userblock div span.title {
+  font-family: "STHeiti", 华文黑体; 
+}
+
+
+.easy .word, .easy .char.number, .easy .punctuation {
+   height: 60px; 
+   margin: 0 0 20px 0;
+}
+
+.grouped .word {
+  margin-right: 30px;   
+}
+
+.grouped .word.punctuation {
+  margin-right: 0;   
+}
+
+.grouped .word.number {
+  margin-right: 30px;   
 }
 
 #text.easy .hanzi {
-  color: #333; 
-  margin: 0 0 10px 0; 
+  margin: 0 0 0px 0; 
   line-height: 1em;
   font-size: 40px; 
 }
 
 #text.easy .pinyin {
-  color: #c1c1c1;
-  font-size: 16px;
- 
+  font-size: 15px;
 }
 
 h1 {
