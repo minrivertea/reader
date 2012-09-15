@@ -13,29 +13,21 @@
 	<meta content="en-gb" http-equiv="Content-Language" />
 	<meta content="{% block metadescription %}{% endblock %}" name="description" />
 	
-	<meta name="msvalidate.01" content="D72BD43A6F271B73C8F653A920B8C23C" />
-	<meta name="google-site-verification" content="obu9NY_4FNbUQMNlrvWOk59ABZ9gROs37zTql__Lglo" />
-	<META name="y_key" content="cfd80b8d388be931" />
-	
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <meta name="generator" content="Django - http://www.djangoproject.com" />
 	<meta name="DC.format" content="text/html" />
 	<meta name="DC.type" content="Django Site" />
 	<meta name="robots" content="ALL" />
 	
-	<title>{% block pagetitle %}Chinese Dictionary and Reading Tools{% endblock %} | 看懂了么</title>
-	<link rel="shortcut icon" href="{% staticfile '/images/favicon.ico' %}" type="image/x-icon">
-	{% block canonical %}{% endblock %}
-	
-	{% block extra-head %}{% endblock %}
-
+	<title>{% block pagetitle %}Chinese Dictionary and Reading Tools{% endblock %} | 看懂了么</title>	
 	<link rel="stylesheet" href="{% staticfile '/css/styles.css' %}" />
-	    
-	<script type="text/javascript" src="{% staticfile '/js/jquery-1.8.min.js' %}"></script>
+	
 	{% if ga_is_on %}
-		<script src="http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+		<script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 	{% else %}
-		<script src="/js/jquery.tools.min.js"></script>
+		<script src="{% staticfile '/js/jquery.tools.min.js' %}"></script>
+		<script type="text/javascript" src="{% staticfile '/js/jquery-1.8.min.js' %}"></script>
 	{% endif %}
 
 	{% block extracss %}{% endblock %}
@@ -43,10 +35,9 @@
 
 </head>
 
-
-
 <body class="font1">
 
+    <h1>看懂了么？</h1>
 
     <div id="explanation">
         <p>Improve your Chinese - turn any webpage or article into elegantly-formatted, <em>pinyin</em>-annotated text with dictionary and other language tools on hand.</p>
@@ -107,6 +98,7 @@
     
 	   {% block content %}{% endblock %}
 	</div>
+
 
 </div>
 	{% block extrajs %}{% endblock %}
