@@ -18,6 +18,9 @@ function submitForm(e) {
         if ($('#id_char').val().length < 10) {
           dL = true; 
         }
+        
+        $('#explanation').fadeOut(300);
+        $('form').animate({marginTop: '0px',}, 300);
                 
         $.ajax({ 
         url: $('#id_char').attr('action'),
@@ -25,9 +28,6 @@ function submitForm(e) {
         data: $('form').serialize(),
         dataType: 'json',
         success: function(data) {
-            
-            $('#explanation').fadeOut(300);
-            $('form').animate({marginTop: '0px',}, 300);
             
             if (dL==true) {
                 var tWS;
