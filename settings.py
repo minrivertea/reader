@@ -84,6 +84,7 @@ MIDDLEWARE_CLASSES = (
 
 TEMPLATE_CONTEXT_PROCESSORS += (
      'django.core.context_processors.request',
+     'context_processors.common',
 )
 
 ROOT_URLCONF = 'reader.urls'
