@@ -1,5 +1,4 @@
 
-
 $('#pinyin').click(function() {
   if ($(this).hasClass('selected')) {
     $(this).removeClass('selected');
