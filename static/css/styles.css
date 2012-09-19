@@ -28,58 +28,36 @@ a:hover, a:active {
    #C10000;
 }
 
-#tools div#about {
-  position: fixed;
-  bottom: 30px;
-  width: 130px;
+
+.centred {
+  width: 800px;
+  position: relative;
+  left: -400px;
+  margin-left: 50%;
   float: left;
-  font-size: 14px;   
 }
 
-#tools #about ul {
-  margin: 0 0 0 0px;
-  padding: 0;
-  color:  #D68585;
-  list-style-type:none;  
-  line-height: 1.8em;
+#header {
+  padding: 10px 10px 10px 0;
+  margin-bottom: 20px;
+  margin-top: 20px;   
 }
 
-#tools #about ul li a:hover {
-  background: none;
-  box-shadow: none
-}
-
-#explanation {
-  width: 94%;
+#header a {
   float: left;
-  position: absolute;
-  top: 300px;
-  left: 0;
-  background-color: #333;
-  color: #fff;
-  padding: 15px 3%;
-  font-family: Helvetica, Arial, sans-serif;
-  z-index: 1;
+  padding: 0 10px; 
+  color: #666; 
+  text-decoration: none; 
 }
 
-#explanation p {
-  margin: 0;
-  font-size: 13px;
-  text-align: center;   
+#header a:hover {
+  text-decoration: underline;
+  color: #444;   
 }
 
-#container {
-    float: left;
-    height: 100%;
-    left: -600px;
-    margin: 0px auto 0 50%;
-    min-height: 700px;
-    padding: 40px 60px 20px;
-    position: relative;
-    width: 700px;
-    z-index: 0;
+#header a:first-child {
+  padding: 0 10px 0 0;   
 }
-
 
 
 /* forms */
@@ -176,60 +154,6 @@ textarea {
  text-decoration: none;   
 }
 
-#group, #appearance, #pinyin {
-  top: 130px;   
-}
-
-#pinyin .button {
-  text-decoration: line-through;   
-}
-
-#pinyin.selected .button {
-  text-decoration: none;   
-}
-
-#tools #home {
- position: absolute;
- top: 20px;   
-}
-
-#tools #user {
-  position: absolute;
-  top: 70px;   
-}
-
-#tools .button:hover, #bookmarklet:hover {
-  cursor: pointer;
-  background:  #fff no-repeat;
-  color: #c44500; 
-}
-
-#tools .selected .button {
-  color: #C44500; 
-  background: #fff no-repeat; 
-}
-
-#tools #appearance.selected .button, #tools #user.selected .button {
-  border-right: none;   
-}
-
-
-#user .button, #user.selected .button, #user:hover .button, #user.selected:hover .button {
- background-image: url('/images/user.png');  
- background-position: 3px 4px; 
-}
-
-#home .button, #home.selected .button, #home:hover .button, #home.selected:hover .button  {
- background-image: url('/images/home.png');
- background-position: 2px 4px;   
-}
-
-#appearance .button, #appearance.selected .button, #appearance:hover .button, #appearance.selected:hover .button  {
- background-image: url('/images/appearance.png'); 
- background-position: 2px 5px;  
-}
-
-
 
 /* userblock stuff */
 
@@ -238,7 +162,7 @@ textarea {
   height: 100%;
   position: fixed;
   right: 40px;
-  width: 400px;
+  width: 200px;
   z-index: 20;
 }
 
@@ -343,60 +267,65 @@ textarea {
   top: -35px;   
 }
 
-#tools .extra {
-  left: 46px;
-  width: 250px;
-  height: auto; 
-  top: -8px; 
-  font-family: Georgia, serif;    
+#head .extra {
+    font-family: Georgia,serif;
+    height: auto;
+    top: 40px;
+    width: 100%;
 }
 
-#tools .extra div {
+#head .extra div {
   padding-bottom: 15px;
   border-bottom: 1px solid #e6e6e6;
   margin-bottom: 15px;
   float: left;
-  width: 100%;   
+  width: 48%;
+  margin-right: 2%;   
 }
 
-#tools .extra div:last-child {
+#head .extra div:last-child {
    border-bottom: none;
    margin-bottom: 0;   
 }
 
-#tools .extra h4 {
-  margin: 0;   
+#head .extra h4 {
+  margin: 0; 
+  font-family: Helvetica, Arial, sans-serif;  
 }
 
-#tools .extra ul {
+#head .extra ul {
     font-size: 20px;
     list-style-type: none;
     margin: 10px 0 0;
     padding: 0;
 }
 
-#tools .extra ul li {
+#head .extra ul li {
    float: left;
    background: #FDFDFA;
    margin: 0 10px 0 0;   
 }
 
-#tools .extra a {
+#head .extra a {
+    background: none repeat scroll 0 0 #F6F6F6;
+    border: 1px solid #C1C1C1;
+    color: #333333;
+    padding: 5px;
+    text-decoration: none;
+}
+
+#head .extra #fonts a:hover {
   color: #333;
-  text-decoration: none; 
-  padding: 5px;
+  box-shadow: 0 0px 5px #c1c1c1;
+  border: 1px solid #c1c1c1;
+  background: #fff;
 }
 
-#tools .extra #fonts a:hover {
-  color: #333;
-  background: #EDE7DB;
+#head .extra #fonts a.selected {
+  color: #E55C12;   
 }
 
-#tools .extra #fonts a.selected {
-  color: #C33636;   
-}
-
-#tools .extra #colors a:hover {
+#head .extra #colors a:hover {
   border: 3px solid #666;
 }
 
@@ -405,7 +334,7 @@ textarea {
   opacity: 1;
 }
 
-#tools .extra #colors a {
+#head .extra #colors a {
   padding: 2px;
   border: 3px solid #fff;
   box-shadow: 0 0 1px #999;
@@ -504,12 +433,10 @@ body.color4 #tools {
 }
 
 #text, #previous-searches {
-    float: left;
-    margin: 0px 0 0 0%;
     padding: 0;
     text-shadow: 1px 1px 0 #FFFFFF;
-    width: 100%;
     font-size: 20px;
+    margin-top: 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -650,25 +577,29 @@ body.color4 #tools {
   width: 20px;
 }
 
+.punctuation.english .char .hanzi, .punctuation.english .char {
+  width: auto;   
+}
+
 .number .char .hanzi, .number .char {
   min-width: 50px;
   width: auto; 
 }
 
 
-body.font1 .char .hanzi, #tools ul a.font1, body.font1 #userblock div span.title {
+body.font1 .char .hanzi, #head ul a.font1, body.font1 #userblock div span.title {
   font-family: "STKaiti",华文楷体;  
 }
 
-body.font2 .char .hanzi, #tools ul a.font2, body.font2 #userblock div span.title {
+body.font2 .char .hanzi, #head ul a.font2, body.font2 #userblock div span.title {
   font-family: "STSong", 华文宋体; 
 }
 
-body.font3 .char .hanzi, #tools ul a.font3, body.font3 #userblock div span.title {
+body.font3 .char .hanzi, #head ul a.font3, body.font3 #userblock div span.title {
   font-family: "STFangsong", 华文仿宋; 
 }
 
-body.font4 .char .hanzi, #tools ul a.font4, body.font4 #userblock div span.title {
+body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title {
   font-family: "STHeiti", 华文黑体; 
 }
 
@@ -683,7 +614,17 @@ body.font4 .char .hanzi, #tools ul a.font4, body.font4 #userblock div span.title
 }
 
 .grouped .word.punctuation {
-  margin-right: 0;   
+  margin-right: 0; 
+  position: relative;
+  left: -30px;  
+}
+
+.easy .english, .grouped .word.english {
+  margin-right: 15px;
+}
+
+.grouped .word.english {
+  left: -30px;   
 }
 
 .grouped .word.number {
@@ -707,24 +648,40 @@ h1 {
 #head {
     border-bottom: 1px solid #E1E1E1;
     float: left;
-    margin: 0 0 50px;
     padding: 0 0 20px;
-    width: 100%;
+    margin-bottom: 30px;
 }
 
-#original-page {
+#appearance {
+  position: relative;   
+}
+
+#original-page, #appearance .button, #group .button, #pinyin .button {
     background: none repeat scroll 0 0 #f6f6f6;
     color: #E55C12;
     font-size: 14px;
     font-weight: bold;
     font-family: Helvetica, Arial, sans-serif;
-    padding: 9px 15px 5px 10px;
+    padding: 9px 10px 5px 10px;
     text-decoration: none;
     text-shadow: none;
     position: relative;
     border: 1px solid #D1D1D1;
     text-transform: uppercase;
-    margin: 0 10px 0 10px;
+    margin: 0 0px 0 8px;
+    float: left;
+}
+
+#appearance.selected .button {
+  background: #fff;   
+  position: relative;
+  top: -5px;
+  padding-top: 14px;
+}
+
+#original-page:hover, #appearance .button:hover, #group .button:hover, #pinyin .button:hover {
+  cursor: pointer;
+  color: #c44500;  
 }
 
 #original-page:before {
@@ -755,10 +712,23 @@ h1 {
     z-index: 9;
 }
 
-#original-page:hover {
-  color: #c44500;   
+#appearance.selected .extra:before {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-color: #C1C1C1;
+    border-image: none;
+    border-style: solid;
+    border-width: 0 1px;
+    content: " ";
+    display: block;
+    height: 11px;
+    left: 147px;
+    position: absolute;
+    top: -11px;
+    width: 68px;
+    z-index: 10;
 }
 
-span.url {
-  color: #999;   
-}

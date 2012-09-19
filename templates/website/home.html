@@ -27,7 +27,7 @@ h2.centered, p.centered {
 
 form {
   position: relative;
-  margin: 46% 0 50px 0;   
+  top: 220px;
 }
 
 form input.submit {
@@ -76,13 +76,10 @@ form input#id_char {
 }
 
 #bookmarklink {
- width: 100%;
- float: left;
- margin: 0;  
- position: absolute;
- top: 220px; 
- padding: 20px 0 0 0;
  font-family: Helvetica, Arial, sans-serif;
+ position: absolute;
+ top: 240px;
+ display: none;
 }
 
 #bookmarklink p.explain {
@@ -100,26 +97,23 @@ form input#id_char {
 
 
 
-<div id="bookmarklink">    
+<div id="bookmarklink" class="centred">    
     <a id="bookmarklet" href="javascript:location.href='{{ siteurl }}/?url='+encodeURIComponent(location.href)">B</a>
     <p class="explain">
         <strong>&laquo; drag this to your bookmarks toolbar</strong><br/>
         When you're on a webpage with long Chinese text, click this.        
-    </p>
-    
-  
-                                    
+    </p>                            
 </div>
 
 
-<form action="." method="post">
+<form action="." method="post" class="centred">
     {% csrf_token %}
     <input id="id_char" class="" title="" name="char" value="" >
     <input type="submit" value="Go!" id="submit" class="submit button"/>
 </form>
 
-<div id="text" class="easy"></div>
-<div id="previous-searches"></div>
+<div id="text" class="easy centred"></div>
+<div id="previous-searches" class="centred"></div>
 
 
 

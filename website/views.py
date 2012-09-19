@@ -81,9 +81,6 @@ def _is_punctuation(x):
         if len(x) > 1:
             return True
         
-        if x in string.ascii_letters:
-            return True
-        
         if x in string.whitespace:
             return True
             
@@ -109,6 +106,21 @@ def _is_number(x):
         return False
 
     if x.isdigit() or unicodedata.category(x).startswith('N'):
+        return True
+    
+    return False
+
+
+
+
+def _is_english(x):
+    
+    if len(x) > 1:
+        for y in x:
+            if y in string.ascii_letters:
+                return True
+    
+    if x in string.ascii_letters:
         return True
     
     return False
@@ -150,6 +162,7 @@ def group_words(chars):
             character=x,
             pinyin=None,
             meaning=None,
+            is_english=False,
             is_punctuation=False,
             wordset=loop,
         ))
@@ -164,10 +177,12 @@ def group_words(chars):
             # is it a punctuation mark? if so ignore it
             if _is_punctuation(x['character']):
                 x['is_punctuation'] = True
+                punc = True
                 
             
             if _is_number(x['character']):
-                x['is_number'] = True    
+                x['is_number'] = True 
+                num = True   
                 try:
                     if _is_number(obj_list[loop+1]['character']):
                         newvalue = (x['character'] + obj_list[loop+1]['character'])
@@ -176,9 +191,28 @@ def group_words(chars):
                         obj_list.pop(loop+1)
                 except:
                     pass
-
-            else:
+                    
             
+            if _is_english(x['character']):
+                x['is_english'] = True
+                eng = True                    
+                while (eng == True):
+                    count = 1
+                    try:
+                        if _is_english(obj_list[loop+count]['character']):
+                            newvalue = (x['character'] + obj_list[loop+count]['character'])
+                            x['character'] = newvalue
+                            x['is_english'] = True
+                            obj_list.pop(loop+1)
+                            count += 1
+                        
+                        else:
+                            eng = False
+                        
+                    except:
+                        pass
+            
+            else:
                 d = None
                 c = None
                 b = None
@@ -297,6 +331,7 @@ def group_words_backwards(chars):
             character=x,
             pinyin=None,
             meaning=None,
+            is_english=False,
             is_punctuation=False,
             wordset=loop,
         ))

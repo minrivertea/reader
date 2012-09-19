@@ -32,9 +32,8 @@ function submitForm(e) {
   if (pS == null) {pS = ' ';}
   if (tS.localeCompare(pS.toString()) != 0) {
         pS = tS;
-        $('#explanation').fadeOut(300);
-        $('#bookmarklink').fadeOut(300);
-        $('form').animate({marginTop: '0px',}, 300);
+        
+        $('form').animate({'top': '0px'}, 300);
         
         if ($('#id_char').val()=='') {
             $('#text').append('<p>You have to put in some Chinese characters to search - try these: 您好</p>');
@@ -107,6 +106,7 @@ function arrayWords(data) {
             if (v.character == ' ' || v.character == '\n') return;
             if (v.is_punctuation == true) wC += ' punctuation';
             if (v.is_number== true) wC+=' number';
+            if (v.is_english==true) wC +=' english';
             var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.character+'" title="'+v.meaning+'" pinyin="'+v.pinyin+' ">';
             
             var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
