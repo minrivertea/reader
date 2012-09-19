@@ -116,6 +116,9 @@ DJANGO_STATIC_NAME_PREFIX = '/cache-forever'
 DJANGO_STATIC_MEDIA_URL = 'http://static.minrivertea.com'
 
 
+#random stuff
+SITE_URL = 'http://kandongle.me'
+
 try:
     from local_settings import *
 except ImportError:

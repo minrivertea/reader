@@ -185,6 +185,9 @@ def group_words(chars):
                 a = x['character']
                 r = None # the final word
                 
+                
+                # this next block just checks "is there a next character?"
+                # and also "is it punctuation?"
                 try:
                     if _is_punctuation(obj_list[loop+1]['character']): 
                         b = None
@@ -213,12 +216,7 @@ def group_words(chars):
                     key = "2CHARS:%s" % b
                     if search_redis(key):
                         r = search_redis(key)
-                    else:
-                        pass
-                        #t2 = search(b, 'Pinyin')
-                        #if t2 is not None:
-                        #    add_to_redis(key, t2)
-                        #    r = t2
+
                     
                     if r:
                         obj_list[loop+1]['wordset'] = x['wordset']
@@ -234,12 +232,6 @@ def group_words(chars):
                     if search_redis(key):
                         r = search_redis(key)
                     
-                    else:
-                        pass 
-                        #t3 = search(c, 'Pinyin')
-                        #if t3 is not None:
-                        #    r = t3
-                        #    add_to_redis(key, t3)
     
                     if r:
                         obj_list[loop+2]['wordset'] = x['wordset']
@@ -257,12 +249,7 @@ def group_words(chars):
                     if search_redis(key):
                         r = search_redis(key)
                         
-                    else:
-                        pass
-                        #t4 = search(d, 'Pinyin')
-                        #if t4 is not None:
-                        #    r = t4
-                        #    add_to_redis(key, t4)
+
     
                     if r:
                         obj_list[loop+3]['wordset'] = x['wordset']
@@ -284,14 +271,7 @@ def group_words(chars):
                         r = search_redis(key)
                         x['meaning'] = r['meaning'] 
                         x['pinyin'] = r['pinyin']
-                    
-                    else:
-                        pass
-                        #t1 = search(a, 'Pinyin')
-                        #if t1 is not None:
-                        #    add_to_redis(key, t1)
-                        #    x['meaning'] = t1['meaning']
-                        #    x['pinyin'] = t1['pinyin']
+
 
                 
         else:
@@ -303,6 +283,146 @@ def group_words(chars):
 
 
 
+def group_words_backwards(chars):
+    # different from above, this works through the text backwards. 
+    # in theory, it should more reliably find words. 
+    
+    obj_list = []
+    loop = 0
+    
+    
+    # I don't think I need to loop this two times - can't I loop through on the next bit?
+    for x in chars:
+        obj_list.append(dict(
+            character=x,
+            pinyin=None,
+            meaning=None,
+            is_punctuation=False,
+            wordset=loop,
+        ))
+        loop += 1
+   
+    
+    loop = 0
+    skip = 0
+    
+    for x in obj_list:
+        if skip == 0:
+            # is it a punctuation mark? if so ignore it
+            if _is_punctuation(x['character']):
+                x['is_punctuation'] = True
+                
+            
+            if _is_number(x['character']):
+                x['is_number'] = True    
+                try:
+                    if _is_number(obj_list[loop+1]['character']):
+                        newvalue = (x['character'] + obj_list[loop+1]['character'])
+                        x['character'] = newvalue
+                        x['is_number'] = True
+                        obj_list.pop(loop+1)
+                except:
+                    pass
+
+            else:
+            
+                d, c, b = None
+                a = x['character']
+                r = None # the final word
+                
+                try:
+                    if _is_punctuation(obj_list[loop+1]['character']): 
+                        b = None
+                    else:     
+                        b = (x['character'] + obj_list[loop+1]['character'])
+
+                    if b:
+                        try:
+                            c = (b + obj_list[loop+2]['character'])
+                            if _is_punctuation(obj_list[loop+2]['character']):
+                                c = None
+                            
+                            if c:
+                                try:
+                                    d = (c + obj_list[loop+3]['character'])
+                                    if _is_punctuation(obj_list[loop+3]['character']): 
+                                        d = None
+                                except:
+                                    pass       
+                        except:
+                            pass              
+                except:
+                    pass
+                
+                if b:
+                    key = "2CHARS:%s" % b
+                    if search_redis(key):
+                        r = search_redis(key)
+
+                    
+                    if r:
+                        obj_list[loop+1]['wordset'] = x['wordset']
+                        x['meaning'] = r['meaning']
+                        x['pinyin'] = r['pinyin'].split()[0]
+                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1] 
+                        r = None
+                        skip += 1
+    
+                                    
+                if c and skip > 0:
+                    key = "3CHARS:%s" % c
+                    if search_redis(key):
+                        r = search_redis(key)
+
+    
+                    if r:
+                        obj_list[loop+2]['wordset'] = x['wordset']
+                        obj_list[loop+1]['wordset'] = x['wordset']
+                        x['meaning'] = r['meaning']
+                        x['pinyin'] = r['pinyin'].split()[0]
+                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
+                        obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
+                        r = None
+                        skip += 1
+    
+    
+                if d and skip > 0:
+                    key = "4CHARS:%s" % d
+                    if search_redis(key):
+                        r = search_redis(key)
+                        
+
+
+    
+                    if r:
+                        obj_list[loop+3]['wordset'] = x['wordset']
+                        obj_list[loop+2]['wordset'] = x['wordset']
+                        obj_list[loop+1]['wordset'] = x['wordset']
+                        
+                        x['meaning'] = r['meaning']
+                        x['pinyin'] = r['pinyin'].split()[0]
+                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
+                        obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
+                        obj_list[loop+3]['pinyin'] = r['pinyin'].split()[3]
+                        r = None
+                        skip += 1
+    
+                
+                if skip == 0: # just a check to see if we've had any luck with 2, 3 or 4 chars...
+                    key = "1CHARS:%s" % a
+                    if search_redis(key):
+                        r = search_redis(key)
+                        x['meaning'] = r['meaning'] 
+                        x['pinyin'] = r['pinyin']
+
+
+                
+        else:
+            skip -= 1
+
+        loop += 1
+     
+    return obj_list   
 
 
 
@@ -465,15 +585,23 @@ def text(request, hashkey):
 def url(request, hashkey):
     
     key = 'url:%s' % hashkey
-    
+        
     r_server = redis.Redis("localhost")
     if r_server.exists(key):
         obj = r_server.hgetall(key)
-
+    
     url = obj['url']
     chars = obj['chars'].decode('utf-8') # because redis stores things as strings...
-    things = split_unicode_chrs(chars)
-    obj_list = group_words(things)
+
+    if request.is_ajax():
+        things = split_unicode_chrs(chars)
+        obj_list = group_words(things)
+        
+        return HttpResponse(simplejson.dumps(obj_list), mimetype="application/json")
+    
+    else:
+        url = obj['url']
+        uid = hashkey
     
     return render(request, 'website/text.html', locals())
 

@@ -5,5 +5,6 @@ def common(request):
     import settings
     context = {}
     context['ga_is_on'] = settings.GA_IS_ON
+    context['siteurl'] = settings.SITE_URL
     return context
     

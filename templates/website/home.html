@@ -6,87 +6,6 @@
 <script type="text/javascript">
 var pS;
 
-function submitForm(e) {
-  var dL = false;
-  var tS = $('#id_char').val();    
-  if (pS == null) {pS = ' ';}
-  
-      
-  if (tS.localeCompare(pS.toString()) != 0) {
-        
-        pS = tS;
-        if ($('#id_char').val().length < 10) {
-          dL = true; 
-        }
-        
-        $('#explanation').fadeOut(300);
-        $('form').animate({marginTop: '0px',}, 300);
-                
-        $.ajax({ 
-        url: $('#id_char').attr('action'),
-        type: 'POST',
-        data: $('form').serialize(),
-        dataType: 'json',
-        success: function(data) {
-            
-            if (dL==true) {
-                var tWS;
-                
-                if ($('#text table').length) {
-                    $('#text table').appendTo('#previous-searches'); 
-                }      
-                
-                $('#text').html('<table></table>');
-                
-                $(data).each( function(k,v) {
-                    if (v.wordset==tWS) {
-                        var wID = v.wordset + "";
-                            $('#text td#char'+wID).append(v.character);
-                            $('#text td#pinyin'+wID).append(' '+v.pinyin);
-                    } else {
-                        tWS = v.wordset;
-                        var html = '<tr><td id="char'+v.wordset+'">'+v.character+'</td><td class="pinyin" id="pinyin'+v.wordset+'">'+v.pinyin+'</td><td>'+v.meaning+'</td></tr>';
-                        $('#text table').append(html);
-                    }
-                    
-                });
-            } else {
-                $('#text').html('');
-                $('#previous-searches').html('');
-                $('#tools').fadeIn(500);
-                var tWS;
-                $(data).each( function(k,v) {
-                    var html;                
-                    var wC = '';
-                    if (v.is_punctuation == true) wC += ' punctuation';
-                    if (v.is_number== true) wC+=' number';
-                    var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.character+'" title="'+v.meaning+'">';
-                    
-                    var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
-                    html+='<span class="hanzi">'+v.character+'</span>';
-                    if (v.pinyin) html+='<span class="pinyin">'+v.pinyin+'</span>';
-                    html+='</div>';
-                    
-                    if (v.wordset==tWS) {
-                        $('#text #word'+v.wordset).append(html);
-                        var newChars = ($('#text #word'+v.wordset).attr('chars') + v.character);
-                        $('#text #word'+v.wordset).attr('chars', newChars);
-                    } else {
-                        html+='</div>';
-                        var newHtml = wW+html;
-                        $('#text').append(newHtml);
-                        tWS = v.wordset;
-                    }
-                });
-            }
-            bindWords();
-        }
-        });
-            return false;   
-      }
-      return false; 
-}
-
 $(document).ready(function() {
    $('#id_char').focus();
    $('form').bind('submit', submitForm);
@@ -159,28 +78,18 @@ form input#id_char {
 #bookmarklink {
  width: 100%;
  float: left;
- margin: 20px 0 100px 50px;  
- position: relative; 
- display: none;
-}
-
-#bookmarklet {
-  font-size: 46px;
-  height: auto;
-  width: 300px;
-  padding: 20px; 
-  float: left;  
-  position: relative;
-  top: 0px;
-  left: 0px;
-  margin: 0;
+ margin: 0;  
+ position: absolute;
+ top: 220px; 
+ padding: 20px 0 0 0;
+ font-family: Helvetica, Arial, sans-serif;
 }
 
 #bookmarklink p.explain {
   float: left;
-  width: 300px;
-  font-size: 16px;
-  margin: 0 0 0 30px;
+  width: auto;
+  font-size: 12px;
+  margin: 3px 0 0 20px;
 }
 
 
@@ -190,6 +99,15 @@ form input#id_char {
 {% block content %}
 
 
+
+<div id="bookmarklink">    
+    <a id="bookmarklet" href="javascript:location.href='{{ siteurl }}/?url='+encodeURIComponent(location.href)/">B</a>
+    <p class="explain">
+        <strong>&laquo; drag this to your bookmarks toolbar</strong><br/>
+        When you're on a webpage with long Chinese text, click this.        
+    </p>
+    
+</div>
 
 
 <form action="." method="post">
@@ -201,10 +119,7 @@ form input#id_char {
 <div id="text" class="easy"></div>
 <div id="previous-searches"></div>
 
-<div id="bookmarklink">    
-    <a id="bookmarklet" href="javascript:location.href='http://reader.westiseast.co.uk/?url='+encodeURIComponent(location.href)">CReader</a>
-    <p class="explain">&laquo; Drag and drop this link into your browser toolbar, like a bookmark. When you're on a web page with long Chinese text, click the bookmark and we'll take it from there.<br/><a href="">How does it work?</a>  |  <a href="">About</a>
-</div>
+
 
 
 

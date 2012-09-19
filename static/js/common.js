@@ -26,6 +26,110 @@ $('#user').click(function() {
    mySelect(this);
 });
 
+
+function submitForm(e) {
+  var tS = $('#id_char').val();    
+  if (pS == null) {pS = ' ';}
+  if (tS.localeCompare(pS.toString()) != 0) {
+        pS = tS;
+        $('#explanation').fadeOut(300);
+        $('#bookmarklink').fadeOut(300);
+        $('form').animate({marginTop: '0px',}, 300);
+        
+        if ($('#id_char').val()=='') {
+            $('#text').append('<p>You have to put in some Chinese characters to search - try these: 您好</p>');
+        } else { 
+                
+            $.ajax({ 
+            url: $('#id_char').attr('action'),
+            type: 'POST',
+            data: $('form').serialize(),
+            dataType: 'json',
+            success: function(data) {
+                arrayWords(data);
+                bindWords();
+            }
+            });
+            return false;   
+        }
+      }
+      return false; 
+}
+
+
+function getTextByUID(uid) {
+   $.ajax({ 
+        url: '/url/'+uid+'/',
+        type: 'GET',
+        data: {'uid': uid},
+        dataType: 'json',
+        success: function(data) {
+            arrayWords(data);
+            bindWords();
+        }
+   });
+   return false;
+}
+
+
+function arrayWords(data) {
+    var key, count = 0;
+    for(key in data) {
+        count++;
+    }
+
+    if (count < 10) {
+        var tWS;
+        if ($('#text table').length) {
+            $('#text table').prependTo('#previous-searches'); 
+        }      
+        $('#text').html('<table></table>');
+        $(data).each( function(k,v) {
+            if (v.wordset==tWS) {
+              var wID = v.wordset + "";
+                $('#text td#char'+wID).append(v.character);
+                $('#text td#pinyin'+wID).append(' '+v.pinyin);
+            } else {
+              tWS = v.wordset;
+              var html = '<tr><td id="char'+v.wordset+'">'+v.character
+              html += '</td><td class="pinyin" id="pinyin'+v.wordset+'">'+v.pinyin+'</td><td>'+v.meaning+'</td></tr>';
+              $('#text table').append(html);
+            }
+        });
+    } else {
+        $('#text').html('');
+        $('#previous-searches').html('');
+        $('#tools').fadeIn(500);
+        var tWS;
+        $(data).each( function(k,v) {
+            var html;                
+            var wC = '';
+            if (v.character == ' ' || v.character == '\n') return;
+            if (v.is_punctuation == true) wC += ' punctuation';
+            if (v.is_number== true) wC+=' number';
+            var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.character+'" title="'+v.meaning+'" pinyin="'+v.pinyin+' ">';
+            
+            var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
+            html+='<span class="hanzi">'+v.character+'</span>';
+            if (v.pinyin) html+='<span class="pinyin">'+v.pinyin+'</span>';
+            html+='</div>';
+            
+            if (v.wordset==tWS) {
+                $('#text #word'+v.wordset).append(html);
+                var newChars = ($('#text #word'+v.wordset).attr('chars') + v.character);
+                var newPY = ($('#text #word'+v.wordset).attr('pinyin') + v.pinyin);
+                $('#text #word'+v.wordset).attr('chars', newChars);
+                $('#text #word'+v.wordset).attr('pinyin', newPY);
+            } else {
+                html+='</div>';
+                var newHtml = wW+html;
+                $('#text').append(newHtml);
+                tWS = v.wordset;
+            }
+        });
+    }  
+}
+
 function changeFont(fname) {
    $('#fonts a').removeClass('selected');
    $('#fonts .'+fname).addClass('selected');
@@ -88,7 +192,7 @@ function toggleUBI(item) {
 
     } else {
         item.addClass('selected');
-        $('#userblock').append('<div id="'+(item.attr("id"))+'">'+'<div class="extra"><p>Something will go in here about the definition of the word or whatever...</div><span class="title">'+item.attr('chars')+'</span><br/>'+item.attr('title')+'</div>');
+        $('#userblock').append('<div id="'+(item.attr("id"))+'">'+'<div class="extra"><p>Something will go in here about the definition of the word or whatever...</div><span class="title">'+item.attr('chars')+'</span><span class="pinyin">'+item.attr('pinyin')+'</span><br/>'+item.attr('title')+'</div>');
         counter += 1;
         selectUBItem($('#userblock #'+item.attr("id")));
     };
@@ -143,7 +247,7 @@ function bindWords() {
     });
     
     $('.word').hover( function(e) {
-       $('#userblock div#'+this.id).css({'position': 'relative', 'left': '-10px', 'width': '210px', 'color': '#C33636'}); 
+       $('#userblock div#'+this.id).css({'position': 'relative', 'left': '-10px', 'color': '#C33636'}); 
     }, function() {
        $('#userblock div#'+this.id).attr('style', ' ');   
     });

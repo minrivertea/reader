@@ -71,12 +71,12 @@ a:hover, a:active {
 #container {
     float: left;
     height: 100%;
-    left: -485px;
+    left: -600px;
     margin: 0px auto 0 50%;
     min-height: 700px;
     padding: 40px 60px 20px;
     position: relative;
-    width: 850px;
+    width: 700px;
     z-index: 0;
 }
 
@@ -114,7 +114,7 @@ textarea {
 
 #tools, #userblock {
     height: 95%;
-    padding: 60px 20px;
+    padding: 2.5% 20px;
     position: absolute;
     top: 40px;
     width: 50px;
@@ -126,9 +126,6 @@ textarea {
  top: 0;
  width: 50px;
  padding: 60px 10px; 
- background: #e6e6e6;
- box-shadow: 3px 0px 0px #fff;
- border-right: 1px solid #d1d1d1;  
 }
 
 
@@ -143,20 +140,22 @@ textarea {
 
 
 #tools .button, #bookmarklet {
-    background: #f6f6f6 no-repeat;
-    border: 1px solid #d1d1d1;
-    text-shadow: 0 1px 0 #fff;
-    color: #666;
-    float: left;
-    font-size: 16px;
-    height: 20px;
-    margin: 0 0px 0 5px;
-    padding: 10px 0 10px;
-    position: relative;
-    text-align: center;
-    width: 40px;
-    z-index: 2000;
-    font-family: "Times New Roman", serif;
+  background: #f6f6f6;
+  border: 1px solid #d1d1d1;
+  font-size: 26px;
+  font-weight: bold;
+  font-family: Helvetica, Arial, sans-serif;
+  color: #E55C12;
+  text-shadow: 1px 1px 0 #fff;
+  height: auto;
+  width: 20px;
+  height: 20px;
+  padding: 6px 6px 8px 8px; 
+  float: left;  
+  position: relative;
+  top: 0px;
+  left: 0px;
+  margin: 0;
     transition:  300ms;
     -moz-transition:  300ms; /* Firefox 4 */
     -moz-transition:  300ms; /* Firefox 4 */
@@ -170,6 +169,8 @@ textarea {
     -o-user-select: none;
     user-select: none;
 }
+
+
 
 #bookmarklet {
  text-decoration: none;   
@@ -188,7 +189,7 @@ textarea {
 }
 
 #tools #home {
-  position: absolute;
+ position: absolute;
  top: 20px;   
 }
 
@@ -200,26 +201,17 @@ textarea {
 #tools .button:hover, #bookmarklet:hover {
   cursor: pointer;
   background:  #fff no-repeat;
-  color: #a08e48; 
+  color: #c44500; 
 }
 
 #tools .selected .button {
-  color: #a08e48; 
+  color: #C44500; 
   background: #fff no-repeat; 
-  width: 41px;
-  border: 1px solid #c1c1c1;
 }
 
 #tools #appearance.selected .button, #tools #user.selected .button {
   border-right: none;   
 }
-
-
-#tools .selected:hover .button {
-  color: #a08e48;
-  background: #fff no-repeat;
-}
-
 
 
 #user .button, #user.selected .button, #user:hover .button, #user.selected:hover .button {
@@ -243,10 +235,11 @@ textarea {
 
 
 #userblock {
-    right: -195px;
-    top: 80px;
-    width: 200px;
-    z-index: 20;
+  height: 100%;
+  position: fixed;
+  right: 40px;
+  width: 400px;
+  z-index: 20;
 }
 
 #userblock input {
@@ -259,7 +252,7 @@ textarea {
 
 
 #userblock div {
-  width: 200px;  
+  width: 100%;  
   border-width: 0 0 1px 0;
   color: #fff;
   border-bottom: 1px solid #e1e1e1;
@@ -280,14 +273,18 @@ textarea {
 
 #userblock div span.title, #userblock div span.editable {
   font-weight: normal;
-  font-size: 26px;  
+  font-size: 20px;
+  margin-right: 10px;  
 }
 
-
+#userblock div .pinyin {
+  text-transform: lowercase;
+  color: #E55C12;   
+  font-size: 18px;
+}
 
 #userblock div span.editable {
-  color: #333;
-    
+  color: #333;  
 }
 
 #userblock div:hover {
@@ -296,7 +293,6 @@ textarea {
   cursor: pointer; 
   position: relative;
   left: -10px;
-  width: 210px;  
 }
 
 #userblock div a.add, #userblock div a.edit, #userblock div a.more {
@@ -509,10 +505,10 @@ body.color4 #tools {
 
 #text, #previous-searches {
     float: left;
-    margin: 0px 0 0 10%;
+    margin: 0px 0 0 0%;
     padding: 0;
     text-shadow: 1px 1px 0 #FFFFFF;
-    width: 80%;
+    width: 100%;
     font-size: 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -546,22 +542,34 @@ body.color4 #tools {
   width: 120px; 
 }
 
-#text table td.pinyin, #previous-searches table td.pinyin {
+#text table td.pinyin, #text.easy table td.pinyin {
   text-transform: lowercase;
   color: #E55C12;
+  font-size: 20px;
 }
 
-#text table tr td:first-child, #previous-searches table td:first-child {
+#previous-searches table td.pinyin {
+  color: #666;  
+ }
+
+#text table tr td:first-child {
   width: 90px;
   color: #5e4313;
   text-shadow: 1px 2px 0 #fff;
   font-size: 24px; 
 }
 
+#previous-searches table td:first-child {
+  color: #666;
+  font-size: 18px; 
+  width: 90px;  
+}
+
 #text table tr td:last-child, #previous-searches table td:last-child {
-  font-size: 14px; 
   width: 500px;  
 }
+
+
 
 .word {
   float: left;
@@ -696,37 +704,61 @@ h1 {
  margin: 0 0 30px 0;   
 }
 
+#head {
+    border-bottom: 1px solid #E1E1E1;
+    float: left;
+    margin: 0 0 50px;
+    padding: 0 0 20px;
+    width: 100%;
+}
+
 #original-page {
-    background: none repeat scroll 0 0 #E56E6E;
-    color: #FFFFFF;
+    background: none repeat scroll 0 0 #f6f6f6;
+    color: #E55C12;
     font-size: 14px;
-    padding: 5px 15px 5px 10px;
+    font-weight: bold;
+    font-family: Helvetica, Arial, sans-serif;
+    padding: 9px 15px 5px 10px;
     text-decoration: none;
     text-shadow: none;
     position: relative;
-    font-weight: normal;
+    border: 1px solid #D1D1D1;
+    text-transform: uppercase;
+    margin: 0 10px 0 10px;
 }
 
 #original-page:before {
-    content: " ";
-    position: absolute;
-    z-index: 10;
-    border-color: transparent transparent transparent #E56E6E;
-    border-right: 13px solid #E56E6E;
+    border-color: transparent #F6F6F6;
     border-style: solid solid solid none;
-    border-width: 13px 13px 13px 0px; 
+    border-width: 15px 15px 15px 0;
+    content: " ";
     display: block;
     height: 0;
+    left: -15px;
+    position: absolute;
+    top: -1px;
     width: 0;
-    top: 0; 
-    left: -13px; 
+    z-index: 10;
+}
+
+#original-page:after {
+    border-color: transparent #c1c1c1;
+    border-style: solid solid solid none;
+    border-width: 16px 16px 16px 0;
+    content: " ";
+    display: block;
+    height: 0;
+    left: -16px;
+    position: absolute;
+    top: -2px;
+    width: 0;
+    z-index: 9;
 }
 
 #original-page:hover {
-  background: #cb4545;   
+  color: #c44500;   
 }
 
-#original-page:hover:before  {
-  border-color: transparent transparent transparent #cb4545;
-  border-left: 14px solid #cb4545;   
+span.url {
+  color: #999;   
 }
