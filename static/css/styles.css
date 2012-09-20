@@ -16,7 +16,7 @@ body {
   position: relative;
   font-size: 13px;
   line-height: normal;
-  background: #fdfdfa; /* url('/images/back.jpg'); */
+  background: #fdfdfa;
 }
 
 a:link, a:visited {
@@ -39,15 +39,33 @@ a:hover, a:active {
 
 #header {
   padding: 10px 10px 10px 0;
-  margin-bottom: 20px;
-  margin-top: 20px;   
+  margin-top: 20px;
+  position: relative;
+}
+
+#header #logo {
+ display: block;
+ float: left;
+ font-weight: bold;
+ font-family: Helvetica, Arial, sans-serif;
+ font-size: 14px;
+ letter-spacing: -0.5px;
+ color: #E55C12;
+ margin: 0 10px 0 0;
+}
+
+#header #logo a {
+ color: #E55C12;
 }
 
 #header a {
   float: left;
   padding: 0 10px; 
-  color: #666; 
-  text-decoration: none; 
+  color: #999; 
+  text-decoration: none;
+  letter-spacing: -0.5px; 
+  font-weight: bold;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 #header a:hover {
@@ -58,6 +76,60 @@ a:hover, a:active {
 #header a:first-child {
   padding: 0 10px 0 0;   
 }
+
+#search {
+  float: left;
+  width: 100%;
+  position: relative;
+  margin-top: 10px; 
+  margin-bottom: 0;  
+}
+
+#search input.submit {
+    float: right;
+    border: 1px solid #c1c1c1;
+    border-color: #fff #f1f1f1 #fff #e6e6e6;
+    box-shadow: 0 0 1px #000;
+    height: auto;
+    width: auto;
+    padding: 5px 10px;
+    background: #F8F0F0;
+    position: relative;
+    top: 1px;
+    color: #333;
+    text-shadow: 1px 1px 0px #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 3px;
+    background: rgb(238,238,238); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6- */
+}
+
+#search textarea:focus .submit {
+  background: #c10000;   
+}
+
+#search input#id_char {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #D1D1D1;
+    color: #333333;
+    float: left;
+    font-size: 20px;
+    height: 25px;
+    line-height: 1em;
+    margin: 0px;
+    overflow: hidden;
+    padding: 10px;
+    width: 83%;
+}
+
 
 
 /* forms */
@@ -587,19 +659,19 @@ body.color4 #tools {
 }
 
 
-body.font1 .char .hanzi, #head ul a.font1, body.font1 #userblock div span.title {
+body.font1 .char .hanzi, #head ul a.font1, body.font1 #userblock div span.title, body.font1 h1 {
   font-family: "STKaiti",华文楷体;  
 }
 
-body.font2 .char .hanzi, #head ul a.font2, body.font2 #userblock div span.title {
+body.font2 .char .hanzi, #head ul a.font2, body.font2 #userblock div span.title, body.font2 h1 {
   font-family: "STSong", 华文宋体; 
 }
 
-body.font3 .char .hanzi, #head ul a.font3, body.font3 #userblock div span.title {
+body.font3 .char .hanzi, #head ul a.font3, body.font3 #userblock div span.title, body.font3 h1 {
   font-family: "STFangsong", 华文仿宋; 
 }
 
-body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title {
+body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title, body.font4 h1 {
   font-family: "STHeiti", 华文黑体; 
 }
 
@@ -642,7 +714,8 @@ body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title 
 }
 
 h1 {
- margin: 0 0 30px 0;   
+ margin: 0 0 10px 0;
+ font-weight: normal;   
 }
 
 #head {
@@ -650,6 +723,14 @@ h1 {
     float: left;
     padding: 0 0 20px;
     margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+#url {
+  color: #999;
+  font-style: italic;
+  margin-top: 5px;
+  margin-bottom: 20px;   
 }
 
 #appearance {
@@ -730,5 +811,30 @@ h1 {
     top: -11px;
     width: 68px;
     z-index: 10;
+}
+
+
+/* flatpage about us styles */
+
+#flatpage {
+  float: left;
+  width: 100%;
+}
+
+#flatpage p {
+  font-size: 18px;
+  line-height: 1.8em;   
+}
+
+#flatpage p.big {
+   font-size: 25px;  
+}
+
+
+
+#flatpage ul {
+  font-size: 18px;
+  line-height: 1.8em;
+  margin-bottom: 30px;   
 }
 

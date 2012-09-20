@@ -164,6 +164,7 @@ def group_words(chars):
             meaning=None,
             is_english=False,
             is_punctuation=False,
+            is_linebreak=False,
             wordset=loop,
         ))
         loop += 1
@@ -174,15 +175,13 @@ def group_words(chars):
     
     for x in obj_list:
         if skip == 0:
+            
             # is it a punctuation mark? if so ignore it
             if _is_punctuation(x['character']):
-                x['is_punctuation'] = True
-                punc = True
-                
+                x['is_punctuation'] = True                
             
             if _is_number(x['character']):
                 x['is_number'] = True 
-                num = True   
                 try:
                     if _is_number(obj_list[loop+1]['character']):
                         newvalue = (x['character'] + obj_list[loop+1]['character'])
@@ -192,6 +191,11 @@ def group_words(chars):
                 except:
                     pass
                     
+            if x['character'] == '\n':
+                x['is_linebreak'] = True
+                if obj_list[loop+1]['character'] == '\n':
+                    obj_list.pop(loop+1)
+            
             
             if _is_english(x['character']):
                 x['is_english'] = True
@@ -227,6 +231,8 @@ def group_words(chars):
                         b = None
                     else:     
                         b = (x['character'] + obj_list[loop+1]['character'])
+
+
 
                     if b:
                         try:
@@ -347,6 +353,7 @@ def group_words_backwards(chars):
             if _is_punctuation(x['character']):
                 x['is_punctuation'] = True
                 
+        
             
             if _is_number(x['character']):
                 x['is_number'] = True    
@@ -497,26 +504,6 @@ def readabilityParser(html):
     readable_title = Document(html).title()           
     return text
 
-
-def _evaluate_paragraphs(paras):
-
-    return
-
-def bsParser(html):
-    soup = BeautifulSoup(html)
-    
-    text = soup.find_all(text=True)
-    
-    # first we'll identify likely paragraphs. 
-    candidates = []
-    
-    for x in text:
-        if len(x) > 20:
-            candidates.append(x)
-    
-    best_para = _evaluate_paragraphs(x)
-    
-    return  
     
 
 class MLStripper(HTMLParser):
@@ -546,14 +533,15 @@ def home(request):
         
         text = readabilityParser(html)
         
-        
+        title = Document(html).title() 
         new_text = strip_tags(text)
         
         this_id = uuid.uuid1().hex
         key = "url:%s" % this_id
             
         mapping = {
-            'user': 'dummy', 
+            'user': 'dummy',
+            'title': title, 
             'chars': new_text, 
             'timestamp': '12345',
             'hash': this_id,
@@ -625,6 +613,7 @@ def url(request, hashkey):
     if r_server.exists(key):
         obj = r_server.hgetall(key)
     
+    title = obj['title']
     url = obj['url']
     chars = obj['chars'].decode('utf-8') # because redis stores things as strings...
 
@@ -639,4 +628,12 @@ def url(request, hashkey):
         uid = hashkey
     
     return render(request, 'website/text.html', locals())
+    
 
+def about(request):
+    
+    if request.is_ajax():
+      
+        return HttpResponse('website/about.html')
+            
+    return render(request, 'website/about.html', locals())

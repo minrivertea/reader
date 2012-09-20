@@ -38,10 +38,18 @@
 <body class="font1">
 
     <div id="header" class="centred">
-        <a href="/">Home</a>
-        <a href="/">Your account</a>
-        <a href="/">About</a>
+        <span id="logo"><a href="/">Kan Dong Le Me?</a>  &raquo;</span>
+        <a href="{% url about %}" onclick="loadPage('{% url about %}');">About</a>
         <a href="javascript:location.href='{{ siteurl }}/?url='+encodeURIComponent(location.href)">Bookmarklet</a>
+    
+    <form id="search" action="." method="post" class="centred">
+    {% csrf_token %}
+    <input id="id_char" class="" title="" name="char" value="" >
+    <input type="submit" value="Go!" id="submit" class="submit button"/>
+</form>
+
+
+    
     </div>
     
     <div id="userblock"></div>

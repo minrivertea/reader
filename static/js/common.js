@@ -26,6 +26,10 @@ $('#user').click(function() {
    mySelect(this);
 });
 
+function loadPage(page) {
+  $('#text').load(page, false);
+}
+
 
 function submitForm(e) {
   var tS = $('#id_char').val();    
@@ -33,7 +37,7 @@ function submitForm(e) {
   if (tS.localeCompare(pS.toString()) != 0) {
         pS = tS;
         
-        $('form').animate({'top': '0px'}, 300);
+        $('form, #header').animate({'top': '0px'}, 300);
         
         if ($('#id_char').val()=='') {
             $('#text').append('<p>You have to put in some Chinese characters to search - try these: 您好</p>');
@@ -47,6 +51,9 @@ function submitForm(e) {
             success: function(data) {
                 arrayWords(data);
                 bindWords();
+            },
+            error: function() {
+                $('#text').html('<p>There was some kind of error, please try again!</p>');
             }
             });
             return false;   
@@ -103,10 +110,13 @@ function arrayWords(data) {
         $(data).each( function(k,v) {
             var html;                
             var wC = '';
-            if (v.character == ' ' || v.character == '\n') return;
+            
+            if (v.character == ' ') return;
+            if (v.is_linebreak == true) { $('#text').append('<br clear="all"/><br clear="all"/>')};
             if (v.is_punctuation == true) wC += ' punctuation';
             if (v.is_number== true) wC+=' number';
             if (v.is_english==true) wC +=' english';
+            
             var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.character+'" title="'+v.meaning+'" pinyin="'+v.pinyin+' ">';
             
             var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
