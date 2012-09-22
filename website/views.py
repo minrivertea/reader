@@ -26,6 +26,8 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils import simplejson
+from django.template.loader import render_to_string
+
 
 
 from cjklib import characterlookup
@@ -78,19 +80,13 @@ def search(string, reading=None, dictionary='CEDICT'):
 def _is_punctuation(x):
     
     try:
-        if len(x) > 1:
-            return True
-        
         if x in string.whitespace:
             return True
             
         if x in string.punctuation:
             return True
-        
-        if x.isdigit():
-            return True
-        
-        if unicodedata.category(x).startswith(('P', 'Z', 'N')):
+                
+        if unicodedata.category(x).startswith(('P', 'Z')):
             return True
     except:
         pass
@@ -153,7 +149,6 @@ def add_to_redis(key, values):
 
 def group_words(chars):
     # send me a dict of chars, and I'll return a dict of chars
-    
     obj_list = []
     loop = 0
     
@@ -165,154 +160,193 @@ def group_words(chars):
             is_english=False,
             is_punctuation=False,
             is_linebreak=False,
+            is_space=False,
             wordset=loop,
         ))
         loop += 1
-   
     
     loop = 0
     skip = 0
-    
+
     for x in obj_list:
-        if skip == 0:
+
+
+        a = x['character']
+        
+        # if it's a line break
+        if a == '\n':
+            x['is_linebreak'] = True
+            loop += 1
+            continue
             
-            # is it a punctuation mark? if so ignore it
-            if _is_punctuation(x['character']):
-                x['is_punctuation'] = True                
+        if a == ' ':
+            x['is_space'] = True
+            loop += 1
+            continue
             
-            if _is_number(x['character']):
-                x['is_number'] = True 
+        
+        # if the character is punctuation
+        if _is_punctuation(a):
+            x['is_punctuation'] = True 
+            punc = True
+                
+            while punc == True:
+                # if the next character is also English, add it to this one
                 try:
-                    if _is_number(obj_list[loop+1]['character']):
-                        newvalue = (x['character'] + obj_list[loop+1]['character'])
-                        x['character'] = newvalue
-                        x['is_number'] = True
-                        obj_list.pop(loop+1)
+                    next = obj_list[loop+1]['character']
                 except:
-                    pass
+                    punc = False
                     
-            if x['character'] == '\n':
-                x['is_linebreak'] = True
-                if obj_list[loop+1]['character'] == '\n':
-                    obj_list.pop(loop+1)
-            
-            
-            if _is_english(x['character']):
-                x['is_english'] = True
-                eng = True                    
-                while (eng == True):
-                    count = 1
+                if _is_punctuation(next):
+                    x['character'] = "%s%s" % (x['character'], next)
                     try:
-                        if _is_english(obj_list[loop+count]['character']):
-                            newvalue = (x['character'] + obj_list[loop+count]['character'])
-                            x['character'] = newvalue
-                            x['is_english'] = True
-                            obj_list.pop(loop+1)
-                            count += 1
-                        
-                        else:
-                            eng = False
-                        
+                        obj_list.pop(loop+1)
                     except:
                         pass
+                else:
+                    punc = False
             
-            else:
-                d = None
-                c = None
-                b = None
-                a = x['character']
-                r = None # the final word
+            
+            loop += 1
+            continue       
+        
+        # if the character is a number          
+        if _is_number(a):
+            x['is_number'] = True
+            
+            number = True
                 
-                
-                # this next block just checks "is there a next character?"
-                # and also "is it punctuation?"
+            while number == True:
+                # if the next character is also English, add it to this one
                 try:
-                    if _is_punctuation(obj_list[loop+1]['character']): 
-                        b = None
-                    else:     
-                        b = (x['character'] + obj_list[loop+1]['character'])
-
-
-
-                    if b:
-                        try:
-                            c = (b + obj_list[loop+2]['character'])
-                            if _is_punctuation(obj_list[loop+2]['character']):
-                                c = None
-                            
-                            if c:
-                                try:
-                                    d = (c + obj_list[loop+3]['character'])
-                                    if _is_punctuation(obj_list[loop+3]['character']): 
-                                        d = None
-                                except:
-                                    pass       
-                        except:
-                            pass              
+                    next = obj_list[loop+1]['character']
                 except:
-                    pass
-                
-                if b:
-                    key = "2CHARS:%s" % b
-                    if search_redis(key):
-                        r = search_redis(key)
-
+                    number = False
                     
-                    if r:
-                        obj_list[loop+1]['wordset'] = x['wordset']
-                        x['meaning'] = r['meaning']
-                        x['pinyin'] = r['pinyin'].split()[0]
-                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1] 
-                        r = None
-                        skip += 1
-    
-                                    
-                if c and skip > 0:
-                    key = "3CHARS:%s" % c
-                    if search_redis(key):
-                        r = search_redis(key)
-                    
-    
-                    if r:
-                        obj_list[loop+2]['wordset'] = x['wordset']
-                        obj_list[loop+1]['wordset'] = x['wordset']
-                        x['meaning'] = r['meaning']
-                        x['pinyin'] = r['pinyin'].split()[0]
-                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
-                        obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
-                        r = None
-                        skip += 1
-    
-    
-                if d and skip > 0:
-                    key = "4CHARS:%s" % d
-                    if search_redis(key):
-                        r = search_redis(key)
-                        
-
-    
-                    if r:
-                        obj_list[loop+3]['wordset'] = x['wordset']
-                        obj_list[loop+2]['wordset'] = x['wordset']
-                        obj_list[loop+1]['wordset'] = x['wordset']
-                        
-                        x['meaning'] = r['meaning']
-                        x['pinyin'] = r['pinyin'].split()[0]
-                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
-                        obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
-                        obj_list[loop+3]['pinyin'] = r['pinyin'].split()[3]
-                        r = None
-                        skip += 1
-    
+                if _is_number(next):
+                    x['character'] = "%s%s" % (x['character'], next)
+                    obj_list.pop(loop+1)
+                else:
+                    number = False
+            
+            
+            loop += 1
+            continue
+        
+        # if the character is English            
+        if _is_english(a):            
+            x['is_english'] = True
+            
+            english = True
                 
-                if skip == 0: # just a check to see if we've had any luck with 2, 3 or 4 chars...
-                    key = "1CHARS:%s" % a
-                    if search_redis(key):
-                        r = search_redis(key)
-                        x['meaning'] = r['meaning'] 
-                        x['pinyin'] = r['pinyin']
+            while english == True:
+                # if the next character is also English, add it to this one
+                try:
+                    next = obj_list[loop+1]['character']
+                except:
+                    english = False
+                    
+                if _is_english(next):
+                    x['character'] = "%s%s" % (x['character'], next)
+                    obj_list.pop(loop+1)
+                else:
+                    english = False
+                            
+
+            
+            loop +=1    
+            continue
+
+        
+        
+        if skip == 0:
+                        
+            d = None
+            c = None
+            b = None
+            r = None # the final word
+            
+            
+            # check if there is a next character, and whether it's punctuation
+            try:
+                b = a + obj_list[loop+1]['character']
+                if _is_punctuation(b):
+                    b = None
+                else:
+                    try:
+                        c = b + obj_list[loop+2]['character']
+                        if _is_punctuation(c):
+                            c = None
+                        else:
+                            try:
+                                d = c + obj_list[loop+3]['character']
+                                if _is_punctuation(d):
+                                    d = None
+                            except:
+                                pass 
+                    except:
+                        pass
+            except:
+                pass
+                            
+
+            if b:
+                # first thing, see if this word appears in the dictionary
+                key = "%sCHARS:%s" % (len(b), b)
+                if search_redis(key):
+                    r = search_redis(key)
+                
+                # if the word exists, then let's do something!
+                if r:
+                    obj_list[loop+1]['wordset'] = x['wordset']
+                    x['meaning'] = r['meaning']
+                    x['pinyin'] = r['pinyin'].split()[0]
+                    obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1] 
+                    r = None
+                    skip += 1
+
+                                
+            if c and skip > 0:
+                key = "%sCHARS:%s" % (len(c), c)
+                if search_redis(key):
+                    r = search_redis(key)
+
+                if r:
+                    obj_list[loop+2]['wordset'] = x['wordset']
+                    obj_list[loop+1]['wordset'] = x['wordset']
+                    x['meaning'] = r['meaning']
+                    x['pinyin'] = r['pinyin'].split()[0]
+                    obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
+                    obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
+                    r = None
+                    skip += 1
 
 
+            if d and skip > 0:
+                key = "%sCHARS:%s" % (len(d), d)
+                if search_redis(key):
+                    r = search_redis(key)
+
+                if r:
+                    obj_list[loop+3]['wordset'] = x['wordset']
+                    obj_list[loop+2]['wordset'] = x['wordset']
+                    obj_list[loop+1]['wordset'] = x['wordset']
+                    
+                    x['meaning'] = r['meaning']
+                    x['pinyin'] = r['pinyin'].split()[0]
+                    obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
+                    obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
+                    obj_list[loop+3]['pinyin'] = r['pinyin'].split()[3]
+                    r = None
+                    skip += 1
+
+            
+            if skip == 0: # just a check to see if we've had any luck with 2, 3 or 4 chars...
+                key = "%sCHARS:%s" % (len(a), a)
+                if search_redis(key):
+                    r = search_redis(key)
+                    x['meaning'] = r['meaning'] 
+                    x['pinyin'] = r['pinyin']
                 
         else:
             skip -= 1
@@ -348,6 +382,16 @@ def group_words_backwards(chars):
     skip = 0
     
     for x in obj_list:
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         if skip == 0:
             # is it a punctuation mark? if so ignore it
             if _is_punctuation(x['character']):
@@ -559,19 +603,6 @@ def home(request):
         form = CheckPinyinForm(request.POST)
         if form.is_valid():
             
-            this_id = uuid.uuid1().hex
-            key = "text:%s" % this_id
-            
-            mapping = {
-                'user': 'dummy', 
-                'chars': form.cleaned_data['char'], 
-                'timestamp': '12345',
-                'hash': this_id,
-            }
-            
-            r_server = redis.Redis("localhost")
-            r_server.hmset(key, mapping)
-            
             if request.is_ajax():
                 
                 things = split_unicode_chrs(form.cleaned_data['char'])
@@ -579,7 +610,21 @@ def home(request):
                 
                 return HttpResponse(simplejson.dumps(obj_list), mimetype="application/json")
             
-            url = reverse('text', args=[this_id])
+            
+            else:
+                this_id = uuid.uuid1().hex
+                key = "text:%s" % this_id
+                
+                mapping = {
+                    'user': 'dummy', 
+                    'chars': form.cleaned_data['char'], 
+                    'timestamp': '12345',
+                    'hash': this_id,
+                }
+                
+                r_server = redis.Redis("localhost")
+                r_server.hmset(key, mapping)
+                url = reverse('text', args=[this_id])
             return HttpResponseRedirect(url)
 
             
@@ -589,6 +634,8 @@ def home(request):
     return render(request, 'website/home.html', locals())
 
 
+# note that in this function, we are retrieving a text that has  
+# already been stored and save in redis
 def text(request, hashkey):
     
     key = 'text:%s' % hashkey
@@ -596,7 +643,6 @@ def text(request, hashkey):
     r_server = redis.Redis("localhost")
     if r_server.exists(key):
         obj = r_server.hgetall(key)
-
     
     chars = obj['chars'].decode('utf-8') # because redis stores things as strings...
     things = split_unicode_chrs(chars)
@@ -630,10 +676,12 @@ def url(request, hashkey):
     return render(request, 'website/text.html', locals())
     
 
-def about(request):
-    
+def page(request, slug):
+    template = 'website/%s.html' % slug
     if request.is_ajax():
-      
-        return HttpResponse('website/about.html')
+        template = 'website/%s_snippet.html' % slug
+        
+        page = render_to_string(template, {'siteurl': RequestContext(request)['siteurl']})
+        return HttpResponse(page)
             
-    return render(request, 'website/about.html', locals())
+    return render(request, template, locals())

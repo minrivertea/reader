@@ -9,7 +9,7 @@ var pS;
 $(document).ready(function() {
    $('#header').css('top', '220px').fadeIn(300);
    $('#id_char').focus();
-   $('form').bind('submit', submitForm);
+   
 });
 </script>
 {% endblock %}
@@ -50,16 +50,6 @@ h2.centered, p.centered {
 {% endblock %}
 
 {% block content %}
-
-
-
-<div id="bookmarklink" class="centred">    
-    <a id="bookmarklet" href="javascript:location.href='{{ siteurl }}/?url='+encodeURIComponent(location.href)">B</a>
-    <p class="explain">
-        <strong>&laquo; drag this to your bookmarks toolbar</strong><br/>
-        When you're on a webpage with long Chinese text, click this.        
-    </p>                            
-</div>
 
 
 <div id="text" class="easy centred"></div>

@@ -27,7 +27,15 @@ $('#user').click(function() {
 });
 
 function loadPage(page) {
-  $('#text').load(page, false);
+  if ($('#header').css('top') != 0) {
+      $('#header').animate({'top':'0px',}, 300);
+  }
+  
+  if ($('#'+page).length > 0) {
+      $('#'+page).css('display', 'block');
+  } else {
+      $('#text').load('/'+page+'/');
+  }
 }
 
 
@@ -54,6 +62,7 @@ function submitForm(e) {
             },
             error: function() {
                 $('#text').html('<p>There was some kind of error, please try again!</p>');
+                $('#search').bind('submit', submitForm);
             }
             });
             return false;   
@@ -91,6 +100,8 @@ function arrayWords(data) {
         }      
         $('#text').html('<table></table>');
         $(data).each( function(k,v) {
+            if (v.character == ' ' || v.is_punctuation == true) return;
+            if (v.is_english == true) return;
             if (v.wordset==tWS) {
               var wID = v.wordset + "";
                 $('#text td#char'+wID).append(v.character);

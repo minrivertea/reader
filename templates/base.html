@@ -39,8 +39,8 @@
 
     <div id="header" class="centred">
         <span id="logo"><a href="/">Kan Dong Le Me?</a>  &raquo;</span>
-        <a href="{% url about %}" onclick="loadPage('{% url about %}');">About</a>
-        <a href="javascript:location.href='{{ siteurl }}/?url='+encodeURIComponent(location.href)">Bookmarklet</a>
+        <a href="#" onclick="loadPage('about');">About</a>
+        <a href="#" onclick="loadPage('bookmarklet');">Bookmarklet</a>
     
     <form id="search" action="." method="post" class="centred">
     {% csrf_token %}
@@ -63,7 +63,7 @@
 	<script type="text/javascript">
 
 		$(document).ready( function() {
-            clearInput();
+            $('#search').bind('submit', submitForm);
 		});
 		
 		

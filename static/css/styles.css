@@ -91,12 +91,12 @@ a:hover, a:active {
     border-color: #fff #f1f1f1 #fff #e6e6e6;
     box-shadow: 0 0 1px #000;
     height: auto;
-    width: auto;
-    padding: 5px 10px;
+    width: 108px;
+    padding: 8px 10px;
     background: #F8F0F0;
     position: relative;
     top: 1px;
-    color: #333;
+    color: #E55C12;
     text-shadow: 1px 1px 0px #fff;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
@@ -112,8 +112,15 @@ background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6- */
 }
 
-#search textarea:focus .submit {
-  background: #c10000;   
+#search input.submit:hover {
+    background: rgb(238,238,238); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6- */    
 }
 
 #search input#id_char {
@@ -189,7 +196,7 @@ textarea {
 }
 
 
-#tools .button, #bookmarklet {
+#tools .button {
   background: #f6f6f6;
   border: 1px solid #d1d1d1;
   font-size: 26px;
@@ -219,13 +226,6 @@ textarea {
     -o-user-select: none;
     user-select: none;
 }
-
-
-
-#bookmarklet {
- text-decoration: none;   
-}
-
 
 /* userblock stuff */
 
@@ -529,7 +529,7 @@ body.color4 #tools {
 }
 
 #previous-searches {
-  margin-top: 20px;
+  margin-top: 50px;
   color: #666; 
   font-size: 14px;  
 }
@@ -569,6 +569,7 @@ body.color4 #tools {
 }
 
 
+/* START OF TEXT STYLES */
 
 .word {
   float: left;
@@ -582,38 +583,10 @@ body.color4 #tools {
 
 .char {
  float: left; 
- margin: 0px;
+ margin: 0;
  padding: 0;
  text-align: center; 
  width: 50px; 
-}
-
-.punctuation .char {
-  margin: 0px; 
-}
-
-#text .char.number {
- color: #333;
- font-size: 16px; 
- width: auto;
- padding: 0; 
-}
-
-#text .word.selected .pinyin, #text .word.selected .hanzi {
-  color: #b1531f;   
-}
-
-
-#text .word:hover .pinyin, #text .word:hover .hanzi {
-  color: #C33636;  
-}
-
-#text .word:hover {
-  cursor: pointer;  
-}
-
-.word.select .hanzi {
-   color: red;   
 }
 
 .char .hanzi {
@@ -625,7 +598,7 @@ body.color4 #tools {
   font-family: "STKaiti",华文楷体;
   color: #444;
   text-shadow: 1px 2px 0 #fff;
-  width: 50px;
+  width: auto;
 }
 
 .char .pinyin {
@@ -641,20 +614,26 @@ body.color4 #tools {
     width: 50px;
 }
 
-.grouped .char, .grouped .char .hanzi, .grouped .char .pinyin {
-  width: 40px;   
+
+.word.selected .pinyin, .word.selected .hanzi {
+  color: #b1531f;   
 }
 
-.punctuation .char .hanzi, .punctuation .char {
-  width: 20px;
+.word:hover .pinyin, .word:hover .hanzi {
+  color: #C33636;  
 }
 
-.punctuation.english .char .hanzi, .punctuation.english .char {
+.word:hover {
+  cursor: pointer;  
+}
+
+
+
+.english .char {
   width: auto;   
 }
 
-.number .char .hanzi, .number .char {
-  min-width: 50px;
+.number .char {
   width: auto; 
 }
 
@@ -676,42 +655,59 @@ body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title,
 }
 
 
-.easy .word, .easy .char.number, .easy .punctuation {
-   height: 60px; 
-   margin: 0 0 20px 0;
+
+
+.punctuation .char {
+  margin: 0px; 
+  width: auto;  
 }
 
-.grouped .word {
-  margin-right: 30px;   
+
+/* EASY TEXT STYLES */
+
+.easy .word {
+  height: 60px; 
+  margin: 0 0 20px 0;    
 }
 
-.grouped .word.punctuation {
-  margin-right: 0; 
-  position: relative;
-  left: -30px;  
-}
-
-.easy .english, .grouped .word.english {
-  margin-right: 15px;
-}
-
-.grouped .word.english {
-  left: -30px;   
-}
-
-.grouped .word.number {
-  margin-right: 30px;   
-}
-
-#text.easy .hanzi {
+.easy .hanzi {
   margin: 0 0 0px 0; 
   line-height: 1em;
   font-size: 40px; 
 }
 
-#text.easy .pinyin {
+.easy .pinyin {
   font-size: 15px;
 }
+
+.easy .english {
+  margin-right: 10px;
+  margin-left: 10px;   
+}
+
+
+/* GROUPED TEXT STYLES */
+
+.grouped .word {
+  margin-right: 30px;  
+}
+
+.grouped .english {
+  left: -30px; 
+  margin-right: 15px;  
+}
+
+.grouped .number {
+  margin-right: 30px;   
+}
+
+.grouped .punctuation {
+  margin-right: 0; 
+  position: relative;
+  left: -30px;  
+}
+
+
 
 h1 {
  margin: 0 0 10px 0;
@@ -816,23 +812,23 @@ h1 {
 
 /* flatpage about us styles */
 
-#flatpage {
+.flatpage {
   float: left;
   width: 100%;
 }
 
-#flatpage p {
+.flatpage p {
   font-size: 18px;
   line-height: 1.8em;   
 }
 
-#flatpage p.big {
+.flatpage p.big {
    font-size: 25px;  
 }
 
 
 
-#flatpage ul {
+.flatpage ul {
   font-size: 18px;
   line-height: 1.8em;
   margin-bottom: 30px;   
