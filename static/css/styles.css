@@ -107,7 +107,7 @@ a:hover, a:active {
     font-weight: bold;
     font-size: 20px;
     letter-spacing: 0.5px;
-  border-color: #A53A00;
+    border-color: #A53A00;
     background: rgb(226,103,36); /* Old browsers */
 background: -moz-linear-gradient(top, rgba(226,103,36,1) 0%, rgba(229,92,18,1) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(226,103,36,1)), color-stop(100%,rgba(229,92,18,1))); /* Chrome,Safari4+ */
@@ -126,16 +126,16 @@ a.button {
 
 #search input.submit:hover, .button:hover, a.button:hover {
     background: rgb(224,112,51); /* Old browsers */
-background: -moz-linear-gradient(top, rgba(224,112,51,1) 0%, rgba(226,103,36,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(224,112,51,1)), color-stop(100%,rgba(226,103,36,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e07033', endColorstr='#e26724',GradientType=0 ); /* IE6- */
-  box-shadow: 0 0px 2px #777;
-  border-color: #BF5200 #A53A00 #A53A00 transparent ;
-  color: #fff;    
+    background: -moz-linear-gradient(top, rgba(224,112,51,1) 0%, rgba(226,103,36,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(224,112,51,1)), color-stop(100%,rgba(226,103,36,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e07033', endColorstr='#e26724',GradientType=0 ); /* IE6- */
+    box-shadow: 0 0px 2px #777;
+    border-color: #BF5200 #A53A00 #A53A00 #BF5200 ;
+    color: #fff;    
 }
 
 #search input.submit:active {
@@ -883,7 +883,12 @@ h3 {
   top: 35px;
   margin-left: 60px;
   height: 50px;
-  padding: 25px 15px 10px ;   
+  padding: 25px 15px 10px;
+  border-width:   
+}
+
+.explain .button:hover {
+  box-shadow: 0 0px 5px #444;   
 }
 
 .explain .guide {
