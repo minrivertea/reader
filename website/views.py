@@ -202,7 +202,7 @@ def group_words(chars):
                     try:
                         obj_list.pop(loop+1)
                     except:
-                        pass
+                        break
                 else:
                     punc = False
             
@@ -248,7 +248,10 @@ def group_words(chars):
                     
                 if _is_english(next):
                     x['character'] = "%s%s" % (x['character'], next)
-                    obj_list.pop(loop+1)
+                    try:
+                        obj_list.pop(loop+1)
+                    except:
+                        pass
                 else:
                     english = False
                             

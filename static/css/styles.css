@@ -142,6 +142,13 @@ a.button {
     width: 83%;
 }
 
+#search .explain {
+  float: left;
+  width: 100%;
+  text-align: left;
+  color: #999;   
+}
+
 
 
 /* forms */
