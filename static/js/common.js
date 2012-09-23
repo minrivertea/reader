@@ -275,35 +275,36 @@ function bindWords() {
 }
 
 
-function clearInput() {
-		// clear input on focus
-		var clearMePrevious = '';
-		
+function clearInput() {		
 		$('.clearMeFocus').each( function() {
-			if ($(this).val() == '') {
-			    var title = $(this).attr('title');
-			    $(this).val(title);
-			}
+		   if ($(this).val() == '') {
+		      var id = $(this).attr('id');
+		      $('label[for="'+id+'"]').show();
+		   }
 		});
 		
-		$('.clearMeFocus').focus(function()
-		{
-			if($(this).val()==$(this).attr('title'))
-			{
-				clearMePrevious = $(this).val();
-				$(this).val('');
-				$(this).css('color', '#333');
-			}
+		$('.clearMeFocus').focus(function() {	
+			var id = $(this).attr('id');
+			$('label[for="'+id+'"]').addClass('focus');
 		});
 		
 		// if field is empty afterward, add text again
-		$('.clearMeFocus').blur(function()
-		{
-			if($(this).val()=='')
-			{
-				$(this).val(clearMePrevious);
-				$(this).css('color', '#999');
+		$('.clearMeFocus').blur(function() {
+			var id = $(this).attr('id');
+			
+			if($(this).val()=='') {
+				$('label[for="'+id+'"]').removeClass('focus');
 			}
-		});   
+		}); 
+		
+		$('.clearMeFocus').keyup( function() {
+		    var id = $(this).attr('id');
+		    if ($(this).val() != '') {
+		      
+			  $('label[for="'+id+'"]').hide();
+		    } else {
+		      $('label[for="'+id+'"]').show();
+		    }
+		});  
 }
 

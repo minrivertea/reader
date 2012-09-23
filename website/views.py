@@ -681,6 +681,8 @@ def url(request, hashkey):
 
 def page(request, slug):
     template = 'website/%s.html' % slug
+    
+    
     if request.is_ajax():
         template = 'website/%s_snippet.html' % slug
         

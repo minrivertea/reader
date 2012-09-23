@@ -39,14 +39,14 @@
 
     <div id="header" class="centred">
         <span id="logo"><a href="/">Kan Dong Le Me?</a>  &raquo;</span>
-        <a href="#" onclick="loadPage('about');">About</a>
-        <a href="#" onclick="loadPage('bookmarklet');">Bookmarklet</a>
+        <a href="/about/">About</a>
+        <a href="/bookmarklet/">Bookmarklet</a>
     
     <form id="search" action="." method="post" class="centred">
     {% csrf_token %}
-    <input id="id_char" class="" title="" name="char" value="" >
+    <label for="id_char">The worlds greatest Chinese English dictionary!</label>
+    <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >
     <input type="submit" value="Go!" id="submit" class="submit button"/>
-    <p class="explain">It's a Chinese-English dictionary and more…</p>
 </form>
 
 

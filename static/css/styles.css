@@ -51,7 +51,7 @@ a:hover, a:active {
  font-size: 14px;
  letter-spacing: -0.5px;
  color: #E55C12;
- margin: 0 10px 0 0;
+ margin: 0 10px 0 10px;
 }
 
 #header #logo a {
@@ -112,6 +112,7 @@ background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6- */
 }
 
+
 a.button {
   float: left;
   width: auto;   
@@ -142,14 +143,18 @@ a.button {
     width: 83%;
 }
 
-#search .explain {
-  float: left;
-  width: 100%;
-  text-align: left;
-  color: #999;   
+label {
+    display: none;
+    font-size: 20px;
+    left: 0;
+    padding: 13px;
+    position: absolute;
+    text-align: left;
 }
 
-
+label.focus {
+  color: #a1a1a1;   
+}
 
 /* forms */
 
