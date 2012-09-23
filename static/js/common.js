@@ -41,19 +41,8 @@ function loadContent(href) {
       $('#header').animate({'top':'0px',}, 300);
   }
   $('#text').load(href);
-  $('#loading').hide();
   return false;
 }
-
-$.ajaxStart( function() {
-  $('#loading').show(); 
-});
-
-$.ajaxStop( function() {
-   $('#loading').hide(); 
-});
-
-
 
 function submitForm(e) {
   var tS = $('#id_char').val();    
@@ -61,6 +50,7 @@ function submitForm(e) {
   if (tS.localeCompare(pS.toString()) != 0) {
         pS = tS;
         
+        $('#loading').show();
         $('form, #header').animate({'top': '0px'}, 300);
         
         if ($('#id_char').val()=='') {
@@ -75,6 +65,7 @@ function submitForm(e) {
             success: function(data) {
                 arrayWords(data);
                 bindWords();
+                $('#loading').hide();
             },
             error: function() {
                 $('#text').html('<p>There was some kind of error, please try again!</p>');
