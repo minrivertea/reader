@@ -190,21 +190,21 @@ def group_words(chars):
             x['is_punctuation'] = True 
             punc = True
                 
-            while punc == True:
-                # if the next character is also English, add it to this one
-                try:
-                    next = obj_list[loop+1]['character']
-                except:
-                    punc = False
-                    
-                if _is_punctuation(next):
-                    x['character'] = "%s%s" % (x['character'], next)
-                    try:
-                        obj_list.pop(loop+1)
-                    except:
-                        break
-                else:
-                    punc = False
+#            while punc == True:
+#               # if the next character is also English, add it to this one
+#                try:
+#                    next = obj_list[loop+1]['character']
+#                except:
+#                    punc = False
+#                    
+#                if _is_punctuation(next):
+#                    x['character'] = "%s%s" % (x['character'], next)
+#                    try:
+#                        obj_list.pop(loop+1)
+#                    except:
+#                        break
+#                else:
+#                    punc = False
             
             
             loop += 1
