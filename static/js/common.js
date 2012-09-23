@@ -52,10 +52,12 @@ function submitForm(e) {
         pS = tS;
         
         $('#loading').show();
+        
         $('form, #header').animate({'top': '0px'}, 300);
         
         if ($('#id_char').val()=='') {
             $('#text').append('<p>You have to put in some Chinese characters to search - try these: 您好</p>');
+            $('#loading').show();
         } else { 
                 
             $.ajax({ 
