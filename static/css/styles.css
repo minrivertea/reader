@@ -95,7 +95,7 @@ a:hover, a:active {
     float: right;
     border: 1px solid transparent;
     height: auto;
-    width: 114px;
+    width: 58px;
     padding: 9px 10px;
     background: #F8F0F0;
     position: relative;
@@ -107,7 +107,7 @@ a:hover, a:active {
     font-weight: bold;
     font-size: 20px;
     letter-spacing: 0.5px;
-  border-color: #BF5200 #A53A00 #A53A00 transparent ;
+  border-color: #A53A00;
     background: rgb(226,103,36); /* Old browsers */
 background: -moz-linear-gradient(top, rgba(226,103,36,1) 0%, rgba(229,92,18,1) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(226,103,36,1)), color-stop(100%,rgba(229,92,18,1))); /* Chrome,Safari4+ */
@@ -154,7 +154,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e07033', end
     margin: 0px;
     overflow: hidden;
     padding: 10px;
-    width: 83%;
+    width: 90%;
 }
 
 label {
@@ -168,7 +168,7 @@ label {
 }
 
 label.focus {
-  color: #a1a1a1;   
+  color: #d1d1d1;   
 }
 
 /* forms */
@@ -866,11 +866,39 @@ h3 {
    font-size: 25px;  
 }
 
-
-
 .flatpage ul {
   font-size: 18px;
   line-height: 1.8em;
   margin-bottom: 30px;   
 }
+
+.flatpage .explain {
+  width: 100%;
+  float: left;
+  margin: 0 0 30px 0;   
+}
+
+.explain .button {
+  position: relative;
+  top: 35px;
+  margin-left: 60px;
+  height: 50px;
+  padding: 25px 15px 10px ;   
+}
+
+.explain .guide {
+  font-size: 12px;
+  font-style: italic;
+  position: relative;
+  width: 200px;
+  float: left;
+  left: 30px;
+  top: 40px;   
+}
+
+.explain img {
+  position: relative;
+  left: 40px;   
+}
+
 

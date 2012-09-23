@@ -46,7 +46,7 @@
             {% csrf_token %}
             <label for="id_char">The worlds greatest Chinese English dictionary!</label>
             <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >
-            <input type="submit" value="Search" id="submit" class="submit button"/>
+            <input type="submit" value="Go" id="submit" class="submit button"/>
         </form>
     </div>
     
@@ -62,7 +62,12 @@
 		$(document).ready( function() {
             $('#search').bind('submit', submitForm);            
             window.onpopstate = function(event) {
-	           loadContent(location.pathname);
+	           if (location.pathname.match(/url/g)) {
+	               var path = location.pathname.replace('/url/', '').replace('/', '');
+	               getTextByUID(path);    
+	           } else {
+    	           loadContent(location.pathname);
+	           }
             }
 		});
 		

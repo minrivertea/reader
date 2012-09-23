@@ -37,9 +37,11 @@ $('#header a.ajax').click( function(e) {
 
 function loadContent(href) {
   $('#loading').show();
+  $('#head, h1.centred, #url').hide();
   if ($('#header').css('top') != 0) {
       $('#header').animate({'top':'0px',}, 300);
-  }
+  };
+  
   $('#text').load(href);
   $('#loading').hide();
   return false;
@@ -84,6 +86,11 @@ function submitForm(e) {
 
 
 function getTextByUID(uid) {
+   $('#text').html('');
+   $('#loading').show();
+   if ($('#head').length) {
+     $('#head, h1.centred, #url').show();
+   }
    $.ajax({ 
         url: '/url/'+uid+'/',
         type: 'GET',
@@ -94,6 +101,7 @@ function getTextByUID(uid) {
             bindWords();
         }
    });
+   $('#loading').hide();
    return false;
 }
 

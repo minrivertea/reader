@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
-{% load endless django_static %}
+{% load django_static %}
 
 {% block extrajs %}
 <script type="text/javascript">
 $(document).ready( function() {
  getTextByUID('{{ uid }}');
-
 });
 </script>
 {% endblock %}
@@ -14,16 +13,14 @@ $(document).ready( function() {
 
 {% block extracss %}
 <style type="text/css">
-#explanation {
-  display: none;   
-}
+
 </style>
 {% endblock %}
 
 
 {% block content %}
 
-<div id="head" class="centred">
+<div id="head" class="centred easy">
 <a id="original-page" title="{{ url }}" href="{{ url }}">Original page</a>
     <div id="appearance" class="set">
         <span class="button">Fonts</span>
