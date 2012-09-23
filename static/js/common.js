@@ -71,6 +71,7 @@ function submitForm(e) {
             error: function() {
                 $('#text').html('<p>There was some kind of error, please try again!</p>');
                 $('#search').bind('submit', submitForm);
+                $('#loading').hide();
             }
             });
             return false;   
