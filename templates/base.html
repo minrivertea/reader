@@ -46,7 +46,7 @@
             {% csrf_token %}
             <label for="id_char">The worlds greatest Chinese English dictionary!</label>
             <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >
-            <input type="submit" value="Go!" id="submit" class="submit button"/>
+            <input type="submit" value="Search" id="submit" class="submit button"/>
         </form>
     </div>
     
@@ -61,12 +61,11 @@
 
 		$(document).ready( function() {
             $('#search').bind('submit', submitForm);            
-		// THIS EVENT MAKES SURE THAT THE BACK/FORWARD BUTTONS WORK AS WELL
-window.onpopstate = function(event) {
-	loadContent(location.pathname);
-}
-		
+            window.onpopstate = function(event) {
+	           loadContent(location.pathname);
+            }
 		});
+		
 	</script>
     {% block extrajs %}{% endblock %}	
 
