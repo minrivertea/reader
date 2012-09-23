@@ -41,6 +41,7 @@ function loadContent(href) {
       $('#header').animate({'top':'0px',}, 300);
   }
   $('#text').load(href);
+  $('#loading').hide();
   return false;
 }
 
