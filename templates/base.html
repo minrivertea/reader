@@ -39,8 +39,8 @@
 
     <div id="header" class="centred">
         <span id="logo"><a href="/">Kan Dong Le Me?</a>  &raquo;</span>
-        <a href="/about/">About</a>
-        <a href="/bookmarklet/">Bookmarklet</a>
+        <a href="/about/" title="about" class="ajax">About</a>
+        <a href="/bookmarklet/" title="bookmarklet" class="ajax">Bookmarklet</a>
     
     <form id="search" action="." method="post" class="centred">
     {% csrf_token %}
@@ -64,7 +64,12 @@
 	<script type="text/javascript">
 
 		$(document).ready( function() {
-            $('#search').bind('submit', submitForm);
+            $('#search').bind('submit', submitForm);            
+		// THIS EVENT MAKES SURE THAT THE BACK/FORWARD BUTTONS WORK AS WELL
+window.onpopstate = function(event) {
+	loadContent(location.pathname);
+}
+		
 		});
 		
 		

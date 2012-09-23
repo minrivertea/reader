@@ -150,6 +150,7 @@ label {
     padding: 13px;
     position: absolute;
     text-align: left;
+    color: #666;
 }
 
 label.focus {

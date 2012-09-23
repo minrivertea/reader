@@ -26,17 +26,24 @@ $('#user').click(function() {
    mySelect(this);
 });
 
-function loadPage(page) {
+$('#header a.ajax').click( function(e) {  
+  newURL = $(this).attr('href');
+  loadContent(newURL);
+  history.pushState('', 'title', newURL); 
+  e.preventDefault();
+});
+
+
+
+function loadContent(href) {
   if ($('#header').css('top') != 0) {
       $('#header').animate({'top':'0px',}, 300);
   }
-  
-  if ($('#'+page).length > 0) {
-      $('#'+page).css('display', 'block');
-  } else {
-      $('#text').load('/'+page+'/');
-  }
+  $('#text').load(href);
+  return false;
 }
+
+
 
 
 function submitForm(e) {
