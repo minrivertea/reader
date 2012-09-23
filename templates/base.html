@@ -42,24 +42,20 @@
         <a href="/about/" title="about" class="ajax">About</a>
         <a href="/bookmarklet/" title="bookmarklet" class="ajax">Bookmarklet</a>
     
-    <form id="search" action="." method="post" class="centred">
-    {% csrf_token %}
-    <label for="id_char">The worlds greatest Chinese English dictionary!</label>
-    <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >
-    <input type="submit" value="Go!" id="submit" class="submit button"/>
-</form>
-
-
-    
+        <form id="search" action="." method="post" class="centred">
+            {% csrf_token %}
+            <label for="id_char">The worlds greatest Chinese English dictionary!</label>
+            <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >
+            <input type="submit" value="Go!" id="submit" class="submit button"/>
+        </form>
     </div>
     
     <div id="userblock"></div>
+    
+    <img id="loading" src="{% staticfile '/images/loading.gif' %}"/>
          
     {% block content %}{% endblock %}
 
-
-</div>
-	{% block extrajs %}{% endblock %}
 	<script type="text/javascript" src="{% staticfile '/js/common.js' %}"></script>
 	<script type="text/javascript">
 
@@ -71,10 +67,8 @@ window.onpopstate = function(event) {
 }
 		
 		});
-		
-		
 	</script>
-	
+    {% block extrajs %}{% endblock %}	
 
 </body>
 

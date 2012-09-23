@@ -36,13 +36,22 @@ $('#header a.ajax').click( function(e) {
 
 
 function loadContent(href) {
+  $('#loading').show();
   if ($('#header').css('top') != 0) {
       $('#header').animate({'top':'0px',}, 300);
   }
   $('#text').load(href);
+  $('#loading').hide();
   return false;
 }
 
+$.ajaxStart( function() {
+  $('#loading').show(); 
+});
+
+$.ajaxStop( function() {
+   $('#loading').hide(); 
+});
 
 
 
