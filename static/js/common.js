@@ -57,7 +57,7 @@ function submitForm(e) {
         
         if ($('#id_char').val()=='') {
             $('#text').append('<p>You have to put in some Chinese characters to search - try these: 您好</p>');
-            $('#loading').show();
+            $('#loading').hide();
         } else { 
                 
             $.ajax({ 
