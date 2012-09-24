@@ -288,7 +288,7 @@ def group_words(chars):
                 i += 1
             
         
-        if word:
+        if word != None:
             # give X the values of the dictionary word
             for k, v in word.iteritems():
                 obj[k] = v
