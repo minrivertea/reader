@@ -165,8 +165,8 @@ def add_to_redis(key, values):
     return True
     
 
+# send me a dict of chars, and I'll return a dict of chars
 def group_words(chars):
-    # send me a dict of chars, and I'll return a dict of chars
     obj_list = []
     loop = 0        
     skip = 0
@@ -182,31 +182,29 @@ def group_words(chars):
              'chars': x,
              'wordset': loop,   
         }
+        
+        nc = False
                 
         # if it's a line break
-        if x == '\n':
+        if nc == False and x == '\n':
             obj['is_linebreak'] = True
-            obj_list.append(obj)
-            loop += 1
-            continue
+            nc = True
+
             
-        if x == ' ':
+        if nc == False and x == ' ':
             obj['is_space'] = True
-            obj_list.append(obj)
-            loop += 1
-            continue
+            nc = True
+
             
         
         # if the character is punctuation
-        if _is_punctuation(x):
+        if nc == False and _is_punctuation(x):
             obj['is_punctuation'] = True 
-            punc = True
-            obj_list.append(obj)
-            loop += 1
-            continue       
+            nc = True
+    
         
         # if the character is a number          
-        if _is_number(x):
+        if nc == False and _is_number(x):
             obj['is_number'] = True
             number = True
             num = x
@@ -227,12 +225,10 @@ def group_words(chars):
                             
 
             obj['chars'] = num
-            obj_list.append(obj)
-            loop +=1    
-            continue
+            nc = True
         
         # if the character is English            
-        if _is_english(x):            
+        if nc == False and _is_english(x):            
             obj['is_english'] = True
             english = True
             eng_word = x
@@ -253,10 +249,14 @@ def group_words(chars):
                             
 
             obj['chars'] = eng_word
-            obj_list.append(obj)
-            loop +=1    
-            continue
+            nc = True
+
         
+        
+        if nc == True:
+            obj_list.append(obj)
+            loop += 1
+            continue
 
         word = None
         r = None
