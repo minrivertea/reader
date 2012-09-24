@@ -670,19 +670,19 @@ body.color4 #tools {
 
 
 body.font1, body.font1 .char .hanzi, #head ul a.font1, body.font1 #userblock div span.title, body.font1 h1, body.font1 #editable .chars {
-  font-family: Georgia, "STKaiti",华文楷体;  
+  font-family: Times New Roman,"STKaiti",华文楷体, serif;  
 }
 
 body.font2, body.font2 .char .hanzi, #head ul a.font2, body.font2 #userblock div span.title, body.font2 h1, body.font2 #editable .chars {
-  font-family: Georgia, "STSong", 华文宋体; 
+  font-family: Times New Roman,"STSong", 华文宋体, serif; 
 }
 
 body.font3, body.font3 .char .hanzi, #head ul a.font3, body.font3 #userblock div span.title, body.font3 h1, body.font3 #editable .chars {
-  font-family: Georgia, "STFangsong", 华文仿宋; 
+  font-family: Times New Roman,"STFangsong", 华文仿宋, serif; 
 }
 
 body.font4, body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title, body.font4 h1, body.font4 #editable .chars {
-  font-family: Georgia, "STHeiti", 华文黑体; 
+  font-family: Times New Roman,"STHeiti", 华文黑体, serif; 
 }
 
 

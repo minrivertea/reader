@@ -258,7 +258,7 @@ def group_words(chars):
             continue
         
 
-        w = None
+        word = None
         r = None
         i = 1
         search_string = x
