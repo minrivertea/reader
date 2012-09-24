@@ -130,18 +130,36 @@ def search_redis(key):
         return None
     
 
-
+# TODO - there's a problem here. For example, some characters have multiple readings
+# and so this function will only write the 1st reading, not subsequent ones. eg 都
 def add_to_redis(key, values):
+
     
-    if search_redis(key) is None:
+    r_server = get_redis()
     
+    if r_server.exists(key):
+        object = search_redis(key)
+        count = (int(object['count']) + 1)
+        new1 = "meaning%s" % count
+        new2 = "pinyin%s" % count
+        
         mapping = {
-            'pinyin': values['pinyin'], 
-            'characters': values['characters'], 
-            'meaning': values['meaning'],
+            new1: values['meaning'],
+            new2: values['pinyin'], 
+            'count': count,
+        }
+        
+        r_server.hmset(key, mapping)
+                
+    else:
+        mapping = {
+            'chars': values['characters'],
+            'pinyin1': values['pinyin'], 
+            'meaning1': values['meaning'],
+            'count': 1,
             'id': uuid.uuid1().hex,
         }
-        r_server = get_redis()
+        
         r_server.hmset(key, mapping)
         
     return True
@@ -150,376 +168,175 @@ def add_to_redis(key, values):
 def group_words(chars):
     # send me a dict of chars, and I'll return a dict of chars
     obj_list = []
-    loop = 0
-    
-    for x in chars:
-        obj_list.append(dict(
-            character=x,
-            pinyin=None,
-            meaning=None,
-            is_english=False,
-            is_punctuation=False,
-            is_linebreak=False,
-            is_space=False,
-            wordset=loop,
-        ))
-        loop += 1
-    
-    loop = 0
+    loop = 0        
     skip = 0
 
-    for x in obj_list:
-
-
-        a = x['character']
-        
+    for x in chars:
+    
+        if skip != 0:
+            skip -= 1
+            loop += 1
+            continue
+                
+        obj = {
+             'chars': x,
+             'wordset': loop,   
+        }
+                
         # if it's a line break
-        if a == '\n':
-            x['is_linebreak'] = True
+        if x == '\n':
+            obj['is_linebreak'] = True
+            obj_list.append(obj)
             loop += 1
             continue
             
-        if a == ' ':
-            x['is_space'] = True
+        if x == ' ':
+            obj['is_space'] = True
+            obj_list.append(obj)
             loop += 1
             continue
             
         
         # if the character is punctuation
-        if _is_punctuation(a):
-            x['is_punctuation'] = True 
+        if _is_punctuation(x):
+            obj['is_punctuation'] = True 
             punc = True
-                
-#            while punc == True:
-#               # if the next character is also English, add it to this one
-#                try:
-#                    next = obj_list[loop+1]['character']
-#                except:
-#                    punc = False
-#                    
-#                if _is_punctuation(next):
-#                    x['character'] = "%s%s" % (x['character'], next)
-#                    try:
-#                        obj_list.pop(loop+1)
-#                    except:
-#                        break
-#                else:
-#                    punc = False
-            
-            
+            obj_list.append(obj)
             loop += 1
             continue       
         
         # if the character is a number          
-        if _is_number(a):
-            x['is_number'] = True
-            
+        if _is_number(x):
+            obj['is_number'] = True
             number = True
-                
+            num = x
             while number == True:
-                # if the next character is also English, add it to this one
+            
+                # if the next character is also a number, add it to this one
                 try:
-                    next = obj_list[loop+1]['character']
+                    next = chars[loop+1]
                 except:
-                    number = False
-                    
+                    break
+                
                 if _is_number(next):
-                    x['character'] = "%s%s" % (x['character'], next)
-                    obj_list.pop(loop+1)
+                    num = "%s%s" % (num, next)
+                    chars.pop(loop+1)
+
                 else:
-                    number = False
-            
-            
-            loop += 1
+                    break
+                            
+
+            obj['chars'] = num
+            obj_list.append(obj)
+            loop +=1    
             continue
         
         # if the character is English            
-        if _is_english(a):            
-            x['is_english'] = True
-            
+        if _is_english(x):            
+            obj['is_english'] = True
             english = True
-                
+            eng_word = x
             while english == True:
+            
                 # if the next character is also English, add it to this one
                 try:
-                    next = obj_list[loop+1]['character']
+                    next = chars[loop+1]
                 except:
-                    english = False
-                    
+                    break
+                
                 if _is_english(next):
-                    x['character'] = "%s%s" % (x['character'], next)
-                    try:
-                        obj_list.pop(loop+1)
-                    except:
-                        pass
+                    eng_word = "%s%s" % (eng_word, next)
+                    chars.pop(loop+1)
+
                 else:
-                    english = False
+                    break
                             
 
-            
+            obj['chars'] = eng_word
+            obj_list.append(obj)
             loop +=1    
             continue
+        
 
+        w = None
+        r = None
+        i = 1
+        search_string = x
+                
         
-        
-        if skip == 0:
-                        
-            d = None
-            c = None
-            b = None
-            r = None # the final word
-            
-            
-            # check if there is a next character, and whether it's punctuation
+        # at the end of this loop, we'll have a MULTI-CHAR-WORD or NONE
+        while i > 0:
             try:
-                b = a + obj_list[loop+1]['character']
-                if _is_punctuation(b):
-                    b = None
-                else:
-                    try:
-                        c = b + obj_list[loop+2]['character']
-                        if _is_punctuation(c):
-                            c = None
-                        else:
-                            try:
-                                d = c + obj_list[loop+3]['character']
-                                if _is_punctuation(d):
-                                    d = None
-                            except:
-                                pass 
-                    except:
-                        pass
+                next_char = chars[loop+i]
             except:
-                pass
-                            
-
-            if b:
-                # first thing, see if this word appears in the dictionary
-                key = "%sCHARS:%s" % (len(b), b)
-                if search_redis(key):
-                    r = search_redis(key)
-                
-                # if the word exists, then let's do something!
-                if r:
-                    obj_list[loop+1]['wordset'] = x['wordset']
-                    x['meaning'] = r['meaning']
-                    x['pinyin'] = r['pinyin'].split()[0]
-                    obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1] 
-                    r = None
-                    skip += 1
-
-                                
-            if c and skip > 0:
-                key = "%sCHARS:%s" % (len(c), c)
-                if search_redis(key):
-                    r = search_redis(key)
-
-                if r:
-                    obj_list[loop+2]['wordset'] = x['wordset']
-                    obj_list[loop+1]['wordset'] = x['wordset']
-                    x['meaning'] = r['meaning']
-                    x['pinyin'] = r['pinyin'].split()[0]
-                    obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
-                    obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
-                    r = None
-                    skip += 1
-
-
-            if d and skip > 0:
-                key = "%sCHARS:%s" % (len(d), d)
-                if search_redis(key):
-                    r = search_redis(key)
-
-                if r:
-                    obj_list[loop+3]['wordset'] = x['wordset']
-                    obj_list[loop+2]['wordset'] = x['wordset']
-                    obj_list[loop+1]['wordset'] = x['wordset']
-                    
-                    x['meaning'] = r['meaning']
-                    x['pinyin'] = r['pinyin'].split()[0]
-                    obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
-                    obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
-                    obj_list[loop+3]['pinyin'] = r['pinyin'].split()[3]
-                    r = None
-                    skip += 1
-
+                break
+                        
+            if _is_punctuation(next_char):
+                break
             
-            if skip == 0: # just a check to see if we've had any luck with 2, 3 or 4 chars...
-                key = "%sCHARS:%s" % (len(a), a)
-                if search_redis(key):
-                    r = search_redis(key)
-                    x['meaning'] = r['meaning'] 
-                    x['pinyin'] = r['pinyin']
+                        
+            search_string = "%s%s" % (search_string, next_char)            
+            key = "%sC:%s" % (len(search_string), search_string)
+            r = search_redis(key) 
+            
+                    
+            if r == None:
+                break
+            else:  
+                word = r
+                length = len(search_string)
+                i += 1
+            
+        
+        if word:
+            # give X the values of the dictionary word
+            for k, v in word.iteritems():
+                obj[k] = v
                 
+                if k == 'chars':
+                    obj[k] = x
+                
+                if k == 'pinyin1':
+                    obj[k] = v.split()[0]
+                    
+            obj_list.append(obj)
+            
+            # if the word is more than 1 character, give the next X's the values too
+            ni = 1
+            while ni < length:
+                
+                n = {
+                    'chars': chars[loop+ni],
+                    'wordset': obj['wordset'],
+                    'pinyin1': word['pinyin1'].split()[ni],
+                }
+                ni += 1
+                obj_list.append(n)
+            
+            skip += (length-1)
+            word = None
+          
+        # finally, if we have no WORD we'll just do a SINGLE-CHAR-LOOKUP
         else:
-            skip -= 1
-
+            key = "%sC:%s" % (len(x), x)
+            r = search_redis(key)
+            for k, v in r.iteritems():
+                obj[k] = v
+            obj_list.append(obj)
+        
         loop += 1
      
     return obj_list                         
 
 
 
-def group_words_backwards(chars):
-    # different from above, this works through the text backwards. 
-    # in theory, it should more reliably find words. 
-    
-    obj_list = []
-    loop = 0
-    
-    
-    # I don't think I need to loop this two times - can't I loop through on the next bit?
-    for x in chars:
-        obj_list.append(dict(
-            character=x,
-            pinyin=None,
-            meaning=None,
-            is_english=False,
-            is_punctuation=False,
-            wordset=loop,
-        ))
-        loop += 1
-   
-    
-    loop = 0
-    skip = 0
-    
-    for x in obj_list:
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        if skip == 0:
-            # is it a punctuation mark? if so ignore it
-            if _is_punctuation(x['character']):
-                x['is_punctuation'] = True
-                
-        
-            
-            if _is_number(x['character']):
-                x['is_number'] = True    
-                try:
-                    if _is_number(obj_list[loop+1]['character']):
-                        newvalue = (x['character'] + obj_list[loop+1]['character'])
-                        x['character'] = newvalue
-                        x['is_number'] = True
-                        obj_list.pop(loop+1)
-                except:
-                    pass
-
-            else:
-            
-                d, c, b = None
-                a = x['character']
-                r = None # the final word
-                
-                try:
-                    if _is_punctuation(obj_list[loop+1]['character']): 
-                        b = None
-                    else:     
-                        b = (x['character'] + obj_list[loop+1]['character'])
-
-                    if b:
-                        try:
-                            c = (b + obj_list[loop+2]['character'])
-                            if _is_punctuation(obj_list[loop+2]['character']):
-                                c = None
-                            
-                            if c:
-                                try:
-                                    d = (c + obj_list[loop+3]['character'])
-                                    if _is_punctuation(obj_list[loop+3]['character']): 
-                                        d = None
-                                except:
-                                    pass       
-                        except:
-                            pass              
-                except:
-                    pass
-                
-                if b:
-                    key = "2CHARS:%s" % b
-                    if search_redis(key):
-                        r = search_redis(key)
-
-                    
-                    if r:
-                        obj_list[loop+1]['wordset'] = x['wordset']
-                        x['meaning'] = r['meaning']
-                        x['pinyin'] = r['pinyin'].split()[0]
-                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1] 
-                        r = None
-                        skip += 1
-    
-                                    
-                if c and skip > 0:
-                    key = "3CHARS:%s" % c
-                    if search_redis(key):
-                        r = search_redis(key)
-
-    
-                    if r:
-                        obj_list[loop+2]['wordset'] = x['wordset']
-                        obj_list[loop+1]['wordset'] = x['wordset']
-                        x['meaning'] = r['meaning']
-                        x['pinyin'] = r['pinyin'].split()[0]
-                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
-                        obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
-                        r = None
-                        skip += 1
-    
-    
-                if d and skip > 0:
-                    key = "4CHARS:%s" % d
-                    if search_redis(key):
-                        r = search_redis(key)
-                        
-
-
-    
-                    if r:
-                        obj_list[loop+3]['wordset'] = x['wordset']
-                        obj_list[loop+2]['wordset'] = x['wordset']
-                        obj_list[loop+1]['wordset'] = x['wordset']
-                        
-                        x['meaning'] = r['meaning']
-                        x['pinyin'] = r['pinyin'].split()[0]
-                        obj_list[loop+1]['pinyin'] = r['pinyin'].split()[1]
-                        obj_list[loop+2]['pinyin'] = r['pinyin'].split()[2]
-                        obj_list[loop+3]['pinyin'] = r['pinyin'].split()[3]
-                        r = None
-                        skip += 1
-    
-                
-                if skip == 0: # just a check to see if we've had any luck with 2, 3 or 4 chars...
-                    key = "1CHARS:%s" % a
-                    if search_redis(key):
-                        r = search_redis(key)
-                        x['meaning'] = r['meaning'] 
-                        x['pinyin'] = r['pinyin']
-
-
-                
-        else:
-            skip -= 1
-
-        loop += 1
-     
-    return obj_list   
-
-
 
 def copy_dictionary(request):
-    # eg 一中一台 一中一台 [yi1 Zhong1 yi1 Tai2] /first meaning/second meaning/
-    file = open('/home/ubuntu/django/reader/cedict_1_0_ts_utf-8_mdbg.txt')
-    
+    # eg 一中一台 [yi1 Zhong1 yi1 Tai2] /first meaning/second meaning/
+    #file = open('/home/ubuntu/django/reader/cedict_1_0_ts_utf-8_mdbg.txt')
+    file = open('/Users/chriswest/Desktop/django-code/reader/reader/cedict_1_0_ts_utf-8_mdbg.txt')
     count = 0
+    
     for line in file:
         if line.startswith("#"):
             pass
@@ -532,17 +349,16 @@ def copy_dictionary(request):
                 sourceOptions={'toneMarkType': 'numbers', 'yVowel': 'v',
                 'missingToneMark': 'fifth'})
             
+            
             meanings = line[(line.index('/')+1):(line.rindex('/'))]
 
             # meanings = split((s.index('/') to last s.index('/')), '/') # this should give us a list of meanings ??
-            key = "%sCHARS:%s" % ((len((new[1]))/3), new[1])
+            key = "%sC:%s" % ((len((new[1]))/3), new[1])
             
             add_to_redis(key, dict(characters=new[1], pinyin=pinyin, meaning=meanings ))
                 
     
-    file.close()
-    
-    
+    file.close()    
     return render(request, 'website/success.html', locals())      
 
 
@@ -575,6 +391,9 @@ def home(request):
 
     if request.GET.get('url'):
         url = request.GET.get('url')
+
+
+        # TODO if it's already been scanned and saved, don't bother parsing it again….
 
         html = urllib2.urlopen(url).read()
         

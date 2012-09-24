@@ -4,8 +4,8 @@ import views
 
 urlpatterns = patterns('',
     url(r'^$', views.home, name="home"),
-    url(r'^(?P<slug>[\w-]+)/$', views.page, name="page"),
+    url(r'^copy_dict/$', views.copy_dictionary, name="copy_dictionary"),
     url(r'^text/(?P<hashkey>[\w-]+)/$', views.text, name="text"),
     url(r'^url/(?P<hashkey>[\w-]+)/$', views.url, name="url"),
-    url(r'^copy_dict/$', views.copy_dictionary, name="copy_dictionary"),
+    url(r'^(?P<slug>[\w-]+)/$', views.page, name="page"),
 )

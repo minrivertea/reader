@@ -5,7 +5,6 @@ html {
 }
 
 input, textarea, body {
-  font-family: Georgia, serif;
   background-color: #fff;  
 }
 
@@ -670,20 +669,20 @@ body.color4 #tools {
 }
 
 
-body.font1 .char .hanzi, #head ul a.font1, body.font1 #userblock div span.title, body.font1 h1 {
-  font-family: "STKaiti",华文楷体;  
+body.font1, body.font1 .char .hanzi, #head ul a.font1, body.font1 #userblock div span.title, body.font1 h1, body.font1 #editable .chars {
+  font-family: Georgia, "STKaiti",华文楷体;  
 }
 
-body.font2 .char .hanzi, #head ul a.font2, body.font2 #userblock div span.title, body.font2 h1 {
-  font-family: "STSong", 华文宋体; 
+body.font2, body.font2 .char .hanzi, #head ul a.font2, body.font2 #userblock div span.title, body.font2 h1, body.font2 #editable .chars {
+  font-family: Georgia, "STSong", 华文宋体; 
 }
 
-body.font3 .char .hanzi, #head ul a.font3, body.font3 #userblock div span.title, body.font3 h1 {
-  font-family: "STFangsong", 华文仿宋; 
+body.font3, body.font3 .char .hanzi, #head ul a.font3, body.font3 #userblock div span.title, body.font3 h1, body.font3 #editable .chars {
+  font-family: Georgia, "STFangsong", 华文仿宋; 
 }
 
-body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title, body.font4 h1 {
-  font-family: "STHeiti", 华文黑体; 
+body.font4, body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title, body.font4 h1, body.font4 #editable .chars {
+  font-family: Georgia, "STHeiti", 华文黑体; 
 }
 
 
@@ -845,8 +844,83 @@ h3 {
     left: 147px;
     position: absolute;
     top: -11px;
-    width: 68px;
+    width: 70px;
     z-index: 10;
+}
+
+/* editable styles */
+
+#editable div {
+  position: absolute;
+  width: 300px;
+  height: auto;
+  box-shadow: 0 1px 20px #999;
+  background: #fff;
+  z-index: 100;
+  padding: 15px; 
+  border: 1px solid #a1a1a1;  
+}
+
+#editable div:before {
+    border-color: #fff transparent;
+    border-style: none solid solid solid;
+    border-width: 0 15px 15px 15px;
+    content: " ";
+    display: block;
+    height: 0;
+    left: 120px;
+    position: absolute;
+    top: -15px;
+    width: 0;
+    z-index: 11;     
+}
+
+#editable div:after {
+    border-color: #a1a1a1 transparent;
+    border-style: none solid solid solid;
+    border-width: 0px 15px 15px 15px;
+    content: " ";
+    display: block;
+    height: 0;
+    left: 120px;
+    position: absolute;
+    top: -16px;
+    width: 0;
+    z-index: 10;     
+}
+
+#editable div .chars, #editable div .pinyin {
+  font-size: 24px;
+  margin: 0px 0 5px 0;
+  float: left;
+  width: 100%;
+}
+
+#editable div .pinyin {
+  color: #E55C12; 
+  font-size: 16px;  
+  text-transform: lowercase;
+}
+
+#editable div input[type=text] {
+  width: 93%;
+  border: 1px solid #c1c1c1;
+  padding: 10px;
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;   
+}
+
+#editable div input[type=submit] {
+    float: right;
+    font-size: 14px;
+    padding: 8px 25px;
+    width: auto;
+}
+
+#editable div label {
+  left: 13px;
+  font-size: 18px;   
 }
 
 

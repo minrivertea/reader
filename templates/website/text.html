@@ -5,6 +5,7 @@
 {% block extrajs %}
 <script type="text/javascript">
 $(document).ready( function() {
+ clearInput();
  getTextByUID('{{ uid }}');
 });
 </script>
@@ -28,7 +29,7 @@ $(document).ready( function() {
             <div>
             <h4>Change font</h4>
             <ul id="fonts">
-                <li><a href="#" class="font1 selected" onclick="changeFont('font1');" title="KaiTi">汉字</a></li>
+                <li><a href="#" class="font1 selected" onclick="changeFont('font1', false);" title="KaiTi">汉字</a></li>
                 <li><a href="#" class="font2" onclick="changeFont('font2');" title="SongTi">汉字</a></li>
                 <li><a href="#" class="font3" onclick="changeFont('font3');" title="FangSong">汉字</a></li>
                 <li><a href="#" class="font4" onclick="changeFont('font4');" title="HeiTi">汉字</a></li>

@@ -47,6 +47,7 @@ function loadContent(href) {
   return false;
 }
 
+var pS;
 function submitForm(e) {
   var tS = $('#id_char').val();    
   if (pS == null) {pS = ' ';}
@@ -119,16 +120,16 @@ function arrayWords(data) {
         }      
         $('#text').html('<table></table>');
         $(data).each( function(k,v) {
-            if (v.character == ' ' || v.is_punctuation == true) return;
+            if (v.chars == ' ' || v.is_punctuation == true) return;
             if (v.is_english == true) return;
             if (v.wordset==tWS) {
               var wID = v.wordset + "";
-                $('#text td#char'+wID).append(v.character);
-                $('#text td#pinyin'+wID).append(' '+v.pinyin);
+                $('#text td#char'+wID).append(v.chars);
+                $('#text td#pinyin'+wID).append(' '+v.pinyin1);
             } else {
               tWS = v.wordset;
-              var html = '<tr><td id="char'+v.wordset+'">'+v.character
-              html += '</td><td class="pinyin" id="pinyin'+v.wordset+'">'+v.pinyin+'</td><td>'+v.meaning+'</td></tr>';
+              var html = '<tr><td id="char'+v.wordset+'">'+v.chars
+              html += '</td><td class="pinyin" id="pinyin'+v.wordset+'">'+v.pinyin1+'</td><td>'+v.meaning1+'</td></tr>';
               $('#text table').append(html);
             }
         });
@@ -141,23 +142,23 @@ function arrayWords(data) {
             var html;                
             var wC = '';
             
-            if (v.character == ' ') return;
+            if (v.chars == ' ') return;
             if (v.is_linebreak == true) { $('#text').append('<br clear="all"/><br clear="all"/>')};
             if (v.is_punctuation == true) wC += ' punctuation';
             if (v.is_number== true) wC+=' number';
             if (v.is_english==true) wC +=' english';
             
-            var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.character+'" title="'+v.meaning+'" pinyin="'+v.pinyin+' ">';
+            var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.chars+'" title="'+v.meaning1+'" pinyin="'+v.pinyin1+' ">';
             
             var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
-            html+='<span class="hanzi">'+v.character+'</span>';
-            if (v.pinyin) html+='<span class="pinyin">'+v.pinyin+'</span>';
+            html+='<span class="hanzi">'+v.chars+'</span>';
+            if (v.pinyin1) html+='<span class="pinyin">'+v.pinyin1+'</span>';
             html+='</div>';
             
             if (v.wordset==tWS) {
                 $('#text #word'+v.wordset).append(html);
-                var newChars = ($('#text #word'+v.wordset).attr('chars') + v.character);
-                var newPY = ($('#text #word'+v.wordset).attr('pinyin') + v.pinyin);
+                var newChars = ($('#text #word'+v.wordset).attr('chars') + v.chars);
+                var newPY = ($('#text #word'+v.wordset).attr('pinyin') + v.pinyin1);
                 $('#text #word'+v.wordset).attr('chars', newChars);
                 $('#text #word'+v.wordset).attr('pinyin', newPY);
             } else {
@@ -203,27 +204,6 @@ $('#group').click(function() {
    } 
 });
 
-
-var counter = 0
-$('.char').not('.punctuation').each(function(index) {
-   
-   var curr = $(this).attr('rel');   
-   allChars = '';
-
-   $('.char[rel="'+curr+'"]').each( function() {
-      allChars += ($(this).find('.hanzi').html());
-   });
-   
-   if ($(this).parent().hasClass('word')) {
-       $(this).attr('id', '');
-   } 
-   else {
-        $('.char[rel="'+curr+'"]').wrapAll('<div class="word" chars="'+allChars+'" id="'+counter+'" title="'+($(this).attr('title'))+'" />');
-        $(this).attr('id', '');
-        counter ++; 
-   }  
-});
-
 function toggleUBI(item) {
     if (item.hasClass('selected')) {
         item.removeClass('selected');
@@ -233,7 +213,6 @@ function toggleUBI(item) {
     } else {
         item.addClass('selected');
         $('#userblock').append('<div id="'+(item.attr("id"))+'">'+'<div class="extra"><p>Something will go in here about the definition of the word or whatever...</div><span class="title">'+item.attr('chars')+'</span><span class="pinyin">'+item.attr('pinyin')+'</span><br/>'+item.attr('title')+'</div>');
-        counter += 1;
         selectUBItem($('#userblock #'+item.attr("id")));
     };
 }
@@ -243,22 +222,50 @@ function removeEditBlock() {
 }
 
 
+function findPos(obj) {
+	var curleft = curtop = 0;
+	if (obj.offsetParent) {	
+		do {
+			curleft += obj.offsetLeft;
+			curtop += obj.offsetTop;	
+		} while (obj = obj.offsetParent);
+	}
+	return [curleft,curtop];
+}
+
+
 function addEditableWord(item) {
-    if (item.hasClass('select')) {
-        item.removeClass('select');
-        var editBlock = $('#userblock .editing .editable');
-        editBlock.text(editBlock.text().replace(item.attr('chars'), ''));
-        if (editBlock.text().length < 1) {
-            removeEditBlock();
+    var pos = findPos(item);
+       
+    if ($(item).hasClass('selected')) {
+        
+        $(item).removeClass('selected');
+        $('#editable div .chars').text($('#editable div .chars').text().replace($(item).attr('chars'), ''));
+        $('#editable div .pinyin').text($('#editable div .pinyin').text().replace($(item).attr('pinyin'), ''));
+
+        if ($('#editable div .chars').html() == '') {
+           $('#editable div').remove();   
         }
+
     } else {
-        item.addClass('select');
-        if ($('#userblock .editing')[0]) {
-            $('#userblock .editing span.editable').append(item.attr('chars'));
-        } else {
-            $('#userblock').append('<div id="'+(item.attr("id"))+'" class="editing">'+'<span class="editable">'+item.attr('chars')+'</span><br/><input type="text" class="clearMeFocus" title="Write a note..." value=""/></div>');
-            $('#userblock .editing input').bind('focus', clearInput());
+        $(item).addClass('selected');
+        
+        if ($('#editable div')[0]) {
+            $('#editable div span.chars').append($(item).attr('chars'));
+            $('#editable div span.pinyin').append($(item).attr('pinyin'));
+        } 
+        
+        else {
+            
+            $('#editable').append('<div id="'+($(item).attr("id"))+'">'+'<span class="chars">'+$(item).attr('chars')+'</span><span class="pinyin">'+$(item).attr('pinyin')+'</span></div>');
+            $('#editable div').append('<form action="" method="" id="editform"></form>');
+            $('#editform').append('<label for="id_definition">Enter a definition</label><input name="definition" id="id_definition" type="text" class="clearMeFocus" title="Write your definition" value=""/><input type="submit" class="submit button" value="Save"/>');
+             
+            $('#'+$(item).attr('id')).css({'top': (pos[1]+60), 'left': (pos[0]-80)});
+            
         }
+      clearInput();
+      $('#editable input[type=text]').focus();  
     };
 }
 
@@ -282,9 +289,12 @@ function expandUserBlock(item) {
 
 
 function bindWords() {
-    $('.word').click( function(e) {
-       if (e.shiftKey) { addEditableWord($(this));} else { toggleUBI($(this)); }
+    $('.word').not('.english, .punctuation, .number').click( function(e) {
+       if (e.shiftKey) {addEditableWord(this);}  
+       else { toggleUBI($(this)); }
     });
+    
+    
     
     $('.word').hover( function(e) {
        $('#userblock div#'+this.id).css({'position': 'relative', 'left': '-10px', 'color': '#C33636'}); 
