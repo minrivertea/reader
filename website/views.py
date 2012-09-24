@@ -320,8 +320,9 @@ def group_words(chars):
         else:
             key = "%sC:%s" % (len(x), x)
             r = search_redis(key)
-            for k, v in r.iteritems():
-                obj[k] = v
+            if r != None:
+                for k, v in r.iteritems():
+                    obj[k] = v
             obj_list.append(obj)
         
         loop += 1
