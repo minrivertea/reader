@@ -15,6 +15,7 @@ from readability.readability import Document
 import uuid
 import re
 import urllib2
+import datetime
 from HTMLParser import HTMLParser
 
 from django.conf import settings
@@ -35,6 +36,7 @@ from cjklib.dictionary import CEDICT
 from cjklib.reading import ReadingFactory
 
 from website.forms import CheckPinyinForm
+from website.signals import *
 
 
 from re import compile as _Re
@@ -166,7 +168,7 @@ def add_to_redis(key, values):
     
 
 # send me a dict of chars, and I'll return a dict of chars
-def group_words(chars):
+def group_words(chars, chinese_only=False):
     obj_list = []
     loop = 0        
     skip = 0
@@ -177,7 +179,8 @@ def group_words(chars):
             skip -= 1
             loop += 1
             continue
-                
+                            
+        
         obj = {
              'chars': x,
              'wordset': loop,   
@@ -196,7 +199,6 @@ def group_words(chars):
             nc = True
 
             
-        
         # if the character is punctuation
         if nc == False and _is_punctuation(x):
             obj['is_punctuation'] = True 
@@ -254,7 +256,12 @@ def group_words(chars):
         
         
         if nc == True:
-            obj_list.append(obj)
+            if chinese_only == False:
+                obj_list.append(obj)
+                
+            else:
+                pass
+                
             loop += 1
             continue
 
@@ -425,6 +432,9 @@ def home(request):
         form = CheckPinyinForm(request.POST)
         if form.is_valid():
             
+            if request.user.is_authenticated() and len(form.cleaned_data['char']) < 10:
+                word_searched.send(sender=word_searched, chars=form.cleaned_data['char'], time=datetime.datetime.now(), user_id=request.user.pk)
+            
             if request.is_ajax():
                 
                 things = split_unicode_chrs(form.cleaned_data['char'])
@@ -509,3 +519,28 @@ def page(request, slug):
         return HttpResponse(page)
             
     return render(request, template, locals())
+    
+def user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    return render(request, 'website/user.html', locals())
+    
+def get_personal_words(request):
+    try:
+        account = request.user.get_profile()
+    except:
+        return HttpResponse()
+    words = account.get_personal_words()
+    
+    if request.is_ajax():
+        return HttpResponse(simplejson.dumps(words), mimetype="application/json")
+    
+    return render(request, 'website/vocab.html', locals())
+    
+    
+    
+    
+    
+    
+    
+    
+    

@@ -104,6 +104,7 @@ INSTALLED_APPS = (
     'django_static',
     #'debug_toolbar',
     'endless_pagination',
+    'registration',
 )
 
 #ENDLESS PAGINATION SETTINGS:
@@ -118,6 +119,9 @@ DJANGO_STATIC_MEDIA_URL = 'http://static.minrivertea.com'
 
 #random stuff
 SITE_URL = 'http://kandongle.me'
+ACCOUNT_ACTIVATION_DAYS = 7
+AUTH_PROFILE_MODULE = "website.Account"
+
 
 try:
     from local_settings import *

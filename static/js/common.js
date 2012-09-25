@@ -304,7 +304,24 @@ function bindWords() {
 }
 
 
-function clearInput() {		
+function getPersonalWords() {
+    $.ajax({ 
+        url: '/get-personal-words/',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            $('#text').append(data);
+        },
+        error: function() {
+            $('#text').html('<p>There was some kind of error, please try again!</p>');
+            $('#search').bind('submit', submitForm);
+            $('#loading').hide();
+        }
+    });
+    return false;   
+}
+    
+    function clearInput() {		
 		$('.clearMeFocus').each( function() {
 		   if ($(this).val() == '') {
 		      var id = $(this).attr('id');

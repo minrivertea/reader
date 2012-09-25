@@ -41,6 +41,24 @@
         <span id="logo"><a href="/">Kan Dong Le Me?</a>  &raquo;</span>
         <a href="/about/" title="about" class="ajax">About</a>
         <a href="/bookmarklet/" title="bookmarklet" class="ajax">Bookmarklet</a>
+        {% if user.is_authenticated %}
+
+            <div href="/" class="expandable">
+                <span class="linktext">Your account <span class="arrow">&#9660;</span></span>
+                <div class="subnav">
+                    <p>Logged in as {{ request.user.email }} - <a href="{% url auth_logout %}">logout</a></p>
+                    <ul>
+                        
+                        <li> <a href="">Vocab</a> </li>
+                        <li> <a href="">Articles</a> </li>
+                    </ul>
+                </div>
+            </div>
+
+        {% else %}
+        <a href="{% url registration_register %}" title="register" class="">Register</a>
+        <a href="{% url auth_login %}">Login</a>
+        {% endif %}
     
         <form id="search" action="." method="post" class="centred">
             {% csrf_token %}
@@ -63,6 +81,7 @@
 
 		$(document).ready( function() {
             $('#search').bind('submit', submitForm);            
+            clearInput();
             window.onpopstate = function(event) {
 	           if (location.pathname.match(/url/g)) {
 	               var path = location.pathname.replace('/url/', '').replace('/', '');

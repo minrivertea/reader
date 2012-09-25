@@ -6,9 +6,12 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-   clearInput();
    $('#header').css('top', '220px').fadeIn(300);
    $('#id_char').focus();
+   
+   {% if user.is_authenticated %}
+   getPersonalWords();
+   {% endif %}
    
    
 });
