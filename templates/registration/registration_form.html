@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Register{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+
+{% block extracss %}
+
+<style type="text/css">
+
+#search {
+  display: none;   
+}
+
+#text {
+  margin-top: 10%;   
+}
+
+form p {
+  width: 100%;
+  float: left;
+  margin: 0 0 15px 0;   
+}
+
+form p.help {
+  font-size: 14px;
+  text-align: left; 
+  margin: 10px 0 25px;  
+}
+
+input {
+  float: left;
+  width: 400px;   
+}
+
+input[type=submit] {
+  float: left;
+  width: auto;    
+}
+
+ul.errorlist {
+  font-size: 16px;
+  color: red;
+  list-style-type: square;   
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="text" class="centred easy">
+<h1>Register</h1>
+{{ form.errors }}
+
+<form method="post" action=".">
+	{% csrf_token %}
+  <p>{{ form.email }}<label for="id_email">Your email address <span>(will never be made public)</span></label></p>
+  <p>{{ form.password1 }}<label for="id_password1">Choose a password</label></p>
+  <p class="help"><strong>Register to use personalised reading lists, vocabulary and mobile applications. It takes 10 seconds and it's free!</strong> We will never pass on your private information to any other individual or company. Your information is stored securely, your password encrypted, and your email will never be displayed publicly. We hate spam just as much as you do!</p>
+  <input type="submit" value="Register now!" class="register button" />
+</form>
+
+
+</div>
+{% endblock %}

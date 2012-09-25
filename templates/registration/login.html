@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Login{% endblock %}
+
+{% block extracss %}
+
+<style type="text/css">
+
+#search {
+  display: none;   
+}
+
+#text {
+  margin-top: 10%;   
+}
+
+form p {
+  width: 100%;
+  float: left;
+  margin: 0 0 15px 0;   
+}
+
+form p.help {
+  font-size: 14px;
+  text-align: left; 
+  margin: 10px 0 25px;  
+}
+
+input {
+  float: left;
+  width: 400px;   
+}
+
+input[type=submit] {
+  float: left;
+  width: auto;    
+}
+
+ul.errorlist {
+  font-size: 16px;
+  color: red;
+  list-style-type: square;   
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div id="text" class="centred easy">
+
+<h1>Login</h1>
+
+{% if form.errors %}
+<p class="red">Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<form method="post" action="{% url django.contrib.auth.views.login %}">
+{% csrf_token %}
+<p><label for="id_username">Your email</label><input id="id_username" type="text" name="username" title="Your username" class="clearMeFocus" maxlength="30" /></p>
+<p><label for="id_password">Password</label><input type="password" name="password" id="id_password" title="Your password" class="clearMeFocus" /></p>
+ <p class="help">If you haven't got an account, <a href="{% url registration_register %}">register here</a> - or did you <a class="forgotten" href="{% url auth_password_reset %}">forget your password?</a>?</p>   
+    <input type="submit" value="Login" class="login button" /></p>
+
+<input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
+</form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load django_static %}
+
+{% block extrajs %}
+<script type="text/javascript">
+$(document).ready( function() {
+ clearInput();
+ getTextByUID('{{ uid }}');
+});
+</script>
+{% endblock %}
+
+
+{% block extracss %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div id="head" class="centred easy">
+<a id="original-page" title="{{ url }}" href="{{ url }}">Original page</a>
+    <div id="appearance" class="set">
+        <span class="button">Fonts</span>
+        <div class="extra">
+            <div>
+            <h4>Change font</h4>
+            <ul id="fonts">
+                <li><a href="#" class="font1 selected" onclick="changeFont('font1', false);" title="KaiTi">汉字</a></li>
+                <li><a href="#" class="font2" onclick="changeFont('font2');" title="SongTi">汉字</a></li>
+                <li><a href="#" class="font3" onclick="changeFont('font3');" title="FangSong">汉字</a></li>
+                <li><a href="#" class="font4" onclick="changeFont('font4');" title="HeiTi">汉字</a></li>
+            </ul>
+            </div>
+            <div>
+            <h4>Theme</h4>
+            <ul id="colors">
+                <li><a href="#" onclick="changeColor('color1');" class="color1" title="Red"></a></li>
+                <li><a href="#" onclick="changeColor('color2');" class="color2" title="blue"></a></li>
+                <li><a href="#" onclick="changeColor('color3');" class="color3" title="green"></a></li>
+                <li><a href="#" onclick="changeColor('color4');" class="color4" title="black"></a></li>
+
+            </ul>
+            </div>
+                    
+        </div>
+   </div>
+            
+    <div id="group" class="set">
+        <span class="button" class="">Group Words</span>
+    </div> 
+    <div id="pinyin" class="set">
+        <span class="button" class="selected">Pinyin</span>
+    </div>
+</div>
+
+<h1 class="centred">{{ title }}</h1>
+<span id="url" class="centred">{{ url }}</span>
+
+<div id="text" class="easy centred"></div>
+{% endblock %}
