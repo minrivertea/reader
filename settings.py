@@ -111,10 +111,10 @@ INSTALLED_APPS = (
 ENDLESS_PAGINATION_PER_PAGE = 200
 
 # django-static info
-DJANGO_STATIC = False
+DJANGO_STATIC = True
 DJANGO_STATIC_SAVE_PREFIX = '/tmp/cache-forever'
 DJANGO_STATIC_NAME_PREFIX = '/cache-forever'
-DJANGO_STATIC_MEDIA_URL = 'http://static.minrivertea.com'
+DJANGO_STATIC_MEDIA_URL = '//static.kandongle.me'
 
 
 #random stuff
