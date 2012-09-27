@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load endless django_static %}
+
+{% block extrajs %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+
+{% block extracss %}
+<style type="text/css">
+
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+    <div id="text" class="centred easy">
+    {% include 'website/vocab_snippet.html' %}
+    </div>
+    
+{% endblock %}
