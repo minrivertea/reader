@@ -103,7 +103,7 @@ def save_word(sender, **kwargs):
         # if the word is already in the list, then remove it
         if smart_str(w) in smart_str(this_users_words):
             for line in smart_unicode(this_users_words).splitlines():
-                if w in line.split('/')[0].strip():
+                if w == line.split('/')[0].strip():
                     to_remove.append(line)
                     count = int(line.split('/')[2]) + 1
                     

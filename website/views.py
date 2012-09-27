@@ -432,6 +432,16 @@ def home(request):
         form = CheckPinyinForm(request.POST)
         if form.is_valid():
             
+            r_server = get_redis()
+            if r_server.exists('stats'):
+                r_server.hincrby('stats', 'searches', 1)
+            else:
+                mapping = {
+                     'searches': 1,
+                     'redis_hits': 1,   
+                }
+                r_server.hmset('stats', mapping)
+            
             if request.user.is_authenticated() and len(form.cleaned_data['char']) < 10:
                 word_searched.send(sender=word_searched, chars=form.cleaned_data['char'], time=datetime.datetime.now(), user_id=request.user.pk)
             
@@ -454,7 +464,7 @@ def home(request):
                     'hash': this_id,
                 }
                 
-                r_server = redis.Redis("localhost")
+                r_server = get_redis()
                 r_server.hmset(key, mapping)
                 url = reverse('text', args=[this_id])
             return HttpResponseRedirect(url)
@@ -472,7 +482,7 @@ def text(request, hashkey):
     
     key = 'text:%s' % hashkey
     
-    r_server = redis.Redis("localhost")
+    r_server = get_redis()
     if r_server.exists(key):
         obj = r_server.hgetall(key)
     
@@ -487,7 +497,7 @@ def url(request, hashkey):
     
     key = 'url:%s' % hashkey
         
-    r_server = redis.Redis("localhost")
+    r_server = get_redis()
     if r_server.exists(key):
         obj = r_server.hgetall(key)
     
@@ -511,7 +521,6 @@ def url(request, hashkey):
 def page(request, slug):
     template = 'website/%s.html' % slug
     
-    
     if request.is_ajax():
         template = 'website/%s_snippet.html' % slug
         
@@ -523,7 +532,14 @@ def page(request, slug):
 def user(request, pk):
     user = get_object_or_404(User, pk=pk)
     return render(request, 'website/user.html', locals())
+
+
+def stats(request):
     
+    key = "stats"
+    stats = search_redis(key)
+    
+    return render(request, 'website/stats.html', locals())    
     
     
 def get_personal_words(request):

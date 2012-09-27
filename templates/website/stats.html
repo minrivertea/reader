@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load django_static %}
+
+{% block extrajs %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+
+{% block extracss %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div id="text" class="centred easy">
+
+    <table>
+    {% for k,v in stats.items %}
+        <tr>
+        <td>{{ k|capfirst }}</td><td>{{ v }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+
+</div>
+
+
+{% endblock %}
