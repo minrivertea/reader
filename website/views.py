@@ -401,7 +401,6 @@ def home(request):
 
 
         # TODO if it's already been scanned and saved, don't bother parsing it again….
-
         html = urllib2.urlopen(url).read()
         
         text = readabilityParser(html)
@@ -421,7 +420,7 @@ def home(request):
             'url' : url,
         }
         
-        r_server = redis.Redis("localhost")
+        r_server = get_redis()
         r_server.hmset(key, mapping)
         
         url = reverse('url', args=[this_id])
