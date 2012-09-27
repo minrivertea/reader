@@ -524,11 +524,14 @@ def user(request, pk):
     user = get_object_or_404(User, pk=pk)
     return render(request, 'website/user.html', locals())
     
+    
+    
 def get_personal_words(request):
     try:
         account = request.user.get_profile()
     except:
         return HttpResponse()
+    
     words = account.get_personal_words()
     
     if request.is_ajax():

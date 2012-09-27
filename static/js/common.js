@@ -311,9 +311,16 @@ function getPersonalWords() {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
+            if ($('#text table').length) {
+                $('#text table').prependTo('#previous-searches'); 
+            }      
+            $('#text').html('<table></table>');
+            
             $(data).each( function(k,v) {
-               $('#session-searches').append('<p>'+v.chars+' / '+v.time+' / '+v.count+'</p>') 
-            });
+                var html = '<tr><td>'+v.chars
+                html += '</td><td class="pinyin">'+v.pinyin+'</td><td>'+v.meaning+'</td></tr>';
+                $('#text table').append(html);
+            }); 
         },
         error: function() {
             $('#text').html('<p>There was some kind of error, please try again!</p>');

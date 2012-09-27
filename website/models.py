@@ -17,6 +17,7 @@ from website.signals import word_searched
 from website.views import group_words, split_unicode_chrs, search_redis
 
 
+
 # our main profile thing
 class Account(models.Model):
     user = models.ForeignKey(User)
@@ -34,14 +35,26 @@ class Account(models.Model):
         wordlist = search_redis(key)['wordlist']
                 
         obj_list = []
+        
         for x in wordlist.splitlines():
             try:
                 this_time = datetime.datetime.fromtimestamp(float(x.split('/')[1].strip(' ')))
-                obj_list.append(dict(chars=x.split('/')[0], time=str(this_time.date()), count=x.split('/')[2]))
+                w = x.split('/')[0].strip(' ')
+                key = "%sC:%s" % (len(smart_unicode(w)), w)
+                word = search_redis(key)
+                obj_list.append(dict(
+                    chars=w, 
+                    time=str(this_time.date()), 
+                    count=x.split('/')[2],
+                    pinyin=word['pinyin1'],
+                    meaning=word['meaning1'],
+                ))
             except:
                 pass
         
-        return obj_list[:10]
+        
+        
+        return obj_list
     
          
 
@@ -93,10 +106,6 @@ def save_word(sender, **kwargs):
                 if w in line.split('/')[0].strip():
                     to_remove.append(line)
                     count = int(line.split('/')[2]) + 1
-                    print w
-                    print line
-                    print " "
-                    
                     
 
         # add / update the word
