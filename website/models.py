@@ -5,72 +5,120 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
 import datetime
+import time
+import unicodedata
+
+from redis_helper import get_redis
 
 from django.core.signals import request_finished
 from django.utils.encoding import smart_str, smart_unicode
 
 from website.signals import word_searched
-from website.views import group_words, split_unicode_chrs
-
+from website.views import group_words, split_unicode_chrs, search_redis
 
 
 # our main profile thing
 class Account(models.Model):
     user = models.ForeignKey(User)
     date_joined = models.DateTimeField()
-    words = models.TextField(blank=True) # a list of word UIDs + timestamp 
+    words = models.TextField(blank=True) # CHARS / TIMESTAMP / VIEWCOUNT 
     articles = models.TextField(blank=True) # a list of article UIDs + timestamp + read/unread
     
     def __unicode__(self):
         return self.user.email
     
     def get_personal_words(self):
+        
+        r_server = get_redis()
+        key = "PW:%s" % self.user.email
+        wordlist = search_redis(key)['wordlist']
                 
-        newlist = self.words.splitlines() 
         obj_list = []
-        for x in newlist:
-            obj_list.append(x.split('/')[0])
+        for x in wordlist.splitlines():
+            try:
+                this_time = datetime.datetime.fromtimestamp(float(x.split('/')[1].strip(' ')))
+                obj_list.append(dict(chars=x.split('/')[0], time=str(this_time.date()), count=x.split('/')[2]))
+            except:
+                pass
         
-        
-        return obj_list
-        
-
+        return obj_list[:10]
+    
+         
 
 # SIGNAL HANDLERS!
 
 
 # save a word in the user's personal wordlist
 def save_word(sender, **kwargs):
-
+    print "called save word on %s" % kwargs['chars']
     try:
         account = get_object_or_404(User, pk=kwargs['user_id']).get_profile()
     except:
         return 
-    things = split_unicode_chrs(kwargs['chars'])
+    
+    # words coming in need to be converted into unicode characters        
+    things = split_unicode_chrs(kwargs['chars'])    
     obj_list = group_words(things, chinese_only=True)
-            
-    loop = 0
-    w = ''
-    s = ''
+                    
+    r_server = get_redis()
+    key = "PW:%s" % account.user.email
     
-    # account.words = ''
-    
-    for x in obj_list:
-                
-        w = x['chars']
+    this_users_words = ''
+    if r_server.exists(key):
+        this_users_words = search_redis(key)['wordlist']
         
+    loop = 0
+    new_words = []
+    to_remove = []
+    output = ''
+    for x in obj_list:
+        
+        # construct a word 
+        w = smart_unicode(x['chars'])         
+        additional = ''
         try:
-            while obj_list[loop+1]['wordset'] == x['wordset']:
-                w += obj_list[loop+1]['chars']
+            while obj_list[loop+1]['wordset'] == x['wordset']:                
+                additional = "%s%s" % (additional, obj_list[loop+1]['chars'])
                 obj_list.pop(loop+1)
+            
+                        
         except:
             pass
         
-        s = "%s / %s \n" % (w, datetime.datetime.now())
-        s.encode('utf-8')
-        account.words = "%s%s" % (account.words, s)
-        loop +=1 
+        
+        w = "%s%s" % (w, additional)
+        count = 1
+        # if the word is already in the list, then remove it
+        if smart_str(w) in smart_str(this_users_words):
+            for line in smart_unicode(this_users_words).splitlines():
+                if w in line.split('/')[0].strip():
+                    to_remove.append(line)
+                    count = int(line.split('/')[2]) + 1
+                    print w
+                    print line
+                    print " "
+                    
+                    
+
+        # add / update the word
+        s = "%s / %s / %s\n" % (smart_str(w), time.time(), count)
+        new_words.append(s)
+        loop += 1
     
-    account.save()    
+    
+    for old in to_remove:
+        this_users_words = smart_str(this_users_words).replace(smart_str(old), '')
+            
+    for new in new_words:
+        this_users_words = "%s%s" % (new, this_users_words)
+    
+    
+        
+    mapping = {
+        'wordlist': this_users_words,
+    }
+        
+    r_server.hmset(key, mapping)        
+    
     
 word_searched.connect(save_word)

@@ -43,6 +43,7 @@ function loadContent(href) {
   };
   
   $('#text').load(href);
+  eval($('#text').text());
   $('#loading').hide();
   return false;
 }
@@ -64,7 +65,7 @@ function submitForm(e) {
         } else { 
                 
             $.ajax({ 
-            url: $('#id_char').attr('action'),
+            url: $('#search').attr('action'),
             type: 'POST',
             data: $('form').serialize(),
             dataType: 'json',
@@ -310,7 +311,9 @@ function getPersonalWords() {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            $('#text').append(data);
+            $(data).each( function(k,v) {
+               $('#session-searches').append('<p>'+v.chars+' / '+v.time+' / '+v.count+'</p>') 
+            });
         },
         error: function() {
             $('#text').html('<p>There was some kind of error, please try again!</p>');

@@ -4,7 +4,7 @@ html {
   padding: none;	
 }
 
-input, textarea, body {
+input, textarea {
   background-color: #fff;
   border: 1px solid #c1c1c1;
   padding: 10px;
@@ -287,6 +287,10 @@ textarea {
  font-family: "Times New Roman", serif;
 }
 
+
+#session-searches {
+
+}
 
 
 
