@@ -50,7 +50,6 @@ class Account(models.Model):
 
 # save a word in the user's personal wordlist
 def save_word(sender, **kwargs):
-    print "called save word on %s" % kwargs['chars']
     try:
         account = get_object_or_404(User, pk=kwargs['user_id']).get_profile()
     except:
