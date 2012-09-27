@@ -114,7 +114,7 @@ ENDLESS_PAGINATION_PER_PAGE = 200
 DJANGO_STATIC = True
 DJANGO_STATIC_SAVE_PREFIX = '/tmp/cache-forever'
 DJANGO_STATIC_NAME_PREFIX = '/cache-forever'
-DJANGO_STATIC_MEDIA_URL = '//static.kandongle.me'
+#DJANGO_STATIC_MEDIA_URL = '//static.kandongle.me'
 
 
 #random stuff
