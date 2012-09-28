@@ -108,36 +108,51 @@ function getTextByUID(uid) {
 }
 
 
+function dictionaryWords(data) {
+  $(data).each( function(k,v) {        
+    var html = '<table id="vocablist"><tr class="sep"><td class="wrapper" id="char'+v.wordset+'"><table>';
+    html += '<tr><td class="chars" valign="top">'+v.chars+'</td><td class="pinyin" valign="top">'+v.pinyin1+'</td><td class="meaning" valign="top">'+v.meaning1+'</td></tr>';
+    
+    if (v.meaning2) {
+    html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin2+'</td><td class="meaning" valign="top">'+v.meaning2+'</td></tr>';
+    };
+    if (v.meaning3) {
+    html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin3+'</td><td class="meaning" valign="top">'+v.meaning3+'</td></tr>';
+    };
+    html += '</table></td></tr></table>';
+    $('#text').append(html); 
+  });    
+}
+
+
 function arrayWords(data) {
     var key, count = 0;
     for(key in data) {
         count++;
     }
-
     if (count < 10) {
         var tWS;
         if ($('#text table').length) {
             $('#text table').prependTo('#previous-searches'); 
-        }      
-        $(data).each( function(k,v) {
-            if (v.chars == ' ' || v.is_punctuation == true) return;
-            if (v.is_english == true) return;
-            if (v.wordset==tWS) {
-              var wID = v.wordset + "";
-                $('#text td#char'+wID+' .chars').append(v.chars);
-                $('#text td#char'+wID+' .pinyin').append(' '+v.pinyin1);
+        }
+        $('#text').html('');      
+        $(data).each( function(k,v) {        
+            if (v.wordset == tWS) {
+                $('#char'+v.wordset+' .chars').append(v.chars);
+                $('#char'+v.wordset+' .pinyin').append(' '+v.pinyin1);
             } else {
-              tWS = v.wordset;
-              var html = '<table><tr class="sep"><td class="wrapper" id="char'+v.wordset+'"><table>';
-              html += '<tr><td class="chars" valign="top">'+v.chars+'</td><td class="pinyin" valign="top">'+v.pinyin1+'</td><td class="meaning" valign="top">'+v.meaning1+'</td></tr>';
-              if (v.meaning2) {
+                tWS = v.wordset;
+                var html = '<table id="vocablist"><tr class="sep"><td class="wrapper" id="char'+v.wordset+'"><table>';
+                html += '<tr><td class="chars" valign="top">'+v.chars+'</td><td class="pinyin" valign="top">'+v.pinyin1+'</td><td class="meaning" valign="top">'+v.meaning1+'</td></tr>';
+                
+                if (v.meaning2) {
                 html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin2+'</td><td class="meaning" valign="top">'+v.meaning2+'</td></tr>';
-              };
-              if (v.meaning3) {
+                };
+                if (v.meaning3) {
                 html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin3+'</td><td class="meaning" valign="top">'+v.meaning3+'</td></tr>';
-              };
-              
-              $('#text').html(html);
+                };
+                html += '</table></td></tr></table>';
+                $('#text').append(html); 
             }
         });
     } else {
@@ -310,27 +325,14 @@ function bindWords() {
     });
 }
 
-
 function getPersonalWords() {
     $.ajax({ 
         url: '/get-personal-words/',
         type: 'GET',
         dataType: 'json',
         success: function(data) {            
-            $(data).each( function(k,v) {
-              var html = '<table><tr class="sep"><td class="wrapper" id="char'+v.wordset+'"><table>';
-              html += '<tr><td class="chars" valign="top">'+v.chars+'</td><td class="pinyin" valign="top">'+v.pinyin+'</td><td class="meaning" valign="top">'+v.meaning+'</td></tr>';
-              
-              if (v.meaning2) {
-                html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin2+'</td><td class="meaning" valign="top">'+v.meaning2+'</td></tr>';
-              };
-              if (v.meaning3) {
-                html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin3+'</td><td class="meaning" valign="top">'+v.meaning3+'</td></tr>';
-              };
-              html += '</table></td></tr></table>';
-              $('#text').append(html); 
-            });
-            
+            $('#text').html('');
+            dictionaryWords(data);
         },
         error: function() {
             $('#text').html('<p>There was some kind of error, please try again!</p>');

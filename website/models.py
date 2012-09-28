@@ -35,20 +35,18 @@ class Account(models.Model):
         wordlist = search_redis(key)['wordlist']
                 
         obj_list = []
-        
+        loop = 0
         for x in wordlist.splitlines():
             try:
                 this_time = datetime.datetime.fromtimestamp(float(x.split('/')[1].strip(' ')))
                 w = x.split('/')[0].strip(' ')
                 key = "%sC:%s" % (len(smart_unicode(w)), w)
                 word = search_redis(key)
-                obj_list.append(dict(
-                    chars=w, 
-                    time=str(this_time.date()), 
-                    count=x.split('/')[2],
-                    pinyin=word['pinyin1'],
-                    meaning=word['meaning1'],
-                ))
+                word['time'] = str(this_time.date())
+                word['count'] = x.split('/')[2]
+                word['wordset'] = loop
+                obj_list.append(word)
+                loop += 1
             except:
                 pass
         
