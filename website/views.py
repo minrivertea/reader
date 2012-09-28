@@ -126,9 +126,16 @@ def _is_english(x):
 
 def search_redis(key):
     r_server = get_redis()
+    stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)    
     if r_server.exists(key):
+        r_server.hincrby(stats_key, 'redis_hits', 1)
         return r_server.hgetall(key)
     else:
+        mapping = {
+            'searches': 1,
+            'redis_hits': 1,   
+        }
+        r_server.hmset(stats_key, mapping)
         return None
     
 
@@ -432,14 +439,15 @@ def home(request):
         if form.is_valid():
             
             r_server = get_redis()
-            if r_server.exists('stats'):
-                r_server.hincrby('stats', 'searches', 1)
+            stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
+            if r_server.exists(stats_key):
+                r_server.hincrby(stats_key, 'searches', 1)
             else:
                 mapping = {
                      'searches': 1,
                      'redis_hits': 1,   
                 }
-                r_server.hmset('stats', mapping)
+                r_server.hmset(stats_key, mapping)
             
             if request.user.is_authenticated() and len(form.cleaned_data['char']) < 10:
                 word_searched.send(sender=word_searched, chars=form.cleaned_data['char'], time=datetime.datetime.now(), user_id=request.user.pk)
@@ -535,7 +543,7 @@ def user(request, pk):
 
 def stats(request):
     
-    key = "stats"
+    key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
     stats = search_redis(key)
     
     return render(request, 'website/stats.html', locals())    
