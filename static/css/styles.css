@@ -647,7 +647,7 @@ body.color4 #tools {
 }
 
 
-#text table tr, #previous-searches table tr {
+#text table tr.sep, #previous-searches table tr {
   width: 100%;
   border-bottom: 1px solid #e1e1e1;   
 }
@@ -664,36 +664,40 @@ body.color4 #tools {
 
 #text table td, #previous-searches table td {
   width: auto;
-  padding: 15px 20px;
+}
+
+#text table td.wrapper {
   border-bottom: 1px solid #e1e1e1;
-  width: 120px; 
+  padding: 20px 0;   
+}
+
+#text table td.chars {
+  width: 120px;
+  color: #5e4313;
+  text-shadow: 1px 2px 0 #fff;
+  font-size: 24px;   
 }
 
 #text table td.pinyin, #text.easy table td.pinyin {
   text-transform: lowercase;
   color: #E55C12;
-  font-size: 20px;
+  font-size: 18px;
+  width: 120px;
+}
+
+#text table td.meaning {
+  width: 540px; 
+  font-size: 18px;  
 }
 
 #previous-searches table td.pinyin {
   color: #666;  
  }
 
-#text table tr td:first-child {
-  width: 90px;
-  color: #5e4313;
-  text-shadow: 1px 2px 0 #fff;
-  font-size: 24px; 
-}
-
 #previous-searches table td:first-child {
   color: #666;
   font-size: 18px; 
   width: 90px;  
-}
-
-#text table tr td:last-child, #previous-searches table td:last-child {
-  width: 500px;  
 }
 
 

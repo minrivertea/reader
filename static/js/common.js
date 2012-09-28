@@ -119,19 +119,25 @@ function arrayWords(data) {
         if ($('#text table').length) {
             $('#text table').prependTo('#previous-searches'); 
         }      
-        $('#text').html('<table></table>');
         $(data).each( function(k,v) {
             if (v.chars == ' ' || v.is_punctuation == true) return;
             if (v.is_english == true) return;
             if (v.wordset==tWS) {
               var wID = v.wordset + "";
-                $('#text td#char'+wID).append(v.chars);
-                $('#text td#pinyin'+wID).append(' '+v.pinyin1);
+                $('#text td#char'+wID+' .chars').append(v.chars);
+                $('#text td#char'+wID+' .pinyin').append(' '+v.pinyin1);
             } else {
               tWS = v.wordset;
-              var html = '<tr><td id="char'+v.wordset+'">'+v.chars
-              html += '</td><td class="pinyin" id="pinyin'+v.wordset+'">'+v.pinyin1+'</td><td>'+v.meaning1+'</td></tr>';
-              $('#text table').append(html);
+              var html = '<table><tr class="sep"><td class="wrapper" id="char'+v.wordset+'"><table>';
+              html += '<tr><td class="chars" valign="top">'+v.chars+'</td><td class="pinyin" valign="top">'+v.pinyin1+'</td><td class="meaning" valign="top">'+v.meaning1+'</td></tr>';
+              if (v.meaning2) {
+                html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin2+'</td><td class="meaning" valign="top">'+v.meaning2+'</td></tr>';
+              };
+              if (v.meaning3) {
+                html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin3+'</td><td class="meaning" valign="top">'+v.meaning3+'</td></tr>';
+              };
+              
+              $('#text').html(html);
             }
         });
     } else {
@@ -310,17 +316,21 @@ function getPersonalWords() {
         url: '/get-personal-words/',
         type: 'GET',
         dataType: 'json',
-        success: function(data) {
-            if ($('#text table').length) {
-                $('#text table').prependTo('#previous-searches'); 
-            }      
-            $('#text').html('<table></table>');
-            
+        success: function(data) {            
             $(data).each( function(k,v) {
-                var html = '<tr><td>'+v.chars
-                html += '</td><td class="pinyin">'+v.pinyin+'</td><td>'+v.meaning+'</td></tr>';
-                $('#text table').append(html);
-            }); 
+              var html = '<table><tr class="sep"><td class="wrapper" id="char'+v.wordset+'"><table>';
+              html += '<tr><td class="chars" valign="top">'+v.chars+'</td><td class="pinyin" valign="top">'+v.pinyin+'</td><td class="meaning" valign="top">'+v.meaning+'</td></tr>';
+              
+              if (v.meaning2) {
+                html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin2+'</td><td class="meaning" valign="top">'+v.meaning2+'</td></tr>';
+              };
+              if (v.meaning3) {
+                html += '<tr><td>&nbsp;</td><td class="pinyin" valign="top">'+v.pinyin3+'</td><td class="meaning" valign="top">'+v.meaning3+'</td></tr>';
+              };
+              html += '</table></td></tr></table>';
+              $('#text').append(html); 
+            });
+            
         },
         error: function() {
             $('#text').html('<p>There was some kind of error, please try again!</p>');
