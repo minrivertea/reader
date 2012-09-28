@@ -128,7 +128,10 @@ def search_redis(key):
     r_server = get_redis()
     stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)    
     if r_server.exists(key):
-        r_server.hincrby(stats_key, 'redis_hits', 1)
+        if request.path == '/stats/':
+            pass
+        else:
+            r_server.hincrby(stats_key, 'redis_hits', 1)
         return r_server.hgetall(key)
     else:
         mapping = {
