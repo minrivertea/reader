@@ -128,10 +128,7 @@ def search_redis(key):
     r_server = get_redis()
     stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)    
     if r_server.exists(key):
-        if request.path == '/stats/':
-            pass
-        else:
-            r_server.hincrby(stats_key, 'redis_hits', 1)
+        r_server.hincrby(stats_key, 'redis_hits', 1)
         return r_server.hgetall(key)
     else:
         mapping = {
@@ -148,7 +145,6 @@ def add_to_redis(key, values):
 
     
     r_server = get_redis()
-    
     if r_server.exists(key):
         object = search_redis(key)
         count = (int(object['count']) + 1)
@@ -553,13 +549,13 @@ def stats(request):
     
     
 def get_personal_words(request):
+    
     try:
         account = request.user.get_profile()
     except:
         return HttpResponse()
     
     words = account.get_personal_words()
-    
     if request.is_ajax():
         return HttpResponse(simplejson.dumps(words), mimetype="application/json")
     
