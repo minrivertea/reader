@@ -44,7 +44,7 @@
                     <ul>
                         
                         <li> <a class="ajax" href="/vocab/">Vocab</a> </li>
-                        <li> <a href="">Articles</a> </li>
+                        <li> <a class="ajax" href="/articles/">Articles</a> </li>
                     </ul>
                 </div>
             </div>
@@ -64,16 +64,19 @@
     <div id="userblock"></div>
     
     <div id="editable"></div>
-    
+        
     <img id="loading" src="/images/loading.gif"/>
-         
-    {% block content %}{% endblock %}
-
+    
+    <div id="container">  
+        {% block content %}{% endblock %}        
+    </div>
+    
 	<script type="text/javascript" src="{% slimfile '/js/common.js' %}"></script>
 	<script type="text/javascript">
 
 		$(document).ready( function() {
-            $('#search').bind('submit', submitForm);            
+            $('#search').bind('submit', submitForm);
+            $('a.ajax').bind('click', loadFlatpage);            
             clearInput();
             window.onpopstate = function(event) {
 	           if (location.pathname.match(/url/g)) {

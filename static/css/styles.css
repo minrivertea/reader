@@ -27,12 +27,12 @@ body {
 }
 
 a:link, a:visited {
-  text-decoration: underline;
+  text-decoration: none;
   color: #E55C12;   
 }
 
 a:hover, a:active {
-   color: #C10000;
+   text-decoration: underline;
 }
 
 
@@ -543,6 +543,32 @@ textarea {
   float: left;   
 }
 
+#crumbs {
+    border-bottom: 2px dotted #E1E1E1;
+    color: #5E4313;
+    font-family: Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: -0.5px;
+    margin-bottom: 0px;
+    padding: 30px 0 10px 0px;
+}
+
+#crumbs .arrow {
+  font-size: 16px;   
+  color: #E55C12;
+  margin: 0 10px;
+}
+
+
+#crumbs a {
+  font-weight: bold;
+  font-size: 15px;
+  position: relative;
+}
+
+
+
 #colors a.color1 {
   background: #fff;
 }
@@ -636,7 +662,6 @@ body.color4 #tools {
     padding: 0;
     text-shadow: 1px 1px 0 #FFFFFF;
     font-size: 20px;
-    margin-top: 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -647,13 +672,17 @@ body.color4 #tools {
 }
 
 
-#text table tr.sep, #previous-searches table tr {
-  width: 100%;
-  border-bottom: 1px solid #e1e1e1;   
+#vocablist .wrapper, #previous-searches .wrapper {
+  width: 96%;
+  padding: 20px 2% 10px;
+  float: left;
+  border-bottom: 1px solid #e1e1e1;
+  border-top: 1px solid transparent;
+  position: relative;   
 }
 
-#text table tr:last-child {
-  border-bottom: none;   
+#vocablist .wrapper:last-child, #previous-searches .wrapper:last-child {
+  border-bottom: 1px solid transparent;   
 }
 
 #previous-searches {
@@ -662,44 +691,84 @@ body.color4 #tools {
   font-size: 14px;  
 }
 
-#text table td, #previous-searches table td {
-  width: auto;
+#vocablist .wrapper .line, #previous-searches table td {
+  float: left;
+  width: 100%;
 }
 
-#text table td.wrapper {
-  border-bottom: 1px solid #e1e1e1;
-  padding: 20px 0;   
+#vocablist .wrapper:before {
+    background: none repeat scroll 0 0 #E55C12;
+    border-radius: 15px 15px 15px 15px;
+    content: " ";
+    display: none;
+    height: 30px;
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    margin-top: -15px;
+    width: 30px;
 }
 
-#text table td.chars {
+#vocablist .wrapper:hover:before {
+  display: block;   
+}
+
+#vocablist .wrapper:hover {
+  background: #f6f6f6;
+  cursor: pointer;
+}
+
+
+#vocablist .wrapper:last-child:hover {
+  border-bottom: 1px solid #e1e1e1;   
+}
+
+#vocablist .wrapper span.next {
+    color: #fff;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    margin-top: -13px;
+    text-shadow: none;
+    display: none;
+    font-size: 21px;
+}
+
+#vocablist .wrapper:hover span.next {
+  display: block;   
+}
+
+#vocablist .chars {
   width: 120px;
   color: #5e4313;
   text-shadow: 1px 2px 0 #fff;
-  font-size: 24px;   
+  font-size: 24px;
+  float: left;
+  position: relative;
+  top: -4px;   
 }
 
-#text table td.pinyin, #text.easy table td.pinyin {
+#vocablist .pinyin {
   text-transform: lowercase;
   color: #E55C12;
   font-size: 18px;
   width: 120px;
   height: 31px;
+  float: left;
 }
 
-#text table td.meaning {
-  width: 540px; 
-  font-size: 18px;  
-}
-
-#previous-searches table td.pinyin {
-  color: #666;  
- }
-
-#previous-searches table td:first-child {
-  color: #666;
+#vocablist .meaning {
+  width: 520px; 
   font-size: 18px; 
-  width: 90px;  
+  float: left; 
 }
+
+#previous-searches #vocablist .chars, #previous-searches #vocablist .pinyin, #previous-searches #vocablist .meaning {
+  font-size: 14px;
+  color: #666;
+  height: auto;    
+}
+
 
 
 /* START OF TEXT STYLES */
@@ -1030,12 +1099,14 @@ h3 {
 
 .flatpage {
   float: left;
-  width: 100%;
+  width: 98%;
+  padding: 0 1%;
 }
 
 .flatpage p {
   font-size: 18px;
-  line-height: 1.8em;   
+  line-height: 1.8em;
+  margin: 10px 0 20px;   
 }
 
 .flatpage p.big {
@@ -1045,7 +1116,7 @@ h3 {
 .flatpage ul {
   font-size: 18px;
   line-height: 1.8em;
-  margin-bottom: 30px;   
+  margin-bottom: 20px;   
 }
 
 .flatpage .explain {
@@ -1083,3 +1154,9 @@ h3 {
 }
 
 
+/* SINGLE WORD LOOKUP STYLES */
+
+#single #chars {
+  font-size: 60px;
+  padding: 20px;   
+}

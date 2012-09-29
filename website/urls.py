@@ -4,7 +4,10 @@ import views
 
 urlpatterns = patterns('',
     url(r'^$', views.home, name="home"),
+    url(r'^search/$', views.home, name="search"),
+    url(r'^search/(?P<word>[\w-]+)/$', views.single_word, name="search_word"),
     url(r'^copy_dict/$', views.copy_dictionary, name="copy_dictionary"),
+    url(r'^vocab/(?P<word>[\w-]+)/$', views.single_word, name="single_word"),
     url(r'^stats/$', views.stats, name="stats"),
     url(r'^get-personal-words/$', views.get_personal_words, name="get_personal_words"),
     url(r'^text/(?P<hashkey>[\w-]+)/$', views.text, name="text"),

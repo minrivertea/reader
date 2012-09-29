@@ -529,7 +529,6 @@ def page(request, slug):
     
     if request.is_ajax():
         template = 'website/%s_snippet.html' % slug
-        
         page = render_to_string(template, {'siteurl': RequestContext(request)['siteurl']})
         return HttpResponse(page)
             
@@ -541,12 +540,28 @@ def user(request, pk):
 
 
 def stats(request):
-    
+    # TODO - do monthly filtering, backwards and forwards, comparisons etc.
     key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
     stats = search_redis(key)
     
     return render(request, 'website/stats.html', locals())    
+
+
+def single_word(request, word):
     
+    key = "%sC:%s" % (len(word), word)
+    word = search_redis(key)
+    
+    if request.is_ajax():
+        return HttpResponse(simplejson.dumps(word), mimetype="application/json")
+    
+    
+    crumb = "Search"
+    if 'vocab' in request.path:
+        crumb = "Your Vocabulary"
+            
+    chars = word['chars']
+    return render(request, 'website/single.html', locals())    
     
 def get_personal_words(request):
     
@@ -555,6 +570,8 @@ def get_personal_words(request):
     except:
         return HttpResponse()
     
+    
+    # TODO - add pagination with django-endless maybe
     words = account.get_personal_words()
     if request.is_ajax():
         return HttpResponse(simplejson.dumps(words), mimetype="application/json")

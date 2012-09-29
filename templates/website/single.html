@@ -1,13 +1,10 @@
 {% extends "base.html" %}
 
-{% load django_static %}
+{% load endless django_static %}
 
 {% block extrajs %}
 <script type="text/javascript">
-$(document).ready( function() {
- clearInput();
- getTextByUID('{{ uid }}');
-});
+
 </script>
 {% endblock %}
 
@@ -15,12 +12,11 @@ $(document).ready( function() {
 {% block extracss %}
 <style type="text/css">
 
+
 </style>
 {% endblock %}
 
 
 {% block content %}
-
-
-<div id="text" class="easy centred"></div>
+    {% include 'website/single_snippet.html' %}    
 {% endblock %}
