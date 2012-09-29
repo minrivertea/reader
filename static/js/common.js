@@ -3,7 +3,7 @@ var vocabListHTML = '<div id="vocablist" class="centred"></div>';
 var crumbsHTML = '<div id="crumbs" class="centred"><span class="arrow">&#9658;</span></div>';
 var textHTML = '<div id="text" class="centred easy"></div>';
 var textHeadHTML = '<div id="head" class="centred easy"><a id="original-page" title="" href="">Original page</a><div id="appearance" class="set"><span class="button">Fonts</span><div class="extra"><div><h4>Change font</h4><ul id="fonts"><li><a href="#" class="font1 selected" onclick="changeFont(&apos;font1&apos;, false);" title="KaiTi">汉字</a></li><li><a href="#" class="font2" onclick="changeFont(&apos;font2&apos;);" title="SongTi">汉字</a></li><li><a href="#" class="font3" onclick="changeFont(&apos;font3&apos;);" title="FangSong">汉字</a></li><li><a href="#" class="font4" onclick="changeFont(&apos;font4&apos;);" title="HeiTi">汉字</a></li></ul></div><div><h4>Theme</h4><ul id="colors"><li><a href="#" onclick="changeColor(&apos;color1&apos;);" class="color1" title="Red"></a></li><li><a href="#" onclick="changeColor(&apos;color2&apos;);" class="color2" title="blue"></a></li><li><a href="#" onclick="changeColor(&apos;color3&apos;);" class="color3" title="green"></a></li><li><a href="#" onclick="changeColor(&apos;color4&apos;);" class="color4" title="black"></a></li></ul></div></div></div><div id="group" class="set"><span class="button" class="">Group Words</span></div><div id="pinyin" class="set"><span class="button" class="selected">Pinyin</span></div></div><h1 class="centred"></h1><span id="url" class="centred"></span>';
-var singleWordHTML = '<div id="single"><div id="chars"></div></div>';
+var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><div class="pinyin"></div><div class="meaning"></div></div></div>';
 
 
 
@@ -39,6 +39,8 @@ var singleWordHTML = '<div id="single"><div id="chars"></div></div>';
                 $('#text').append(singleWordHTML);
                 $(data).each( function(k,v) {
                     $('#chars').append(v.chars);
+                    $('.pinyin').append(v.pinyin1);
+                    $('.meaning').append(v.meaning1);
                 });
             } 
         });
@@ -55,7 +57,13 @@ var singleWordHTML = '<div id="single"><div id="chars"></div></div>';
             $('#loading').show();
             $('form, #header').animate({'top': '0px'}, 300);
             if ($('#id_char').val()=='') {
-                $('#text').append('<p>You need to enter some words to search for!</p>');
+                if ($('#search-error').length) {
+                    $('#search-error').fadeIn(100);   
+                } else {
+                    $('#header').append('<p id="search-error">You need to enter some words to search for!</p>');
+                }
+                $('#search-error').css('color', 'red').delay(1800).fadeOut(400);
+                $('#id_char').focus();
                 $('#loading').hide();
             } else { 
                 $.ajax({ 
@@ -99,7 +107,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div></div>';
             dataType: 'json',
             success: function(data) {            
                 $('#container').html(vocabListHTML).prepend(crumbsHTML);
-                $('#crumbs').append('<a href="">Your Vocabulary</a>');
+                $('#crumbs').append('<a href="/vocab/">Your Vocabulary</a>');
                 arrayDict(data);
             },
         });

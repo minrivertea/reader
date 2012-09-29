@@ -183,6 +183,17 @@ a:hover, a:active {
   margin-top: 10px;  
 }
 
+#search-error {
+    color: #999999;
+    font-family: Helvetica;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+    position: absolute;
+    right: 10px;
+    top: 77px;
+}
+
 #search input.submit, .button, a.button {
     float: right;
     border: 1px solid transparent;
@@ -1156,7 +1167,43 @@ h3 {
 
 /* SINGLE WORD LOOKUP STYLES */
 
-#single #chars {
-  font-size: 60px;
-  padding: 20px;   
+#single {
+  float: left;
+  width: 100%;
+  margin-top: 20px;   
 }
+
+#single #chars {
+  font-size: 80px;
+  padding: 20px;
+  float: left;
+  width: 100%;
+  margin: 0 20px 0 0;   
+}
+
+#single .line {
+  width: 100%;
+  float: left;
+  margin: 0 0 15px 0;   
+}
+
+#single .pinyin {
+   float: left;
+   font-size: 22px;
+   color: #E55C12; 
+   padding: 0px 0 0px 30px;
+   width: 100px;
+}
+
+#single .meaning {
+  float: left;
+  width: 600px;
+  font-size: 22px;
+  color: #666;
+  font-style: italic;
+  padding: 0px 20px;
+}
+
+
+
+
