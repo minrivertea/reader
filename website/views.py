@@ -557,7 +557,10 @@ def single_word(request, word):
     
     
     crumb = "Search"
+    url = '/search/'
+
     if 'vocab' in request.path:
+        url = '/vocab/'
         crumb = "Your Vocabulary"
             
     chars = word['chars']

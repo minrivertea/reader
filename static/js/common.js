@@ -26,6 +26,8 @@ var singleWordHTML = '<div id="single"><div id="chars"></div></div>';
         var crumbs = $('#crumbs')
         $('#container').html('');
         chars = chars || $(this).attr('chars');
+        $('#container').html(crumbs);
+        $('#crumbs').append('&nbsp;&nbsp;&#92;&nbsp;&nbsp;'+chars+'');
         history.pushState('', 'title', chars);            
         $.ajax({ 
             url: '/vocab/'+chars,
@@ -33,9 +35,8 @@ var singleWordHTML = '<div id="single"><div id="chars"></div></div>';
             data: chars,
             dataType: 'json',
             success: function(data) {
-                $('#container').html(textHTML).prepend(crumbs);
+                $('#container').append(textHTML);
                 $('#text').append(singleWordHTML);
-                $('#crumbs').append('&nbsp;&nbsp;&#92;&nbsp;&nbsp;'+chars+'');
                 $(data).each( function(k,v) {
                     $('#chars').append(v.chars);
                 });
