@@ -682,6 +682,11 @@ body.color4 #tools {
     user-select: none;
 }
 
+#vocablist {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0;
+}
 
 #vocablist .wrapper, #previous-searches .wrapper {
   width: 96%;
@@ -1179,6 +1184,16 @@ h3 {
   float: left;
   width: 100%;
   margin: 0 20px 0 0;   
+}
+
+#single #chars a {
+  color: #333;
+}
+
+#single #chars a:hover {
+  color: #E55C12;
+  text-decoration: none;
+  cursor: pointer;   
 }
 
 #single .line {

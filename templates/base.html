@@ -76,16 +76,10 @@
 
 		$(document).ready( function() {
             $('#search').bind('submit', submitForm);
-            $('a.ajax').bind('click', loadFlatpage);            
+            bindLoadContent();     
             clearInput();
-            window.onpopstate = function(event) {
-	           if (location.pathname.match(/url/g)) {
-	               var path = location.pathname.replace('/url/', '').replace('/', '');
-	               getTextByUID(path);    
-	           } else {
-    	           loadContent(location.pathname);
-	           }
-            }
+            
+            
 		});
 		
 	</script>

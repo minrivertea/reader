@@ -28,6 +28,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils import simplejson
 from django.template.loader import render_to_string
+from django.utils.encoding import smart_str, smart_unicode
+
 
 
 
@@ -448,8 +450,10 @@ def home(request):
                 }
                 r_server.hmset(stats_key, mapping)
             
+            
             if request.user.is_authenticated() and len(form.cleaned_data['char']) < 10:
                 word_searched.send(sender=word_searched, chars=form.cleaned_data['char'], time=datetime.datetime.now(), user_id=request.user.pk)
+            
             
             if request.is_ajax():
                 
@@ -546,24 +550,97 @@ def stats(request):
     
     return render(request, 'website/stats.html', locals())    
 
+def vocab(request):
+    _update_crumbs(request)
+    words = request.user.get_profile().get_personal_words()
+    if request.is_ajax():
+        html = render_to_string('website/vocab_snippet.html', {'words': words,})
+        return HttpResponse(html)
+    
+    return render(request, 'website/vocab.html', locals())
+
+
+# RETURNS A NICELY FORMATTED HTML BREADCRUMB
+def _get_crumbs(request):
+    
+    try:
+        crumbs = request.session['crumbs']
+    except:
+        crumbs = ''
+        request.session['crumbs'] = crumbs
+        return crumbs
+    
+    items = []
+    loop = 0
+    objects = crumbs.split(' \ ')
+    for x in objects:
+        try:
+            next = objects[loop+1]
+            url = reverse('single_word', args=[x])
+            string = '<a href="%s">%s</a>' % (url, x)
+        except:
+            string = x
+        items.append(string)
+        loop += 1
+    
+    crumbs_html = ' \ '.join(items) 
+    return crumbs_html
+
+# ADD OR REMOVE ITEMS FROM THE BREADCRUMB    
+def _update_crumbs(request, word=None):
+    
+    
+    
+    try:
+        crumbs = request.session['crumbs']
+    except:
+        crumbs = ''
+        request.session['crumbs'] = crumbs
+        return crumbs
+    
+    
+    if word == None:
+        new_crumb = ''
+        request.session['crumbs'] = new_crumb
+        return new_crumb
+    
+    
+        
+    if word not in crumbs:
+        new_crumb = "%s \ %s" % (crumbs, word)
+        
+    else:
+        head, sep, tail = crumbs.partition(word)
+        new_crumb = "%s%s" % (head, sep)
+        
+        
+    
+    request.session['crumbs'] = new_crumb
+    return new_crumb
+        
 
 def single_word(request, word):
-    
+   
     key = "%sC:%s" % (len(word), word)
     word = search_redis(key)
     
-    if request.is_ajax():
-        return HttpResponse(simplejson.dumps(word), mimetype="application/json")
+    _update_crumbs(request, smart_unicode(word['chars']))
+    crumbs = _get_crumbs(request)
     
+    chars = split_unicode_chrs(smart_unicode(word['chars']))
     
-    crumb = "Search"
-    url = '/search/'
+    title = "Search"
+    url = reverse('search')
 
     if 'vocab' in request.path:
-        url = '/vocab/'
-        crumb = "Your Vocabulary"
-            
-    chars = word['chars']
+        url = reverse('vocab')
+        title = "Your Vocabulary"
+
+    
+    if request.is_ajax():
+        html = render_to_string('website/single_snippet.html', locals())
+        return HttpResponse(html)
+
     return render(request, 'website/single.html', locals())    
     
 def get_personal_words(request):

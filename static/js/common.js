@@ -7,17 +7,40 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
 
 
 
-    // LOADS A STATIC FLATPAGE. CRUMBS SHOULD COME IN THE TEMPLATE
-    function loadFlatpage() {
-        $('#loading').show();
-        $('#head, h1.centred, #url').hide();
-        if ($('#header').css('top') != 0) {
-            $('#header').animate({'top':'0px',}, 300);
-        };
-        newURL = $(this).attr('href');
-        $('#container').load(newURL);
-        history.pushState('', 'title', newURL); 
-        $('#loading').hide();
+    // LOADS An HTML SNIPPET VIA A URL. CRUMBS SHOULD COME IN THE TEMPLATE
+    function loadContent() {
+        $('.ajax, .wrapper, #crumbs a, a.single').click( function(e) {
+            $('#loading').show();
+            $('#head, h1.centred, #url').hide();
+            if ($('#header').css('top') != 0) {
+                $('#header').animate({'top':'0px',}, 300);
+            };
+            
+            newURL = $(this).attr('href');
+            $('.ajax, .wrapper, #crumbs a, a.single').unbind();
+            loadPage(newURL);
+            history.pushState('', '', newURL);
+            e.preventDefault();
+        });
+        
+        window.onpopstate = function(event) {
+    	   $("#loading").show();
+    	   console.log("pathname: "+location.pathname);
+    	   loadPage(location.pathname);
+	    }
+        
+    }
+    
+    function bindLoadContent() {
+       $('.ajax, .wrapper, #crumbs a, a.single').unbind();
+       loadContent();     
+    }
+    
+    function loadPage(url) {
+        $('#container').load(url, function() {
+            bindLoadContent();
+            $('#loading').hide();    
+        });    
     }
     
     
@@ -25,23 +48,34 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     function getSingleWord(e, chars) {
         var crumbs = $('#crumbs')
         $('#container').html('');
-        chars = chars || $(this).attr('chars');
+        chars = chars || $('.chars', this).text().trim();
         $('#container').html(crumbs);
-        $('#crumbs').append('&nbsp;&nbsp;&#92;&nbsp;&nbsp;'+chars+'');
+        $('#crumbs').append('&nbsp;&nbsp;&#92;&nbsp;&nbsp;'+chars);
         history.pushState('', 'title', chars);            
         $.ajax({ 
-            url: '/vocab/'+chars,
+            url: '/vocab/'+chars+'/',
             method: 'GET',
             data: chars,
             dataType: 'json',
             success: function(data) {
                 $('#container').append(textHTML);
                 $('#text').append(singleWordHTML);
+                var chars = '';
                 $(data).each( function(k,v) {
-                    $('#chars').append(v.chars);
+                    var newChars = v.chars.split('');
+                    $(newChars).each( function(k,v) {
+                       var newLink = location.pathname+v;
+                       chars +=  '<a href="'+newLink+'" class="single"><span class="chars">'+v+'</span></a>';
+                    });
                     $('.pinyin').append(v.pinyin1);
                     $('.meaning').append(v.meaning1);
                 });
+                $('#chars').html(chars);
+                
+                updateCrumbs();
+                bindSingleWords();
+                
+
             } 
         });
         return false;
@@ -135,67 +169,72 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     }
 
 
-/* rendering data on the page */
+/* FUNCTIONS THAT RENDER DATA ON A PAGE */
 
-function arrayDict(data) {
-    var tWS;
-    $(data).each( function(k,v) {        
-        if (v.wordset == tWS) {
-            var chars =  $('#vocablist #char'+v.wordset).attr('chars');
-            chars += v.chars;
-            $('#vocablist #char'+v.wordset).attr('chars', chars);
-            $('#vocablist #char'+v.wordset+' .chars').append(v.chars);
-            $('#vocablist #char'+v.wordset+' .pinyin').append(' '+v.pinyin1);
-        } else {
-            tWS = v.wordset;
-            var html = '<div class="wrapper" id="char'+v.wordset+'" chars="'+v.chars+'"><span class="next">&#9658;</span>';
-            html += '<div class="line"><div class="chars">'+v.chars+'</div><div class="pinyin">'+v.pinyin1+'</div><div class="meaning">'+v.meaning1+'</div></div>';
-            if (v.meaning2) {
-            html += '<div class="line"><div class="chars">&nbsp;</div><div class="pinyin">'+v.pinyin2+'</div><div class="meaning">'+v.meaning2+'</div></div>';                };
-            if (v.meaning3) {
-            html += '<div class="line"><div class="chars">&nbsp;</div><div class="pinyin">'+v.pinyin3+'</div><div class="meaning">'+v.meaning3+'</div></div>';                };
-            html += '</div>';
-            $('#vocablist').append(html); 
-        }
-    });
-    $('.wrapper').bind('click', getSingleWord);     
+    // RENDERS A DICTIONARY LOOKUP (LESS THAN 10 CHARACTERS)
+    function arrayDict(data) {
+        var tWS;
+        $(data).each( function(k,v) {        
+            if (v.wordset == tWS) {
+                var chars =  $('#vocablist #char'+v.wordset).attr('chars');
+                chars += v.chars;
+                $('#vocablist #char'+v.wordset).attr('chars', chars);
+                $('#vocablist #char'+v.wordset+' .chars').append(v.chars);
+                $('#vocablist #char'+v.wordset+' .pinyin').append(' '+v.pinyin1);
+            } else {
+                tWS = v.wordset;
+                var url = '/search/';
+                var html = '<div class="wrapper" href="" id="char'+v.wordset+'" chars="'+v.chars+'"><span class="next">&#9658;</span>';
+                html += '<div class="line"><div class="chars">'+v.chars+'</div><div class="pinyin">'+v.pinyin1+'</div><div class="meaning">'+v.meaning1+'</div></div>';
+                if (v.meaning2) {
+                html += '<div class="line"><div class="chars">&nbsp;</div><div class="pinyin">'+v.pinyin2+'</div><div class="meaning">'+v.meaning2+'</div></div>';                };
+                if (v.meaning3) {
+                html += '<div class="line"><div class="chars">&nbsp;</div><div class="pinyin">'+v.pinyin3+'</div><div class="meaning">'+v.meaning3+'</div></div>';                };
+                html += '</div>';
+                $('#vocablist').append(html);
+                 
+            }
+            var url = '/search/' + $('#vocablist #char'+v.wordset).attr('chars') + '/';
+            $('#vocablist #char'+v.wordset).attr('href', url);
+        });
+        $('.ajax, .wrapper, #crumbs a, a.single').unbind().click(loadContent);
+    }
 
-}
-
-function arrayText(data) {
-    $('#previous-searches').hide();
-    $('#tools').fadeIn(500);
-    var tWS;
-    $(data).each( function(k,v) {
-        var html;                
-        var wC = '';
-        if (v.chars == ' ') return;
-        if (v.is_linebreak == true) { $('#text').append('<br clear="all"/><br clear="all"/>')};
-        if (v.is_punctuation == true) wC += ' punctuation';
-        if (v.is_number== true) wC+=' number';
-        if (v.is_english==true) wC +=' english';
-        
-        var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.chars+'" title="'+v.meaning1+'" pinyin="'+v.pinyin1+' ">';
-        
-        var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
-        html+='<span class="hanzi">'+v.chars+'</span>';
-        if (v.pinyin1) html+='<span class="pinyin">'+v.pinyin1+'</span>';
-        html+='</div>';
-        
-        if (v.wordset==tWS) {
-            $('#text #word'+v.wordset).append(html);
-            var newChars = ($('#text #word'+v.wordset).attr('chars') + v.chars);
-            var newPY = ($('#text #word'+v.wordset).attr('pinyin') + v.pinyin1);
-            $('#text #word'+v.wordset).attr('chars', newChars);
-            $('#text #word'+v.wordset).attr('pinyin', newPY);
-        } else {
+    // RENDERS A LONG TEXT LOOKUP (MORE THAN 10 CHARACTERS)
+    function arrayText(data) {
+        $('#previous-searches').hide();
+        $('#tools').fadeIn(500);
+        var tWS;
+        $(data).each( function(k,v) {
+            var html;                
+            var wC = '';
+            if (v.chars == ' ') return;
+            if (v.is_linebreak == true) { $('#text').append('<br clear="all"/><br clear="all"/>')};
+            if (v.is_punctuation == true) wC += ' punctuation';
+            if (v.is_number== true) wC+=' number';
+            if (v.is_english==true) wC +=' english';
+            
+            var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.chars+'" title="'+v.meaning1+'" pinyin="'+v.pinyin1+' ">';
+            
+            var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
+            html+='<span class="hanzi">'+v.chars+'</span>';
+            if (v.pinyin1) html+='<span class="pinyin">'+v.pinyin1+'</span>';
             html+='</div>';
-            var newHtml = wW+html;
-            $('#text').append(newHtml);
-            tWS = v.wordset;
-        }
-    });
-}  
+            
+            if (v.wordset==tWS) {
+                $('#text #word'+v.wordset).append(html);
+                var newChars = ($('#text #word'+v.wordset).attr('chars') + v.chars);
+                var newPY = ($('#text #word'+v.wordset).attr('pinyin') + v.pinyin1);
+                $('#text #word'+v.wordset).attr('chars', newChars);
+                $('#text #word'+v.wordset).attr('pinyin', newPY);
+            } else {
+                html+='</div>';
+                var newHtml = wW+html;
+                $('#text').append(newHtml);
+                tWS = v.wordset;
+            }
+        });
+    }  
 
 
 // UI FUNCTIONS 
@@ -230,25 +269,17 @@ $('#user').click(function() {
 
 
 
-$('a.ajax').bind('click', function(e) {  
-  newURL = $(this).attr('href');
-  loadFlatpage(newURL);
-  history.pushState('', 'title', newURL); 
-  e.preventDefault();
-  return false;
-});
-
-
-function changeFont(fname) {
-   $('#fonts a').removeClass('selected');
-   $('#fonts .'+fname).addClass('selected');
-   $('body').removeClass(function (index, fc) {
-        var matches = fc.match (/font\d+/g) || [];
-        return (matches.join (' '));
-   }).addClass(fname);
-   mySelect(this);
-   return false;
-}
+    // CHANGES THE FONTS FOR LONG TEXTS
+    function changeFont(fname) {
+       $('#fonts a').removeClass('selected');
+       $('#fonts .'+fname).addClass('selected');
+       $('body').removeClass(function (index, fc) {
+            var matches = fc.match (/font\d+/g) || [];
+            return (matches.join (' '));
+       }).addClass(fname);
+       mySelect(this);
+       return false;
+    }
 
 function changeColor(color) {
    $('#colors a').removeClass('selected');
@@ -342,6 +373,10 @@ function bindWords() {
     });
 }
 
+function bindSingleWords() {
+   $('.single').bind('click', getSingleWord);   
+}
+
 // HELPER FUNCTIONS 
 
 function slideLeft(element) {
@@ -357,6 +392,33 @@ function findPos(obj) {
 		} while (obj = obj.offsetParent);
 	}
 	return [curleft,curtop];
+}
+
+function trim(str) {
+    return str.replace(/^\s*|\s*$/g,"");
+}
+
+function findChineseChars() {
+    
+    $('#text').search();
+    var re1 = new RegExp("^[\u4E00-\uFA29]*$"); //Chinese character range
+    var re2 = new RegExp("^[\uE7C7-\uE7F3]*$"); //Chinese character range
+    str = str.replace(/(^\s*)|(\s*$)/g,'');
+    if (str == '') {
+        alert("Oh, man, Please input Chinese character.");
+        return;
+    }
+    
+    if (!(re1.test(str) && (! re2.test(str)))) {
+        alert("Oops, Please input Chinese character.");
+        return;
+    }
+}
+
+function updateCrumbs() {
+   // get the previous crumb and make it a link
+   
+   // add this item to the end.   
 }
 
 function clearInput() {		
