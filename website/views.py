@@ -404,6 +404,8 @@ def strip_tags(html):
 
 def home(request):
 
+    _update_crumbs(request)
+    
     if request.GET.get('url'):
         url = request.GET.get('url')
 
@@ -530,6 +532,7 @@ def url(request, hashkey):
 
 def page(request, slug):
     template = 'website/%s.html' % slug
+    _update_crumbs(request)
     
     if request.is_ajax():
         template = 'website/%s_snippet.html' % slug
