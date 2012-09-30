@@ -70,11 +70,9 @@ def render(request, template, context_dict=None, **kwargs):
             **kwargs)        
 
 def search(string, reading=None, dictionary='CEDICT'):
-    # search
     d = getDictionary(dictionary, entryFactory=entry.UnifiedHeadword(), columnFormatStrategies={'Translation': TranslationFormatStrategy()})
     result = d.getFor(string, reading=reading)
     
-    # shit... this only returns one translation, sometimes it's the wrong one.
     for x in result:
         if x.Translation is None:
             return None
@@ -175,7 +173,7 @@ def add_to_redis(key, values):
     return True
     
 
-# send me a dict of chars, and I'll return a dict of chars
+# ACCEPTS A LIST OF CHARACTERS (a random search string perhaps) AND RETURNS A GROUPED LIST OF WORDS
 def group_words(chars, chinese_only=False):
     obj_list = []
     loop = 0        
@@ -237,14 +235,14 @@ def group_words(chars, chinese_only=False):
             obj['chars'] = num
             nc = True
         
-        # if the character is English            
+        # IS THE CHARACTER ENGLISH?            
         if nc == False and _is_english(x):            
             obj['is_english'] = True
             english = True
             eng_word = x
             while english == True:
             
-                # if the next character is also English, add it to this one
+                # IF THE NEXT CHAR IS ENGLISH, LETS BUILD THE ENGLISH WORD
                 try:
                     next = chars[loop+1]
                 except:
@@ -262,7 +260,7 @@ def group_words(chars, chinese_only=False):
             nc = True
 
         
-        
+        # IF THE CHARACTER IS NOT CHINESE
         if nc == True:
             if chinese_only == False:
                 obj_list.append(obj)
@@ -279,7 +277,7 @@ def group_words(chars, chinese_only=False):
         search_string = x
                 
         
-        # at the end of this loop, we'll have a MULTI-CHAR-WORD or NONE
+        # THIS LOOP WILL BUILD OUR CHINESE WORD
         while i > 0:
             try:
                 next_char = chars[loop+i]
@@ -294,42 +292,34 @@ def group_words(chars, chinese_only=False):
             key = "%sC:%s" % (len(search_string), search_string)
             r = search_redis(key) 
             
-                    
             if r == None:
                 break
             else:  
-                word = r
-                length = len(search_string)
                 i += 1
             
         
-        if word != None:
-            # give X the values of the dictionary word
-            for k, v in word.iteritems():
+        if r != None:
+            # GIVE X THE VALUES OF THE OBJECT THE DICTIONARY RETURNED
+            for k, v in r.iteritems():
                 obj[k] = v
-                
-                if k == 'chars':
-                    obj[k] = x
-                
-                if k == 'pinyin1':
-                    obj[k] = v.split()[0]
+               
                     
             obj_list.append(obj)
             
-            # if the word is more than 1 character, give the next X's the values too
-            ni = 1
-            while ni < length:
-                
-                n = {
-                    'chars': chars[loop+ni],
-                    'wordset': obj['wordset'],
-                    'pinyin1': word['pinyin1'].split()[ni],
-                }
-                ni += 1
-                obj_list.append(n)
+            # IF THE WORD IS MORE THAN 1 CHAR LONG, GIVE THE NEXT ONES TOO
+            #ni = 1
+            #while ni < len(search_string):
+            #    
+            #    n = {
+            #        'chars': chars[loop+ni],
+            #        'wordset': obj['wordset'],
+            #        'pinyin1': r['pinyin1'].split()[ni],
+            #    }
+            #    ni += 1
+            #    obj_list.append(n)
             
-            skip += (length-1)
-            word = None
+            skip += (len(search_string)-1)
+            r = None
           
         # finally, if we have no WORD we'll just do a SINGLE-CHAR-LOOKUP
         else:
@@ -345,6 +335,22 @@ def group_words(chars, chinese_only=False):
 
 
 
+def search_word(request, word):
+    
+    things = split_unicode_chrs(word)
+    print things
+    words = group_words(things)
+    _update_crumbs(request)
+    title = "Search"
+    search = True
+    
+    if request.is_ajax():
+        
+        html = render_to_string('website/vocab_snippet.html', locals())
+        return HttpResponse(html)
+    
+    return render(request, 'website/vocab.html', locals())
+   
 
 def copy_dictionary(request):
     # eg 一中一台 [yi1 Zhong1 yi1 Tai2] /first meaning/second meaning/
@@ -556,8 +562,10 @@ def stats(request):
 def vocab(request):
     _update_crumbs(request)
     words = request.user.get_profile().get_personal_words()
+    title = "Your Vocabulary"
+    
     if request.is_ajax():
-        html = render_to_string('website/vocab_snippet.html', {'words': words,})
+        html = render_to_string('website/vocab_snippet.html', locals())
         return HttpResponse(html)
     
     return render(request, 'website/vocab.html', locals())
@@ -637,7 +645,7 @@ def single_word(request, word):
 
     if 'vocab' in request.path:
         url = reverse('vocab')
-        title = "Your Vocabulary"
+        title = "Vocabulary"
 
     
     if request.is_ajax():

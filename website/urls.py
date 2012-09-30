@@ -5,7 +5,7 @@ import views
 urlpatterns = patterns('',
     url(r'^$', views.home, name="home"),
     url(r'^search/$', views.home, name="search"),
-    url(r'^search/(?P<word>[\w-]+)/$', views.single_word, name="search_word"),
+    url(r'^search/(?P<word>[\w-]+)/$', views.search_word, name="search_word"),
     url(r'^copy_dict/$', views.copy_dictionary, name="copy_dictionary"),
     url(r'^vocab/$', views.vocab, name="vocab"),
     url(r'^vocab/(?P<word>[\w-]+)/$', views.single_word, name="single_word"),

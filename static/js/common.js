@@ -7,7 +7,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
 
 
 
-    // LOADS An HTML SNIPPET VIA A URL. CRUMBS SHOULD COME IN THE TEMPLATE
+    // LOADS AN HTML SNIPPET BASED ON A CLICK ACTION
     function loadContent() {
         $('.ajax, .wrapper, #crumbs a, a.single').click( function(e) {
             $('#loading').show();
@@ -31,11 +31,13 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
         
     }
     
+    // BINDS VARIOUS ELEMENTS TO THE AJAXY LOADCONTENT BELOW
     function bindLoadContent() {
        $('.ajax, .wrapper, #crumbs a, a.single').unbind();
        loadContent();     
     }
     
+    // LOADS A PAGE BASED SOLELY ON A URL
     function loadPage(url) {
         $('#container').load(url, function() {
             bindLoadContent();
@@ -84,51 +86,49 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     // THE MAIN SEARCH FUNCTION
     var pS;
     function submitForm(e) {
-      var tS = $('#id_char').val();    
-      if (pS == null) {pS = ' ';}
-      if (tS.localeCompare(pS.toString()) != 0) {
-            pS = tS;
-            $('#loading').show();
-            $('form, #header').animate({'top': '0px'}, 300);
-            if ($('#id_char').val()=='') {
-                if ($('#search-error').length) {
-                    $('#search-error').fadeIn(100);   
-                } else {
-                    $('#header').append('<p id="search-error">You need to enter some words to search for!</p>');
-                }
-                $('#search-error').css('color', 'red').delay(1800).fadeOut(400);
-                $('#id_char').focus();
-                $('#loading').hide();
-            } else { 
+       $('#loading').show();
+       $('form, #header').animate({'top': '0px'}, 300);
+       
+       if ($('#id_char').val()!='') {
+
+            var key, count = 0;
+            
+            for(key in ($('#id_char').val())) { count++; }
+            if ( count < 10 ) {
+                var url = '/search/'+$('#id_char').val();
+                loadPage(url);
+                history.pushState('', '', url);
+                return false;
+            } else {
                 $.ajax({ 
-                url: $('#search').attr('action'),
-                type: 'POST',
-                data: $('form').serialize(),
-                dataType: 'json',
-                success: function(data) {
-                    history.pushState('', 'title', '/search/');    
-                    var key, count = 0;
-                    for(key in data) { count++; }
-                    if (count < 10) { 
-                        $('#container').html(vocabListHTML).prepend(crumbsHTML);
-                        $('#crumbs').append('<a href="">Search</a>');
-                        arrayDict(data);
-                    } else {
+                    url: $('#search').attr('action'),
+                    type: 'POST',
+                    data: $('form').serialize(),
+                    dataType: 'json',
+                    success: function(data) {   
                         arrayText(data);
-                        bindWords();
-                    };    
-                    $('#loading').hide();
-                },
-                error: function() {
-                    $('#text').html('<p>There was some kind of error, please try again!</p>');
-                    $('#search').bind('submit', submitForm);
-                    $('#loading').hide();
-                }
+                        bindWords();   
+                        $('#loading').hide();
+                    }, error: function() {
+                        $('#text').html('<p>There was some kind of error, please try again!</p>');
+                        $('#loading').hide();
+                    }
                 });
-                return false;   
+                return false;
             }
-          } return false; 
-    }
+         } else {
+             // HANDLE AN EMPTY SEARCH
+             if ($('#search-error').length) {
+                $('#search-error').fadeIn(100);   
+             } else {
+                $('#header').append('<p id="search-error">You need to enter some words to search for!</p>');
+             };
+             $('#search-error').css('color', 'red').delay(1800).fadeOut(400);
+             $('#id_char').focus();
+             $('#loading').hide(); 
+             return false;
+         }
+    } 
 
     
     
