@@ -750,6 +750,10 @@ body.color4 #tools {
   padding-bottom: 10px;   
 }
 
+#vocablist .wrapper .article .title {
+  color: #E55C12;  
+}
+
 #vocablist .wrapper .article .meta {
   font-size: 14px;
   color: #999;

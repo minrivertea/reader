@@ -11,7 +11,7 @@
         <li class="wrapper" href="{% url url x.hash %}">
             <span class="next">&#9658;</span>
             <div class="article">
-                <a class="ajax" href="{% url url x.hash %}">{{ x.title }}</a>
+                <div class="title">{{ x.title }}</div>
                 <div class="meta">
                     <span class="date">{{ x.date|date:"d M Y" }}</span> | 
                     <span class="url">{{ x.shorturl }}</span>
