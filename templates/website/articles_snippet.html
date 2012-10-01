@@ -1,7 +1,21 @@
 
 
-<script type="text/javascript">
-   $(document).ready( function() {
-        // getPersonalArticles();
-   });
-</script>
+<div id="crumbs" class="centred">
+    <span class="arrow">&#9658;</span>
+    <a href="{% url articles %}">Your Articles</a>
+</div>
+
+<ul id="vocablist" class="centred easy">
+    {% for x in articles %}
+        <li class="wrapper" href="{% url url x.hash %}">
+            <span class="next">&#9658;</span>
+            <div class="article">
+                <a class="ajax" href="{% url url x.hash %}">{{ x.title }}</a>
+                <div class="meta">
+                    <span class="date">{{ x.date|date:"d M Y" }}</span> | 
+                    <span class="url">{{ x.shorturl }}</span>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

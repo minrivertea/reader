@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 import datetime
 import time
 import unicodedata
+from urlparse import urlparse
 
 from redis_helper import get_redis
 
@@ -27,7 +28,6 @@ class Account(models.Model):
         return self.user.email
     
     def get_personal_words(self):
-        
         r_server = get_redis()
         key = "PW:%s" % self.user.email
         wordlist = search_redis(key)['wordlist']
@@ -36,6 +36,7 @@ class Account(models.Model):
         loop = 0
         for x in wordlist.splitlines():
             try:
+                print float(x.split('/')[1].strip(' '))
                 this_time = datetime.datetime.fromtimestamp(float(x.split('/')[1].strip(' ')))
                 w = x.split('/')[0].strip(' ')
                 key = "%sC:%s" % (len(smart_unicode(w)), w)
@@ -48,9 +49,35 @@ class Account(models.Model):
             except:
                 pass
         
-        
-        
         return obj_list
+    
+    def get_personal_articles(self):
+        r_server = get_redis()
+        key = 'AL:%s' % self.user.email
+        try:
+            articleslist = search_redis(key)['articlelist']
+        except:
+            articleslist = ''
+        
+        obj_list = []
+        urls = []
+        loop = 0
+        for x in articleslist.split(','):
+            key = "url:%s" % x.strip()
+            a = search_redis(key)
+            try:
+                if a['url'] in urls:
+                    pass
+                else:
+                    urls.append(a['url'])
+                    a['date'] = datetime.datetime.fromtimestamp(float(a['timestamp'].strip()))
+                    a['shorturl'] = urlparse(a['url']).netloc
+                    obj_list.append(a)
+            except:
+                pass
+                
+        return obj_list
+
     
          
 
@@ -61,16 +88,19 @@ def save_article(sender, **kwargs):
     try:
         account = get_object_or_404(User, pk=kwargs['user_id']).get_profile()
     except:
-        return 
+        return     
         
     r_server = get_redis()
     key = "AL:%s" % account.user.email 
     
     if r_server.exists(key):
         current_list = search_redis(key)['articlelist']
-        new_value = ",".join(current_list, kwargs['article_id'])
+        
+        new_value = ",".join((current_list, kwargs['article_id']))
     else:
         new_value = kwargs['article_id']
+    
+    print new_value
     
     mapping = {
         'articlelist': new_value,

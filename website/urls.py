@@ -3,7 +3,11 @@ from django.views.generic.simple import direct_to_template
 import views
 
 urlpatterns = patterns('',
+    
     url(r'^$', views.home, name="home"),
+    
+    url(r'^articles/$', views.articles, name="articles"),
+    
     url(r'^search/$', views.main_search, name="search"),
     url(r'^search/(?P<word>[\w-]+)/$', views.search_word, name="search_word"),
     url(r'^copy_dict/$', views.copy_dictionary, name="copy_dictionary"),

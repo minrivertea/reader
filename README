@@ -41,7 +41,7 @@ Stores a user's personal article list as a list of article UIDs
 
  
       
-TEXT:[HASH]
+text:[HASH]
 eg. TEXT:10HDJKHF8790
 Stores a long piece of text (eg. long chars submitted via search)
       
@@ -52,8 +52,8 @@ Stores a long piece of text (eg. long chars submitted via search)
 
     
 
-URL:[hash]
-eg. URL:85ur8
+url:[hash]
+eg. url:85ur8
 Stores the result of a bookmarklet search
 
     user

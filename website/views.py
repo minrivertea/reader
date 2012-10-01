@@ -486,12 +486,17 @@ def home(request):
         # GIVE IT AN ID
         this_id = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(5))
         key = "url:%s" % this_id
+        
+        if request.user.is_authenticated():
+            user = request.user.email
+        else:
+            user = 'anon'
             
         mapping = {
-            'user': 'dummy',
+            'user': user,
             'title': title, 
             'chars': new_text, 
-            'timestamp': '12345',
+            'timestamp': time.time(),
             'hash': this_id,
             'url' : url,
         }
@@ -501,6 +506,8 @@ def home(request):
         r_server = get_redis()
         r_server.hmset(key, mapping)
         
+        article_saved.send(sender=article_saved, article_id=this_id, time=time.time(), user_id=request.user.pk)
+
         
         # NOW REDIRECT AND SERVE UP THE PAGE
         url = reverse('url', args=[this_id])
@@ -574,6 +581,22 @@ def user(request, pk):
     return render(request, 'website/user.html', locals())
 
 
+
+# GETS A LIST OF YOUR ARTICLES
+def articles(request):
+    
+    if request.user.is_authenticated():        
+        articles = request.user.get_profile().get_personal_articles()        
+        
+    else:
+        pass
+    
+    if request.is_ajax():
+    
+        html = render_to_string('website/articles_snippet.html', locals())
+        return HttpResponse(html)
+    
+    return render(request, 'website/articles.html', locals())
 
 # DISPLAYS SITE STATISTICS
 def stats(request):
