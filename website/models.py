@@ -13,7 +13,7 @@ from redis_helper import get_redis
 from django.core.signals import request_finished
 from django.utils.encoding import smart_str, smart_unicode
 
-from website.signals import word_searched
+from website.signals import word_searched, article_saved
 from website.views import group_words, split_unicode_chrs, search_redis
 
 
@@ -22,8 +22,6 @@ from website.views import group_words, split_unicode_chrs, search_redis
 class Account(models.Model):
     user = models.ForeignKey(User)
     date_joined = models.DateTimeField()
-    words = models.TextField(blank=True) # CHARS / TIMESTAMP / VIEWCOUNT 
-    articles = models.TextField(blank=True) # a list of article UIDs + timestamp + read/unread
     
     def __unicode__(self):
         return self.user.email
@@ -58,6 +56,32 @@ class Account(models.Model):
 
 # SIGNAL HANDLERS!
 
+# SAVE AN ARTICLE IN THE USERS PERSONAL ARTICLE LIST:
+def save_article(sender, **kwargs):
+    try:
+        account = get_object_or_404(User, pk=kwargs['user_id']).get_profile()
+    except:
+        return 
+        
+    r_server = get_redis()
+    key = "AL:%s" % account.user.email 
+    
+    if r_server.exists(key):
+        current_list = search_redis(key)['articlelist']
+        new_value = ",".join(current_list, kwargs['article_id'])
+    else:
+        new_value = kwargs['article_id']
+    
+    mapping = {
+        'articlelist': new_value,
+    }
+    
+    r_server.hmset(key, mapping)
+    
+article_saved.connect(save_article)    
+    
+           
+
 
 # save a word in the user's personal wordlist
 def save_word(sender, **kwargs):
@@ -66,7 +90,7 @@ def save_word(sender, **kwargs):
     except:
         return 
     
-    # words coming in need to be converted into unicode characters        
+    # CLUGE THAT CONVERTS INCOMING CHARS INTO UNICODE        
     things = split_unicode_chrs(kwargs['chars'])    
     obj_list = group_words(things, chinese_only=True)
                     
@@ -98,7 +122,8 @@ def save_word(sender, **kwargs):
         
         w = "%s%s" % (w, additional)
         count = 1
-        # if the word is already in the list, then remove it
+        
+        # IF THE WORD IS ALREADY IN THE LIST, REMOVE ITt
         if smart_str(w) in smart_str(this_users_words):
             for line in smart_unicode(this_users_words).splitlines():
                 if w == line.split('/')[0].strip():
@@ -106,7 +131,7 @@ def save_word(sender, **kwargs):
                     count = int(line.split('/')[2]) + 1
                     
 
-        # add / update the word
+        # ADD / UPDATE THE NEW WORD
         s = "%s / %s / %s\n" % (smart_str(w), time.time(), count)
         new_words.append(s)
         loop += 1
@@ -119,12 +144,10 @@ def save_word(sender, **kwargs):
         this_users_words = "%s%s" % (new, this_users_words)
     
     
-        
     mapping = {
         'wordlist': this_users_words,
     }
         
     r_server.hmset(key, mapping)        
-    
-    
+
 word_searched.connect(save_word)

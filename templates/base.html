@@ -53,7 +53,7 @@
         <a href="{% url auth_login %}">Login</a>
         {% endif %}
     
-        <form id="search" action="/" method="post" class="centred">
+        <form id="search" action="{% url search %}" method="post" class="centred">
             {% csrf_token %}
             <label for="id_char">The worlds greatest Chinese-English dictionary!</label>
             <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >

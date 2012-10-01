@@ -561,7 +561,7 @@ textarea {
     font-size: 14px;
     font-weight: normal;
     letter-spacing: -0.5px;
-    margin-bottom: 0px;
+    margin-bottom: 30px;
     padding: 30px 0 10px 0px;
 }
 
@@ -589,7 +589,7 @@ textarea {
   background: #fff;
 }
 
-body.color1 .hanzi {
+body.color1 .char {
   color: #333;   
 }
 
@@ -601,7 +601,7 @@ body.color1 {
   background: #f6f4ed;   
 }
 
-body.color2 .hanzi {
+body.color2 .char {
   color: #5b4a2e;   
 }
 
@@ -627,7 +627,7 @@ body.color3 #tools {
     
 }
 
-body.color3 .hanzi {
+body.color3 .char {
   color: #fff; 
   text-shadow: none;  
 }
@@ -636,7 +636,7 @@ body.color3 .hanzi {
   background: #f2f5f9;   
 }
 
-body.color4 .hanzi {
+body.color4 .char {
   color: #444444;   
 }
 
@@ -811,7 +811,7 @@ body.color4 #tools {
  width: 100%;
  font-size: 26px;
  line-height: 1em;
- color: #444;
+ color: #5E4313; 
  text-shadow: 1px 2px 0 #fff;
 }
 
@@ -877,7 +877,6 @@ body.font4, body.font4 .char, #head ul a.font4, body.font4 #userblock div span.t
   line-height: 1em;
   font-size: 34px;
   letter-spacing: 0.3em;
-  color: #5E4313; 
 }
 
 .easy .word .pinyin {
@@ -898,16 +897,20 @@ body.font4, body.font4 .char, #head ul a.font4, body.font4 #userblock div span.t
   margin-right: 30px;  
 }
 
-.grouped .english {
+.grouped .word .char {
+  letter-spacing: 0em;   
+}
+
+.grouped .word.english {
   left: -30px; 
   margin-right: 15px;  
 }
 
-.grouped .number {
+.grouped .word.number {
   margin-right: 30px;   
 }
 
-.grouped .punctuation {
+.grouped .word.punctuation {
   margin-right: 0; 
   position: relative;
   left: -30px;  

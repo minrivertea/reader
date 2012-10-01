@@ -15,9 +15,11 @@ from bs4 import BeautifulSoup
 from readability.readability import Document
 
 import uuid
+import random
 import re
 import urllib2
 import datetime
+import time
 from HTMLParser import HTMLParser
 
 from django.conf import settings
@@ -128,21 +130,17 @@ def _is_english(x):
 
 def search_redis(key):
     r_server = get_redis()
+    
     stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)    
     if r_server.exists(key):
         r_server.hincrby(stats_key, 'redis_hits', 1)
         return r_server.hgetall(key)
+    
     else:
-        mapping = {
-            'searches': 1,
-            'redis_hits': 1,   
-        }
-        r_server.hmset(stats_key, mapping)
         return None
     
 
-# TODO - there's a problem here. For example, some characters have multiple readings
-# and so this function will only write the 1st reading, not subsequent ones. eg 都
+# ADDS A WORD TO REDIS FROM A DICTIONARY
 def add_to_redis(key, values):
 
     
@@ -167,7 +165,7 @@ def add_to_redis(key, values):
             'pinyin1': values['pinyin'], 
             'meaning1': values['meaning'],
             'count': 1,
-            'id': uuid.uuid1().hex,
+            'id': uuid.uuid4().hex,
         }
         
         r_server.hmset(key, mapping)
@@ -316,6 +314,84 @@ def group_words(chars, chinese_only=False):
      
     return obj_list                         
 
+def main_search(request):
+    
+    if request.method == 'POST':
+        form = CheckPinyinForm(request.POST)
+        if form.is_valid():
+            
+            r_server = get_redis()
+            
+            # UPDATE THE STATS
+            stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
+            if r_server.exists(stats_key):
+                r_server.hincrby(stats_key, 'searches', 1)
+                
+            else:
+                mapping = {
+                     'searches': 1,
+                     'redis_hits': 1,   
+                }
+                r_server.hmset(stats_key, mapping)
+            
+            
+            # IF THE FORM IS LESS THAN 10 CHARACTERS
+            if len(form.cleaned_data['char']) < 10:
+                if request.user.is_authenticated():
+                    word_searched.send(sender=word_searched, chars=form.cleaned_data['char'], time=datetime.datetime.now(), user_id=request.user.pk)
+            
+                if request.is_ajax():    
+                    things = split_unicode_chrs(form.cleaned_data['char'])
+                    obj_list = group_words(things)
+                    
+                    return HttpResponse(simplejson.dumps(obj_list), mimetype="application/json")
+            
+            # IF THERE'S LOTS OF TEXT SENT THROUGH, DO IT DIFFERENTLY
+            else:
+                
+                # PREPARE SOME VARIABLES
+                this_id = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(5))
+                if request.user.is_authenticated():
+                    account = request.user.email
+                else:
+                    account = 'anon'
+
+                # ADD THIS TEXT TO REDIS
+                key = "text:%s" % this_id
+                mapping = {
+                    'user': account, 
+                    'chars': form.cleaned_data['char'], 
+                    'timestamp': time.time(),
+                    'hash': this_id,
+                }
+                r_server.hmset(key, mapping)
+                
+                if request.is_ajax():
+                        things = split_unicode_chrs(form.cleaned_data['char'])
+                        obj_list = group_words(things)
+                        title = 'Text'
+                        url = reverse('text', args=[this_id])
+                        html = render_to_string('website/text_snippet.html', locals())
+                        data = {
+                            'html': html,
+                            'url': url,
+                        }
+                        return HttpResponse(simplejson.dumps(data), mimetype="application/json") 
+                else:
+                    
+                    # NOW REDIRECT TO THE TEXT FUNCTION, WHICH WILL RETRIEVE AND DISPLAY THE TEXT
+                    url = reverse('text', args=[this_id])
+                    return HttpResponseRedirect(url)
+
+            
+    else:
+        form = CheckPinyinForm()
+    
+    
+    return render(request, 'website/home.html', locals())
+    
+    
+    
 
 
 def search_word(request, word):
@@ -327,7 +403,6 @@ def search_word(request, word):
     search = True
     
     if request.is_ajax():
-        
         html = render_to_string('website/vocab_snippet.html', locals())
         return HttpResponse(html)
     
@@ -394,19 +469,22 @@ def home(request):
 
     _update_crumbs(request)
     
+    # HANDLES BOOKMARKLET REQUESTS
     if request.GET.get('url'):
         url = request.GET.get('url')
 
-
         # TODO if it's already been scanned and saved, don't bother parsing it again….
+        
+        
+        # THIS PARSES THE WEBPAGE AND RETURNS A LIST OF CHARACTERS
         html = urllib2.urlopen(url).read()
-        
         text = readabilityParser(html)
-        
         title = Document(html).title() 
         new_text = strip_tags(text)
         
-        this_id = uuid.uuid1().hex
+        
+        # GIVE IT AN ID
+        this_id = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(5))
         key = "url:%s" % this_id
             
         mapping = {
@@ -418,86 +496,45 @@ def home(request):
             'url' : url,
         }
         
+        
+        # ADD IT TO REDIS
         r_server = get_redis()
         r_server.hmset(key, mapping)
         
+        
+        # NOW REDIRECT AND SERVE UP THE PAGE
         url = reverse('url', args=[this_id])
         return HttpResponseRedirect(url)
 
-
-    if request.method == 'POST':
-        form = CheckPinyinForm(request.POST)
-        if form.is_valid():
-            
-            r_server = get_redis()
-            stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
-            if r_server.exists(stats_key):
-                r_server.hincrby(stats_key, 'searches', 1)
-                
-            else:
-                mapping = {
-                     'searches': 1,
-                     'redis_hits': 1,   
-                }
-                r_server.hmset(stats_key, mapping)
-            
-            
-            if request.user.is_authenticated() and len(form.cleaned_data['char']) < 10:
-                word_searched.send(sender=word_searched, chars=form.cleaned_data['char'], time=datetime.datetime.now(), user_id=request.user.pk)
-            
-            
-            if request.is_ajax():
-                
-                things = split_unicode_chrs(form.cleaned_data['char'])
-                obj_list = group_words(things)
-                
-                return HttpResponse(simplejson.dumps(obj_list), mimetype="application/json")
-            
-            
-            else:
-                this_id = uuid.uuid1().hex
-                key = "text:%s" % this_id
-                
-                mapping = {
-                    'user': 'dummy', 
-                    'chars': form.cleaned_data['char'], 
-                    'timestamp': '12345',
-                    'hash': this_id,
-                }
-                
-                r_server = get_redis()
-                r_server.hmset(key, mapping)
-                url = reverse('text', args=[this_id])
-            return HttpResponseRedirect(url)
-
-            
-    else:
-        form = CheckPinyinForm()
         
     return render(request, 'website/home.html', locals())
 
 
-# note that in this function, we are retrieving a text that has  
-# already been stored and save in redis
+
+# USED FOR LONG DICTIONARY LOOKUPS, NOT FOR WEB ARTICLES
 def text(request, hashkey):
     
     key = 'text:%s' % hashkey
-    
     r_server = get_redis()
     if r_server.exists(key):
         obj = r_server.hgetall(key)
     
-    chars = obj['chars'].decode('utf-8') # because redis stores things as strings...
+    chars = obj['chars'].decode('utf-8')
     things = split_unicode_chrs(chars)
     obj_list = group_words(things)
+    title = 'Text'
+    
+    if request.is_ajax():
+        html = render_to_string('website/text_snippet.html', locals())
+        return HttpResponse(html)
     
     return render(request, 'website/text.html', locals())
 
 
+# USED FOR WEB ARTICLES THAT COME THROUGH THE BOOKMARKLET
 def url(request, hashkey):
     
     key = 'url:%s' % hashkey
-        
     r_server = get_redis()
     if r_server.exists(key):
         obj = r_server.hgetall(key)
@@ -518,6 +555,7 @@ def url(request, hashkey):
     return render(request, 'website/text.html', locals())
     
 
+# DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
 def page(request, slug):
     template = 'website/%s.html' % slug
     _update_crumbs(request)
@@ -528,12 +566,16 @@ def page(request, slug):
         return HttpResponse(page)
             
     return render(request, template, locals())
-    
+
+
+# CURRENTLY REDUNDANT    
 def user(request, pk):
     user = get_object_or_404(User, pk=pk)
     return render(request, 'website/user.html', locals())
 
 
+
+# DISPLAYS SITE STATISTICS
 def stats(request):
     # TODO - do monthly filtering, backwards and forwards, comparisons etc.
     key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
@@ -541,6 +583,8 @@ def stats(request):
     
     return render(request, 'website/stats.html', locals())    
 
+
+# GENERATES A LIST OF USER'S PERSONAL VOCABULARY
 def vocab(request):
     _update_crumbs(request)
     words = request.user.get_profile().get_personal_words()
@@ -551,6 +595,7 @@ def vocab(request):
         return HttpResponse(html)
     
     return render(request, 'website/vocab.html', locals())
+
 
 
 # RETURNS A NICELY FORMATTED HTML BREADCRUMB
@@ -578,6 +623,8 @@ def _get_crumbs(request):
     
     crumbs_html = ' \ '.join(items) 
     return crumbs_html
+
+
 
 # ADD OR REMOVE ITEMS FROM THE BREADCRUMB    
 def _update_crumbs(request, word=None):

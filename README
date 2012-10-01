@@ -1,0 +1,69 @@
+# -*- coding: utf8 -*-
+
+The REDIS database has these objects:
+
+
+STATS:[YEAR]:[MONTH]
+eg. STATS:2012:09
+Stores sidewide stats
+	
+	searches	1       number
+	redis_hits	1       number
+
+
+
+
+PW:[email]
+eg. PW:chris@email.com
+Stores a user's personal wordlist. Each word carries the format CHARS / TIMESTAMP / COUNT
+
+    wordlist    "话 / 12345 / 5 \n"
+
+
+
+[LEN]C:[WORD]
+eg. 3C:神经病
+Stores a single Chinese word and various definitions
+
+    chars       好              [string]
+    pinyin1     hao             [string]
+    meaning1    good / well     [string]
+    count       1               []
+    id          o3iff           [random 10 digit ID]  
+    
+    
+
+AL:[email]
+eg. AL:chris@email.com
+Stores a user's personal article list as a list of article UIDs
+
+    articlelist     "ieur8, asdhf, 28jnf"
+
+ 
+      
+TEXT:[HASH]
+eg. TEXT:10HDJKHF8790
+Stores a long piece of text (eg. long chars submitted via search)
+      
+    user        chris@email.com
+    chars       [the chinese chars in a string]
+    timestamp   timestamp
+    hash        asdf7
+
+    
+
+URL:[hash]
+eg. URL:85ur8
+Stores the result of a bookmarklet search
+
+    user
+    title
+    chars
+    timestamp
+    hash
+    url         http://cn.nytimes.com/adsfajkdl
+    
+
+        
+
+    

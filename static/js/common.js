@@ -34,7 +34,8 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     // BINDS VARIOUS ELEMENTS TO THE AJAXY LOADCONTENT BELOW
     function bindLoadContent() {
        $('.ajax, .wrapper, #crumbs a, a.single').unbind();
-       loadContent();     
+       loadContent();
+       bindWords();     
     }
     
     // LOADS A PAGE BASED SOLELY ON A URL
@@ -94,18 +95,23 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
             
             for(key in ($('#id_char').val())) { count++; }
             if ( count < 10 ) {
+                
+                // HANDLE A SEARCH OF LESS THAN 10 CHARS
                 var url = '/search/'+$('#id_char').val();
                 loadPage(url);
                 history.pushState('', '', url);
                 return false;
             } else {
+                
+                // HANDLE A SEARCH OF MORE THAN 10 CHARS
                 $.ajax({ 
                     url: $('#search').attr('action'),
                     type: 'POST',
                     data: $('form').serialize(),
                     dataType: 'json',
                     success: function(data) {   
-                        arrayText(data);
+                        history.pushState('', 'title', data.url);
+                        $('#container').html(data.html);
                         bindWords();   
                         $('#loading').hide();
                     }, error: function() {
@@ -166,63 +172,6 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
        $('#loading').hide();
        return false;
     }
-
-
-/* FUNCTIONS THAT RENDER DATA ON A PAGE */
-
-    // RENDERS A DICTIONARY LOOKUP (LESS THAN 10 CHARACTERS)
-    function arrayDict(data) {
-        var tWS;
-        $(data).each( function(k,v) {        
-            if (v.wordset == tWS) {
-                var chars =  $('#vocablist #char'+v.wordset).attr('chars');
-                chars += v.chars;
-                $('#vocablist #char'+v.wordset).attr('chars', chars);
-                $('#vocablist #char'+v.wordset+' .chars').append(v.chars);
-                $('#vocablist #char'+v.wordset+' .pinyin').append(' '+v.pinyin1);
-            } else {
-                tWS = v.wordset;
-                var url = '/search/';
-                var html = '<div class="wrapper" href="" id="char'+v.wordset+'" chars="'+v.chars+'"><span class="next">&#9658;</span>';
-                html += '<div class="line"><div class="chars">'+v.chars+'</div><div class="pinyin">'+v.pinyin1+'</div><div class="meaning">'+v.meaning1+'</div></div>';
-                if (v.meaning2) {
-                html += '<div class="line"><div class="chars">&nbsp;</div><div class="pinyin">'+v.pinyin2+'</div><div class="meaning">'+v.meaning2+'</div></div>';                };
-                if (v.meaning3) {
-                html += '<div class="line"><div class="chars">&nbsp;</div><div class="pinyin">'+v.pinyin3+'</div><div class="meaning">'+v.meaning3+'</div></div>';                };
-                html += '</div>';
-                $('#vocablist').append(html);
-                 
-            }
-            var url = '/search/' + $('#vocablist #char'+v.wordset).attr('chars') + '/';
-            $('#vocablist #char'+v.wordset).attr('href', url);
-        });
-        $('.ajax, .wrapper, #crumbs a, a.single').unbind().click(loadContent);
-    }
-
-    // RENDERS A LONG TEXT LOOKUP (MORE THAN 10 CHARACTERS)
-    function arrayText(data) {
-        $('#previous-searches').hide();
-        $(data).each( function(k,v) {
-            var html;                
-            var wC = '';
-            if (v.chars == ' ') return;
-            if (v.is_linebreak == true) { $('#text').append('<br clear="all"/><br clear="all"/>')};
-            if (v.is_punctuation == true) wC += ' punctuation';
-            if (v.is_number== true) wC+=' number';
-            if (v.is_english==true) wC +=' english';
-            
-            var wW = '<div class="word'+wC+'" id="word'+v.wordset+'" chars="'+v.chars+'" title="'+v.meaning1+'" pinyin="'+v.pinyin1+' ">';
-            
-            var html = '<div id="'+k+'" class="char" rel="'+v.wordset+'">';
-            html+='<span class="hanzi">'+v.chars+'</span>';
-            if (v.pinyin1) html+='<span class="pinyin">'+v.pinyin1+'</span>';
-            html+='</div>';
-                html+='</div>';
-                var newHtml = wW+html;
-                $('#text').append(newHtml);
-                tWS = v.wordset;
-        });
-    }  
 
 
 // UI FUNCTIONS 
@@ -294,18 +243,20 @@ $('#user').click(function() {
        } 
     });
 
-function toggleUBI(item) {
-    if (item.hasClass('selected')) {
-        item.removeClass('selected');
-        var idToRemove = item.attr('id');
-        $('#userblock #' + idToRemove).remove();
+    // ADDS OR REMOVES AN ITEM FROM THE USERBLOCK
+    function toggleUBI(item) {
+        if (item.hasClass('selected')) {
+            item.removeClass('selected');
+            var idToRemove = item.attr('id');
+            $('#userblock #' + idToRemove).remove();
+    
+        } else {
+            item.addClass('selected');
+            $('#userblock').append('<div id="'+(item.attr("id"))+'">'+'<div class="extra"><p>Something will go in here about the definition of the word or whatever...</div><span class="title">'+item.attr('chars')+'</span><span class="pinyin">'+item.children('.pinyin').text()+'</span><br/>'+item.attr('title')+'</div>');
+            selectUBItem($('#userblock #'+item.attr("id")));
+        };
+    }
 
-    } else {
-        item.addClass('selected');
-        $('#userblock').append('<div id="'+(item.attr("id"))+'">'+'<div class="extra"><p>Something will go in here about the definition of the word or whatever...</div><span class="title">'+item.attr('chars')+'</span><span class="pinyin">'+item.attr('pinyin')+'</span><br/>'+item.attr('title')+'</div>');
-        selectUBItem($('#userblock #'+item.attr("id")));
-    };
-}
 
 function addEditableWord(item) {
     var pos = findPos(item);
@@ -351,11 +302,14 @@ function selectUBItem(item) {
   });   
 }
 
+
+// USED TO BIND WORDS IN A LONG TEXT SO THAT THEY CAN BE SEARCHED
 function bindWords() {
     $('.word').not('.english, .punctuation, .number').click( function(e) {
        if (e.shiftKey) {addEditableWord(this);}  
        else { toggleUBI($(this)); }
     });
+
 
     $('.word').hover( function(e) {
        $('#userblock div#'+this.id).css({'position': 'relative', 'left': '-10px', 'color': '#C33636'}); 
@@ -364,6 +318,7 @@ function bindWords() {
     });
 }
 
+// BINDS SINGLE WORDS SO THAT THEY CAN BE SEARCHED ON
 function bindSingleWords() {
    $('.single').bind('click', getSingleWord);   
 }
