@@ -402,6 +402,10 @@ def search_word(request, word):
     title = "Search"
     search = True
     
+    if request.user.is_authenticated():
+        word_searched.send(sender=word_searched, chars=word, time=datetime.datetime.now(), user_id=request.user.pk)
+
+    
     if request.is_ajax():
         html = render_to_string('website/vocab_snippet.html', locals())
         return HttpResponse(html)

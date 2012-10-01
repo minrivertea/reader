@@ -36,7 +36,6 @@ class Account(models.Model):
         loop = 0
         for x in wordlist.splitlines():
             try:
-                print float(x.split('/')[1].strip(' '))
                 this_time = datetime.datetime.fromtimestamp(float(x.split('/')[1].strip(' ')))
                 w = x.split('/')[0].strip(' ')
                 key = "%sC:%s" % (len(smart_unicode(w)), w)
@@ -100,7 +99,6 @@ def save_article(sender, **kwargs):
     else:
         new_value = kwargs['article_id']
     
-    print new_value
     
     mapping = {
         'articlelist': new_value,
