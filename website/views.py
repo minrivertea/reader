@@ -8,6 +8,8 @@ PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 
 from redis_helper import get_redis
 
+from urlparse import urlparse
+
 from bs4 import BeautifulSoup
 
 from readability.readability import Document
@@ -271,65 +273,46 @@ def group_words(chars, chinese_only=False):
             loop += 1
             continue
 
-        word = None
-        r = None
-        i = 1
-        search_string = x
+        search_string = [x,]
+        r_server = get_redis()
                 
-        
-        # THIS LOOP WILL BUILD OUR CHINESE WORD
-        while i > 0:
+        # THIS LOOP WILL BUILD OUR CHINESE WORD - GUESSING WE WON'T HAVE MANY MORE THAN 5 CHARS
+        for i in range(1,5):
             try:
-                next_char = chars[loop+i]
+                next_chars = chars[loop+i]
+                if _is_punctuation(next_chars):
+                    next_chars = None
+                    break
+                else:
+                    search_string.append(next_chars)
             except:
                 break
-                        
-            if _is_punctuation(next_char):
-                break
-            
-                        
-            search_string = "%s%s" % (search_string, next_char)            
-            key = "%sC:%s" % (len(search_string), search_string)
-            r = search_redis(key) 
-            
-            if r == None:
-                break
-            else:  
-                i += 1
-            
         
-        if r != None:
-            # GIVE X THE VALUES OF THE OBJECT THE DICTIONARY RETURNED
-            for k, v in r.iteritems():
-                obj[k] = v
-               
-                    
-            obj_list.append(obj)
-            
-            # IF THE WORD IS MORE THAN 1 CHAR LONG, GIVE THE NEXT ONES TOO
-            #ni = 1
-            #while ni < len(search_string):
-            #    
-            #    n = {
-            #        'chars': chars[loop+ni],
-            #        'wordset': obj['wordset'],
-            #        'pinyin1': r['pinyin1'].split()[ni],
-            #    }
-            #    ni += 1
-            #    obj_list.append(n)
-            
-            skip += (len(search_string)-1)
-            r = None
-          
-        # finally, if we have no WORD we'll just do a SINGLE-CHAR-LOOKUP
-        else:
-            key = "%sC:%s" % (len(x), x)
-            r = search_redis(key)
-            for k, v in r.iteritems():
-                obj[k] = v
-            obj_list.append(obj)
+        
+        
+        r = False    
+        while r == False:            
+            key = "%sC:%s" % (len("".join(search_string)), "".join(search_string))
+            r = r_server.exists(key)
+            if r == True:
+                break
+            else:
+                search_string.pop()
+                
+        
+        key = "%sC:%s" % (len("".join(search_string)), "".join(search_string))
+        word = search_redis(key)
+
+        for k, v in word.iteritems():
+            obj[k] = v        
+        
+        obj_list.append(obj)
+        skip += (len(search_string)-1)
         
         loop += 1
+    
+    
+
      
     return obj_list                         
 
@@ -338,7 +321,6 @@ def group_words(chars, chinese_only=False):
 def search_word(request, word):
     
     things = split_unicode_chrs(word)
-    print things
     words = group_words(things)
     _update_crumbs(request)
     title = "Search"
@@ -451,6 +433,7 @@ def home(request):
             stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
             if r_server.exists(stats_key):
                 r_server.hincrby(stats_key, 'searches', 1)
+                
             else:
                 mapping = {
                      'searches': 1,
@@ -519,18 +502,17 @@ def url(request, hashkey):
     if r_server.exists(key):
         obj = r_server.hgetall(key)
     
-    title = obj['title']
-    url = obj['url']
+    title = 'Article' 
+    url = urlparse(obj['url']).netloc
     chars = obj['chars'].decode('utf-8') # because redis stores things as strings...
+    things = split_unicode_chrs(chars)
+    obj_list = group_words(things)
 
     if request.is_ajax():
-        things = split_unicode_chrs(chars)
-        obj_list = group_words(things)
-        
-        return HttpResponse(simplejson.dumps(obj_list), mimetype="application/json")
+        html = render_to_string('website/text_snippet.html', locals())
+        return HttpResponse(html)
     
     else:
-        url = obj['url']
         uid = hashkey
     
     return render(request, 'website/text.html', locals())
@@ -599,9 +581,7 @@ def _get_crumbs(request):
 
 # ADD OR REMOVE ITEMS FROM THE BREADCRUMB    
 def _update_crumbs(request, word=None):
-    
-    
-    
+        
     try:
         crumbs = request.session['crumbs']
     except:
@@ -611,20 +591,29 @@ def _update_crumbs(request, word=None):
     
     
     if word == None:
-        new_crumb = ''
-        request.session['crumbs'] = new_crumb
-        return new_crumb
+        crumbs = ''
+        request.session['crumbs'] = crumbs
+        return crumbs
     
+    if word == crumbs.split(' \ ')[-1]:
+        return crumbs
     
-        
-    if word not in crumbs:
-        new_crumb = "%s \ %s" % (crumbs, word)
-        
-    else:
+    match = False
+    loop = 0
+    for x in crumbs.split(' \ '):
+        if word == x:
+            match = True
+            break
+        else:
+            match = False
+            loop +1
+            
+    
+    if match == True:
         head, sep, tail = crumbs.partition(word)
         new_crumb = "%s%s" % (head, sep)
-        
-        
+    else:
+        new_crumb = "%s \ %s" % (crumbs, word)
     
     request.session['crumbs'] = new_crumb
     return new_crumb

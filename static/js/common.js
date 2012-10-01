@@ -52,7 +52,6 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
         $('#container').html('');
         chars = chars || $('.chars', this).text().trim();
         $('#container').html(crumbs);
-        $('#crumbs').append('&nbsp;&nbsp;&#92;&nbsp;&nbsp;'+chars);
         history.pushState('', 'title', chars);            
         $.ajax({ 
             url: '/vocab/'+chars+'/',
@@ -203,8 +202,6 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     // RENDERS A LONG TEXT LOOKUP (MORE THAN 10 CHARACTERS)
     function arrayText(data) {
         $('#previous-searches').hide();
-        $('#tools').fadeIn(500);
-        var tWS;
         $(data).each( function(k,v) {
             var html;                
             var wC = '';
@@ -220,32 +217,24 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
             html+='<span class="hanzi">'+v.chars+'</span>';
             if (v.pinyin1) html+='<span class="pinyin">'+v.pinyin1+'</span>';
             html+='</div>';
-            
-            if (v.wordset==tWS) {
-                $('#text #word'+v.wordset).append(html);
-                var newChars = ($('#text #word'+v.wordset).attr('chars') + v.chars);
-                var newPY = ($('#text #word'+v.wordset).attr('pinyin') + v.pinyin1);
-                $('#text #word'+v.wordset).attr('chars', newChars);
-                $('#text #word'+v.wordset).attr('pinyin', newPY);
-            } else {
                 html+='</div>';
                 var newHtml = wW+html;
                 $('#text').append(newHtml);
                 tWS = v.wordset;
-            }
         });
     }  
 
 
 // UI FUNCTIONS 
 
+
 $('#pinyin').click(function() {
   if ($(this).hasClass('selected')) {
     $(this).removeClass('selected');
-    $('.pinyin').hide();
+    $('.word .pinyin').hide();
   } else {
     $(this).addClass('selected');
-    $('.pinyin').show();
+    $('.word .pinyin').show();
   }  
 });
 
@@ -280,28 +269,30 @@ $('#user').click(function() {
        mySelect(this);
        return false;
     }
+   
+    // CHANGES THE COLORS FOR LONG TEXTS
+    function changeColor(color) {
+       $('#colors a').removeClass('selected');
+       $('#colors .'+color).addClass('selected');
+       $('body').removeClass(function (index, fc) {
+            var matches = fc.match (/color\d+/g) || [];
+            return (matches.join (' '));
+       }).addClass(color);
+       mySelect(this);
+       return false;
+    }
 
-function changeColor(color) {
-   $('#colors a').removeClass('selected');
-   $('#colors .'+color).addClass('selected');
-   $('body').removeClass(function (index, fc) {
-        var matches = fc.match (/color\d+/g) || [];
-        return (matches.join (' '));
-   }).addClass(color);
-   mySelect(this);
-   return false;
-}
-
-$('#group').click(function() {
-   if ($(this).hasClass('selected')) {
-      $('#text').removeClass('grouped');
-      $(this).removeClass('selected');
-   }
-   else {
-      $(this).addClass('selected');
-      $('#text').addClass('grouped');
-   } 
-});
+    // GROUP OR UNGROUP THE WORDS IN A LONG TEXT
+    $('#group').click(function() {
+       if ($(this).hasClass('selected')) {
+          $('#text').removeClass('grouped');
+          $(this).removeClass('selected');
+       }
+       else {
+          $(this).addClass('selected');
+          $('#text').addClass('grouped');
+       } 
+    });
 
 function toggleUBI(item) {
     if (item.hasClass('selected')) {

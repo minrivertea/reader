@@ -4,10 +4,7 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-$(document).ready( function() {
- clearInput();
- getTextByUID('{{ uid }}');
-});
+
 </script>
 {% endblock %}
 
@@ -22,5 +19,6 @@ $(document).ready( function() {
 {% block content %}
 
 
-<div id="text" class="easy centred"></div>
+    {% include 'website/text_snippet.html' %}
+
 {% endblock %}

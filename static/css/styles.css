@@ -578,6 +578,11 @@ textarea {
   position: relative;
 }
 
+#crumbs span.url {
+  color: #999;
+  font-size: 12px;   
+}
+
 
 
 #colors a.color1 {
@@ -799,45 +804,37 @@ body.color4 #tools {
   width: auto;
 }
 
-.char {
- float: left; 
- margin: 0;
+.word .char {
+ margin: 0 0 5px 0;
  padding: 0;
  text-align: center; 
- width: 50px; 
+ width: 100%;
+ font-size: 26px;
+ line-height: 1em;
+ color: #444;
+ text-shadow: 1px 2px 0 #fff;
 }
 
-.char .hanzi {
-  font-size: 26px;
-  line-height: 1em;
-  float: left;
-  margin: 0 0 5px 0;
-  display: block;
-  font-family: "STKaiti",华文楷体;
-  color: #444;
-  text-shadow: 1px 2px 0 #fff;
-  width: auto;
-}
-
-.char .pinyin {
+.word .pinyin {
     color: #E55C12;
     display: none;
-    float: left;
+    padding-top: 5px;
     font-size: 12px;
     text-shadow: none;
     line-height: 1em; 
     text-transform: lowercase;
     font-style: italic;
     font-family: Georgia, serif;
-    width: 50px;
+    width: 100%;
+    text-align: center;
 }
 
 
-.word.selected .pinyin, .word.selected .hanzi {
+.word.selected .pinyin, .word.selected .char {
   color: #b1531f;   
 }
 
-.word:hover .pinyin, .word:hover .hanzi {
+.word:hover .pinyin, .word:hover .char {
   color: #C33636;  
 }
 
@@ -846,36 +843,23 @@ body.color4 #tools {
 }
 
 
-
-.english .char {
-  width: auto;   
-}
-
-.number .char {
-  width: auto; 
-}
-
-
-body.font1, body.font1 .char .hanzi, #head ul a.font1, body.font1 #userblock div span.title, body.font1 h1, body.font1 #editable .chars {
+body.font1, body.font1 .char, #head ul a.font1, body.font1 #userblock div span.title, body.font1 h1, body.font1 #editable .chars {
   font-family: Times New Roman,"STKaiti",华文楷体, serif;  
 }
 
-body.font2, body.font2 .char .hanzi, #head ul a.font2, body.font2 #userblock div span.title, body.font2 h1, body.font2 #editable .chars {
+body.font2, body.font2 .char, #head ul a.font2, body.font2 #userblock div span.title, body.font2 h1, body.font2 #editable .chars {
   font-family: Times New Roman,"STSong", 华文宋体, serif; 
 }
 
-body.font3, body.font3 .char .hanzi, #head ul a.font3, body.font3 #userblock div span.title, body.font3 h1, body.font3 #editable .chars {
+body.font3, body.font3 .char, #head ul a.font3, body.font3 #userblock div span.title, body.font3 h1, body.font3 #editable .chars {
   font-family: Times New Roman,"STFangsong", 华文仿宋, serif; 
 }
 
-body.font4, body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div span.title, body.font4 h1, body.font4 #editable .chars {
+body.font4, body.font4 .char, #head ul a.font4, body.font4 #userblock div span.title, body.font4 h1, body.font4 #editable .chars {
   font-family: Times New Roman,"STHeiti", 华文黑体, serif; 
 }
 
-
-
-
-.punctuation .char {
+.punctuation {
   margin: 0px; 
   width: auto;  
 }
@@ -884,21 +868,25 @@ body.font4, body.font4 .char .hanzi, #head ul a.font4, body.font4 #userblock div
 /* EASY TEXT STYLES */
 
 .easy .word {
-  height: 60px; 
-  margin: 0 0 20px 0;    
+  height: auto; 
+  margin: 0 0 30px 0;    
 }
 
-.easy .hanzi {
+.easy .word .char {
   margin: 0 0 0px 0; 
   line-height: 1em;
-  font-size: 40px; 
+  font-size: 34px;
+  letter-spacing: 0.3em;
+  color: #5E4313; 
 }
 
-.easy .pinyin {
-  font-size: 15px;
+.easy .word .pinyin {
+  font-size: 14px;
+  padding-top: 10px;
+  letter-spacing: 0.05em;
 }
 
-.easy .english {
+.easy .word .english {
   margin-right: 10px;
   margin-left: 10px;   
 }
@@ -941,6 +929,9 @@ h3 {
 #head {
     border-bottom: 1px solid #E1E1E1;
     float: left;
+    position: fixed;
+    left: 0;
+    height: 100%;
     padding: 0 0 20px;
     margin-bottom: 30px;
     margin-top: 20px;
@@ -1138,7 +1129,7 @@ h3 {
 .flatpage .explain {
   width: 100%;
   float: left;
-  margin: 0 0 30px 0;   
+  margin: 10px 0 20px 0;   
 }
 
 .explain .button {
