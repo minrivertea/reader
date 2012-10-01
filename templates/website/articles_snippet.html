@@ -5,6 +5,7 @@
     <a href="{% url articles %}">Your Articles</a>
 </div>
 
+{% if articles %}
 <ul id="vocablist" class="centred easy">
     {% for x in articles %}
         <li class="wrapper" href="{% url url x.hash %}">
@@ -19,3 +20,10 @@
         </li>
     {% endfor %}
 </ul>
+{% else %}
+<div id="text" class="centred">
+    <p>Articles are webpages you've saved here - you haven't saved any web articles, so nothing appears below!</p>
+    
+    <p>Find out how this works with our <a href="/guide-to-articles/" class="ajax">Guide to Articles &raquo;</a></p>
+</div>
+{% endif %}
