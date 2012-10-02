@@ -619,7 +619,10 @@ def stats(request):
 # GENERATES A LIST OF USER'S PERSONAL VOCABULARY
 def vocab(request):
     _update_crumbs(request)
-    words = request.user.get_profile().get_personal_words()
+    try:
+        words = request.user.get_profile().get_personal_words()
+    except:
+        words = None
     title = "Your Vocabulary"
     
     if request.is_ajax():
