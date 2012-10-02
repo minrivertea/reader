@@ -1,10 +1,6 @@
 
 {% load highlight_keyword %}
 
-<h3 class="centred"><span class="arrow">&#9658;</span> Examples <span class="this"> \ {{ word }}</span></h3>
-
-{% if examples %}
-<ul id="examplelist" class="centred">
   {% for x in examples %}
     <li class="wrapper" href="{% url url x.source_key %}">
         <span class="next">&#9658;</span>
@@ -12,7 +8,4 @@
         <span class="source">from {{ x.source_url }}</span>
     </li>
    {% endfor %}
-</ul>
-{% else %}
-<p class="centred">Whoops! We can't find any examples of sentences with {{ word }} in them.</p>
-{% endif %}
+

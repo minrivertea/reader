@@ -159,11 +159,39 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
             url: '/get-examples/'+word+'/',
             dataType: 'html',
             success: function(data) {
-                $('#container').append(data);
+                $('#examplelist').append(data);
+                if ($(data).length) {
+                    $('h3#examples .this').text(word);
+                } else {
+                   $('h3#examples .this').text("Sorry! We can't find any examples of "+word);
+                };
                 bindLoadContent();
+                 $('h3#examples').attr('onclick', '');
             },
             error: function() {
-               alert('Failed to get examples!');  
+                // FAILS SILENTLY
+            },
+        });
+        return false;   
+    }
+    
+    // GETS SIMILAR WORDS TO THE KEYWORD PROVIDED - eg. wods starting with WORD
+    function getSimilar(word) {
+        $.ajax({
+            url: '/get-similar/'+word+'/',
+            dataType: 'html',
+            success: function(data) {
+                $('#similarlist').append(data);
+                if ($(data).length) {
+                    $('h3#similar .this').text(word);
+                } else {
+                    $('h3#similar .this').text("We can't find any similar words to "+word);
+                };
+                bindLoadContent();
+                $('h3#similar').attr('onclick', '');
+            },
+            error: function() {
+                // FAILS SILENTLY
             },
         });
         return false;   

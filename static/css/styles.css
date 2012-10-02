@@ -681,7 +681,7 @@ body.color4 #tools {
     padding: 0;
     text-shadow: 1px 1px 0 #FFFFFF;
     font-size: 20px;
-    margin-top: 20px'
+    margin-top: 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -1247,19 +1247,19 @@ h3 span.this {
   padding: 0px 10px;
 }
 
-#examplelist {
+#examplelist, #similarlist {
   list-style-type: none;
   margin-top: 0;
   padding-left: 0;
 }
 
-#examplelist li {
+#examplelist li, #similarlist li {
   float: left;
   width: 100%;
   padding: 10px 10px 10px 30px;
 }
 
-#examplelist .snippet {
+#examplelist .snippet, #similarlist .snippet {
   font-size: 22px;
   color: #666;   
 }

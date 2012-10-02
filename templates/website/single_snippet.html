@@ -27,9 +27,9 @@
     </div>
 </div>
 
+<h3 class="centred" id="examples" onclick="getExamples('{{ word.chars|safe }}');"><span class="arrow">&#9658;</span> Examples \ <span class="this">Click to show examples of this word</span></h3>
+<ul id="examplelist" class="centred"></ul>
 
-<script type="text/javascript">
-    $(document).ready( function() {
-       getExamples('{{ word.chars }}'); 
-    });
-</script>
+
+<h3 class="centred" id="similar" onclick="getSimilar('{{ word.chars|safe }}');"><span class="arrow">&#9658;</span> Similar words \ <span class="this">Click to show similar words</span></h3>
+<ul id="similarlist" class="centred"></ul>
