@@ -58,6 +58,7 @@ Stores the result of a bookmarklet search
 
     user
     title
+    eng_title   
     chars
     timestamp
     hash

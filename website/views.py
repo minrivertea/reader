@@ -92,23 +92,27 @@ def _is_punctuation(x):
         if x in string.punctuation:
             return True
                 
-        if unicodedata.category(x).startswith(('P', 'Z')):
+        if unicodedata.category(x).startswith(('P', 'Z', 'S')):
             return True
+            
+            ENCLOSED_ALPHANUMERICS 
     except:
         pass
     
     return False
 
 def _is_number(x):
-    
-    try:
-        float(x)
-        return True
-    except ValueError:
-        return False
 
-    if x.isdigit() or unicodedata.category(x).startswith('N'):
-        return True
+    for t in x:
+        
+        if t.isdigit() or unicodedata.category(t).startswith('N'):
+            return True
+        
+        try:
+            float(t)
+            return True
+        except ValueError:
+            return False
     
     return False
 
@@ -287,7 +291,6 @@ def group_words(chars, chinese_only=False):
                 break
         
         
-        
         r = False    
         while r == False:            
             key = "%sC:%s" % (len("".join(search_string)), "".join(search_string))
@@ -296,6 +299,7 @@ def group_words(chars, chinese_only=False):
                 break
             else:
                 search_string.pop()
+
                 
         
         key = "%sC:%s" % (len("".join(search_string)), "".join(search_string))
@@ -568,12 +572,13 @@ def url(request, hashkey):
 
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
 def page(request, slug):
-    template = 'website/%s.html' % slug
+    template = 'website/pages/page.html'
+    snippet = 'website/pages/%s_snippet.html' % slug
     _update_crumbs(request)
     
     if request.is_ajax():
-        template = 'website/%s_snippet.html' % slug
-        page = render_to_string(template, {'siteurl': RequestContext(request)['siteurl']})
+        
+        page = render_to_string(snippet, {'siteurl': RequestContext(request)['siteurl']})
         return HttpResponse(page)
             
     return render(request, template, locals())

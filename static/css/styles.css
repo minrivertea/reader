@@ -35,6 +35,9 @@ a:hover, a:active {
    text-decoration: underline;
 }
 
+p.red {
+  color: red;   
+}
 
 .centred {
   width: 800px;
