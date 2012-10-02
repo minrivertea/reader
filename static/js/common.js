@@ -169,7 +169,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
                  $('h3#examples').attr('onclick', '');
             },
             error: function() {
-                // FAILS SILENTLY
+                $('h3#examples .this').text("There was some kind of technical problem - please refresh the page and try again!");
             },
         });
         return false;   
@@ -191,7 +191,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
                 $('h3#similar').attr('onclick', '');
             },
             error: function() {
-                // FAILS SILENTLY
+                $('h3#similar .this').text("There was some kind of technical problem - please refresh the page and try again!");
             },
         });
         return false;   
