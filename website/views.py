@@ -754,7 +754,6 @@ def get_examples(request, word):
     except:
         examples_list = ''
     
-    print examples_list
     
     # IF THERE'S NO EXAMPLES YET, WE'LL CRAM IT FULL OF ANY REFERENCE WE CAN FIND
     if examples_list == '':

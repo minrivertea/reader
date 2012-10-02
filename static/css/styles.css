@@ -1254,17 +1254,24 @@ h3 span.this {
 
 #examplelist {
   list-style-type: none;
+  margin-top: 0;
   padding-left: 0;
 }
 
 #examplelist li {
   float: left;
   width: 100%;
-  padding-bottom: 20px;
+  padding: 10px 10px 10px 30px;
 }
 
 #examplelist .snippet {
-  font-size: 25px;   
+  font-size: 25px;
+  color: #666;   
+}
+
+#examplelist .snippet strong {
+  color: #E55C12;  
+  font-weight: normal; 
 }
 
 #examplelist .source {

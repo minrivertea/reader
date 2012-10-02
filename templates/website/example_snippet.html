@@ -1,13 +1,15 @@
 
+{% load highlight_keyword %}
+
 <h3 class="centred"><span class="arrow">&#9658;</span> Examples <span class="this"> \ {{ word }}</span></h3>
 
 {% if examples %}
 <ul id="examplelist" class="centred">
   {% for x in examples %}
-    <li class="wrapper" href="">
+    <li class="wrapper" href="{% url url x.source_key %}">
         <span class="next">&#9658;</span>
-        <span class="snippet">…{{ x.snippet }}…</span>
-        <span class="source">{{ x.source_url }} - <a href="{% url url x.source_key %}" class="ajax">View source</a></span>
+        <span class="snippet">…{{ x.snippet|highlight_keyword:word|safe }}…</span><br/>
+        <span class="source">from {{ x.source_url }}</span>
     </li>
    {% endfor %}
 </ul>

@@ -160,6 +160,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
             dataType: 'html',
             success: function(data) {
                 $('#container').append(data);
+                bindLoadContent();
             },
             error: function() {
                alert('Failed to get examples!');  
