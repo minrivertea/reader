@@ -1213,14 +1213,14 @@ h3 span.this {
 
 #single #chars {
   font-size: 80px;
-  padding: 20px 0;
+  padding: 10px 0;
   float: left;
   width: 100%;
   margin: 0 20px 0 0;   
 }
 
 #single #chars a {
-  color: #333;
+  color: #5E4313;
 }
 
 #single #chars a:hover {
@@ -1236,20 +1236,15 @@ h3 span.this {
 }
 
 #single .pinyin {
-   float: left;
-   font-size: 22px;
+   font-size: 18px;
    color: #E55C12; 
-   padding: 0px 0 0px 10px;
-   width: 100px;
+   padding: 0px 20px 0px 10px;
 }
 
 #single .meaning {
-  float: left;
-  width: 600px;
-  font-size: 22px;
+  font-size: 18px;
   color: #666;
-  font-style: italic;
-  padding: 0px 20px;
+  padding: 0px 10px;
 }
 
 #examplelist {
@@ -1265,7 +1260,7 @@ h3 span.this {
 }
 
 #examplelist .snippet {
-  font-size: 25px;
+  font-size: 22px;
   color: #666;   
 }
 
