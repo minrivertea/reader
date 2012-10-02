@@ -697,7 +697,7 @@ body.color4 #tools {
   margin-top: 0;
 }
 
-#vocablist .wrapper, #previous-searches .wrapper {
+.wrapper, #previous-searches .wrapper {
   width: 96%;
   padding: 20px 2% 10px;
   float: left;
@@ -721,7 +721,7 @@ body.color4 #tools {
   width: 100%;
 }
 
-#vocablist .wrapper:before {
+.wrapper:before {
     background: none repeat scroll 0 0 #E55C12;
     border-radius: 15px 15px 15px 15px;
     content: " ";
@@ -734,11 +734,11 @@ body.color4 #tools {
     width: 30px;
 }
 
-#vocablist .wrapper:hover:before {
+.wrapper:hover:before {
   display: block;   
 }
 
-#vocablist .wrapper:hover {
+.wrapper:hover {
   background: #f6f6f6;
   cursor: pointer;
 }
@@ -765,7 +765,7 @@ body.color4 #tools {
   width: 100%;
 }
 
-#vocablist .wrapper span.next {
+.wrapper span.next {
     color: #fff;
     position: absolute;
     right: 15px;
@@ -776,8 +776,9 @@ body.color4 #tools {
     font-size: 21px;
 }
 
-#vocablist .wrapper:hover span.next {
-  display: block;   
+.wrapper:hover span.next {
+  display: block;
+  cursor: pointer;   
 }
 
 #vocablist .chars {
@@ -945,9 +946,26 @@ h1 {
 }
 
 h3 {
-  color: #000;
+  color: #E55C12;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+  margin: 40px 0 0px 0; 
+  padding-bottom: 10px;
+  border-bottom: 2px dotted #e1e1e1;
+  float: left;
+  width: 100%; 
+}
+
+h3 span.arrow {
+  font-size: 16px;
+  margin: 0 10px;
+}
+
+h3 span.this {
   font-weight: normal;
-  margin: 0 0 0px 0;   
+  color: #333;
+  font-size: 14px;
 }
 
 #head {
@@ -1189,13 +1207,13 @@ h3 {
 
 #single {
   float: left;
-  width: 100%;
-  margin-top: 20px;   
+  width: 97%;
+  padding-left: 3%;
 }
 
 #single #chars {
   font-size: 80px;
-  padding: 20px;
+  padding: 20px 0;
   float: left;
   width: 100%;
   margin: 0 20px 0 0;   
@@ -1221,7 +1239,7 @@ h3 {
    float: left;
    font-size: 22px;
    color: #E55C12; 
-   padding: 0px 0 0px 30px;
+   padding: 0px 0 0px 10px;
    width: 100px;
 }
 
@@ -1234,6 +1252,25 @@ h3 {
   padding: 0px 20px;
 }
 
+#examplelist {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#examplelist li {
+  float: left;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+#examplelist .snippet {
+  font-size: 25px;   
+}
+
+#examplelist .source {
+  color: #999;
+  font-size: 14px;   
+}
 
 
 

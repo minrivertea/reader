@@ -29,7 +29,9 @@ Stores a single Chinese word and various definitions
     pinyin1     hao             [string]
     meaning1    good / well     [string]
     count       1               []
-    id          o3iff           [random 10 digit ID]  
+    id          o3iff           [random 10 digit ID]
+    
+    examples    "[snippet], [source_key], [source_url],  [rating] \n"        to be implemented. It will have a list of examples of this word in action, with a reference to the text where it came from
     
     
 

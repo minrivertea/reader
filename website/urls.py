@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     url(r'^$', views.home, name="home"),
     
     url(r'^articles/$', views.articles, name="articles"),
-    
+    url(r'^get-examples/(?P<word>[\w-]+)/$', views.get_examples, name="get_examples"),
     url(r'^search/$', views.main_search, name="search"),
     url(r'^search/(?P<word>[\w-]+)/$', views.search_word, name="search_word"),
     url(r'^copy_dict/$', views.copy_dictionary, name="copy_dictionary"),

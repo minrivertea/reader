@@ -152,6 +152,21 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
         });
         return false;   
     }
+    
+    // GETS EXAMPLES OF A CHARACTER/WORD IN USE FROM THE SERVER
+    function getExamples(word) {
+        $.ajax({
+            url: '/get-examples/'+word+'/',
+            dataType: 'html',
+            success: function(data) {
+                $('#container').append(data);
+            },
+            error: function() {
+               alert('Failed to get examples!');  
+            },
+        });
+        return false;   
+    }
 
     // GETS A LONG TEXT BY A UID
     function getTextByUID(uid) {

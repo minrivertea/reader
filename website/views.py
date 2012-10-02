@@ -739,7 +739,61 @@ def get_personal_words(request):
     
     
     
+def get_examples(request, word):
     
+    # FIRST CHECK IF THE WORD ALREADY HAS ANY EXAMPLES ATTACHED TO IT - IF YES, JUST RETURN THEM
+    r_server = get_redis()
+    key = "%sC:%s" % (len(word), word)
+    r = search_redis(key)
+
+    obj_list = []
+    
+    try:
+        examples_list = r['examples']
+        obj_list = examples_list.splitlines()
+    except:
+        examples_list = ''
+    
+    print examples_list
+    
+    # IF THERE'S NO EXAMPLES YET, WE'LL CRAM IT FULL OF ANY REFERENCE WE CAN FIND
+    if examples_list == '':
+        all_url_keys = r_server.keys('url:*')
+        for x in all_url_keys:
+            text = r_server.hgetall(x)
+            if smart_unicode(word) in smart_unicode(text['chars']):
+                pos = smart_unicode(text['chars']).find(smart_unicode(word))
+                new_string = "%s, %s, %s, %s \n" % (smart_unicode(text['chars'])[(pos-5):(pos+5)], x, text['url'], 1)
+                obj_list.append(new_string)
+            
+        r_server.hset(key, 'examples', ("".join(obj_list))) 
+      
+     
+    # FILTER EXAMPLES_LIST AND THEN RETURN A LIST OF EXAMPLES
+    examples = []
+    seen = []
+    for x in obj_list:
+        try:
+            if x.split(', ')[0] not in seen:
+                a = dict()
+                a['snippet'] = x.split(', ')[0]
+                a['source_key'] = x.split(', ')[1].split(':')[1]
+                a['source_url'] = urlparse(x.split(', ')[2]).netloc
+                a['rating'] = x.split(', ')[3]
+                examples.append(a)
+                seen.append(a['snippet'])
+            else:
+                pass
+        except:
+            pass
+    
+    examples =  sorted(examples, reverse=True, key=lambda thing: thing['rating'])
+    
+    if request.is_ajax():
+        html = render_to_string('website/example_snippet.html', locals())
+        return HttpResponse(html)
+    
+    return render(request, 'website/examples.html', locals())
     
     
     
