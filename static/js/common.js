@@ -405,12 +405,6 @@ function findChineseChars() {
     }
 }
 
-function updateCrumbs() {
-   // get the previous crumb and make it a link
-   
-   // add this item to the end.   
-}
-
 function clearInput() {		
 	$('.clearMeFocus').each( function() {
 	   if ($(this).val() == '') {
@@ -436,7 +430,6 @@ function clearInput() {
 	$('.clearMeFocus').keyup( function() {
 	    var id = $(this).attr('id');
 	    if ($(this).val() != '') {
-	      
 		  $('label[for="'+id+'"]').hide();
 	    } else {
 	      $('label[for="'+id+'"]').show();

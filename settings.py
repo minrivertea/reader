@@ -122,6 +122,12 @@ SITE_URL = 'http://kandongle.me'
 ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = "website.Account"
 
+# EMAILS
+SERVER_EMAIL = 'info@kandongle.me' #important for sending error notifications 
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+SEND_BROKEN_LINK_EMAILS = False 
 
 try:
     from local_settings import *
@@ -129,11 +135,6 @@ except ImportError:
     pass
     
 LOG_FILENAME = ""
-
-try:
-    from local_settings import *
-except ImportError:
-    pass
 
 import logging 
                     
