@@ -7,39 +7,14 @@
 
 {% block extracss %}
 <style type="text/css">
-body {
- background-color: #fff;	
-}
 
-#header {
-  border-bottom: none;	
-}
-
-#footer {
-  display: none;	
-}
-
-.image {
-  position: relative;
-  left: -450px;
-  margin: 20px 0 0 50%;
-  width: 900px;
-  float: left;	
-}
-
-p a:link {
-  text-decoration: underline;	
-}
 </style>
 {% endblock %}
 
 
 {% block content %}
-<div id="main-text-wide">
-	<div class="super">
-		<img class="image" src="{% staticfile '/images/404.jpg' %}"/>
-		<p class="introduction">We can't find the page you're looking for! Perhaps it was mistyped, has moved, or doesn't exist anymore. <a href="http://www.minrivertea.com">Go back to the homepage</a> or perhaps <a href="{% url contact_us %}">contact us</a> if you need some information.</p>
-	</div>
+<div id="container">
+		<p class="introduction">We can't find the page you're looking for! Perhaps it was mistyped, has moved, or doesn't exist anymore. <a href="http://kandongle.me">Go back to the homepage</a> and try again!</p>
 </div>
 
 
