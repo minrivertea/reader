@@ -13,12 +13,8 @@
 
 <style type="text/css">
 
-#search {
-  display: none;   
-}
-
 #text {
-  margin-top: 10%;   
+  margin-top: 30px;   
 }
 
 form p {
@@ -53,16 +49,19 @@ ul.errorlist {
 {% endblock %}
 
 {% block content %}
+
+<div id="crumbs" class="centred"><span class="arrow">&#9658;</span><a href="">Register</a>&nbsp;&nbsp;\&nbsp;&nbsp;It takes 10 seconds, and it's completely free</div>
+
 <div id="text" class="centred easy">
-<h1>Register</h1>
 {{ form.errors }}
 
 <form method="post" action=".">
 	{% csrf_token %}
   <p>{{ form.email }}<label for="id_email">Your email address <span>(will never be made public)</span></label></p>
   <p>{{ form.password1 }}<label for="id_password1">Choose a password</label></p>
-  <p class="help"><strong>Register to use personalised reading lists, vocabulary and mobile applications. It takes 10 seconds and it's free!</strong> We will never pass on your private information to any other individual or company. Your information is stored securely, your password encrypted, and your email will never be displayed publicly. We hate spam just as much as you do!</p>
   <input type="submit" value="Register now!" class="register button" />
+    <p class="help"><strong>Register to use personalised reading lists, vocabulary and mobile applications.</strong> <br/><br/>We will never pass on your private information to any other individual or company. Your information is stored securely, your password encrypted, and your email will never be displayed publicly. We hate spam just as much as you do!</p>
+
 </form>
 
 

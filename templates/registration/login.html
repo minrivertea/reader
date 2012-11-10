@@ -6,12 +6,9 @@
 
 <style type="text/css">
 
-#search {
-  display: none;   
-}
 
 #text {
-  margin-top: 10%;   
+  margin-top: 30px;   
 }
 
 form p {
@@ -47,9 +44,9 @@ ul.errorlist {
 
 {% block content %}
 
-<div id="text" class="centred easy">
+<div id="crumbs" class="centred"><span class="arrow">&#9658;</span><a href="">Login</a>&nbsp;&nbsp;\&nbsp;&nbsp;You know what to do...</div>
 
-<h1>Login</h1>
+<div id="text" class="centred easy">
 
 {% if form.errors %}
 <p class="red">Your username and password didn't match. Please try again.</p>
@@ -57,10 +54,11 @@ ul.errorlist {
 
 <form method="post" action="{% url django.contrib.auth.views.login %}">
 {% csrf_token %}
-<p><label for="id_username">Your email</label><input id="id_username" type="text" name="username" title="Your username" class="clearMeFocus" maxlength="30" /></p>
-<p><label for="id_password">Password</label><input type="password" name="password" id="id_password" title="Your password" class="clearMeFocus" /></p>
- <p class="help">If you haven't got an account, <a href="{% url registration_register %}">register here</a> - or did you <a class="forgotten" href="{% url auth_password_reset %}">forget your password?</a>?</p>   
+<p><label for="id_username">eg. john@example.com</label><input id="id_username" type="text" name="username" title="Your username" class="clearMeFocus" maxlength="30" /></p>
+<p><label for="id_password">Your password</label><input type="password" name="password" id="id_password" title="Your password" class="clearMeFocus" /></p>
     <input type="submit" value="Login" class="login button" /></p>
+     <p class="help">If you haven't got an account, <a href="{% url registration_register %}">register here</a> - or did you <a class="forgotten" href="{% url auth_password_reset %}">forget your password?</a>?</p>   
+
 
 <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
 </form>

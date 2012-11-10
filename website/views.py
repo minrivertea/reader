@@ -38,7 +38,7 @@ from django.utils.encoding import smart_str, smart_unicode
 
 
 from cjklib import characterlookup
-from cjklib.dictionary import CEDICT
+from cjklib.dictionary import *
 from cjklib.reading import ReadingFactory
 
 from website.forms import CheckPinyinForm
@@ -52,8 +52,6 @@ def split_unicode_chrs(text):
 
 
 
-from cjklib.dictionary import *
-from cjklib.reading import ReadingFactory
 
 class TranslationFormatStrategy(format.Base):
     def format(self, string):
@@ -82,6 +80,8 @@ def search(string, reading=None, dictionary='CEDICT'):
             return None
         else:
             return dict(characters=x.HeadwordSimplified, meaning=x.Translation, pinyin=x.Reading)
+
+
 
 def _is_punctuation(x):
     
@@ -130,6 +130,8 @@ def _is_english(x):
         return True
     
     return False
+
+
     
 
 def search_redis(key):
@@ -145,7 +147,7 @@ def search_redis(key):
     
 
 # ADDS A WORD TO REDIS FROM A DICTIONARY
-def add_to_redis(key, values):
+def _add_to_redis(key, values):
 
     
     r_server = get_redis()
@@ -325,19 +327,16 @@ def main_search(request):
         if form.is_valid():
             
             r_server = get_redis()
-            
-            # UPDATE THE STATS
             stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
             if r_server.exists(stats_key):
                 r_server.hincrby(stats_key, 'searches', 1)
-                
             else:
                 mapping = {
                      'searches': 1,
                      'redis_hits': 1,   
                 }
                 r_server.hmset(stats_key, mapping)
-            
+           
             
             # IF THE FORM IS LESS THAN 10 CHARACTERS
             if len(form.cleaned_data['char']) < 10:
@@ -399,7 +398,11 @@ def main_search(request):
 
 
 def search_word(request, word):
-    
+
+    if _is_english(word):
+        problem = "You've performed an English-Chinese search (translating English into Chinese) - we're not quite ready for that yet, please check back later!"
+        return render(request, 'website/english_search.html', locals())
+
     things = split_unicode_chrs(word)
     words = group_words(things)
     _update_crumbs(request)
@@ -441,7 +444,7 @@ def copy_dictionary(request):
             # meanings = split((s.index('/') to last s.index('/')), '/') # this should give us a list of meanings ??
             key = "%sC:%s" % ((len((new[1]))/3), new[1])
             
-            add_to_redis(key, dict(characters=new[1], pinyin=pinyin, meaning=meanings ))
+            _add_to_redis(key, dict(characters=new[1], pinyin=pinyin, meaning=meanings ))
                 
     
     file.close()    
@@ -480,50 +483,51 @@ def home(request):
     # HANDLES BOOKMARKLET REQUESTS
     if request.GET.get('url'):
         url = request.GET.get('url')
-
-        # TODO if it's already been scanned and saved, don't bother parsing it again….
-        
-        
-        # THIS PARSES THE WEBPAGE AND RETURNS A LIST OF CHARACTERS
-        html = urllib2.urlopen(url).read()
-        text = readabilityParser(html)
-        title = Document(html).title() 
-        new_text = strip_tags(text)
-        
-        
-        # GIVE IT AN ID
-        this_id = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(5))
-        key = "url:%s" % this_id
-        
-        if request.user.is_authenticated():
-            user = request.user.email
-        else:
-            user = 'anon'
-            
-        mapping = {
-            'user': user,
-            'title': title, 
-            'chars': new_text, 
-            'timestamp': time.time(),
-            'hash': this_id,
-            'url' : url,
-        }
-        
-        
-        # ADD IT TO REDIS
-        r_server = get_redis()
-        r_server.hmset(key, mapping)
-        
-        article_saved.send(sender=article_saved, article_id=this_id, time=time.time(), user_id=request.user.pk)
-
-        
-        # NOW REDIRECT AND SERVE UP THE PAGE
-        url = reverse('url', args=[this_id])
-        return HttpResponseRedirect(url)
-
-        
+        webarticle(request, url)
+        return
+                
     return render(request, 'website/home.html', locals())
 
+
+def webarticle(request, url):
+    # TODO if it's already been scanned and saved, don't bother parsing it again….
+        
+    # THIS PARSES THE WEBPAGE AND RETURNS A LIST OF CHARACTERS
+    html = urllib2.urlopen(url).read()
+    text = readabilityParser(html)
+    title = Document(html).title() 
+    new_text = strip_tags(text)
+    
+    
+    # GIVE IT AN ID
+    this_id = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(5))
+    key = "url:%s" % this_id
+    
+    if request.user.is_authenticated():
+        user = request.user.email
+    else:
+        user = 'anon'
+        
+    mapping = {
+        'user': user,
+        'title': title, 
+        'chars': new_text, 
+        'timestamp': time.time(),
+        'hash': this_id,
+        'url' : url,
+    }
+    
+    
+    # ADD IT TO REDIS
+    r_server = get_redis()
+    r_server.hmset(key, mapping)
+    
+    article_saved.send(sender=article_saved, article_id=this_id, time=time.time(), user_id=request.user.pk)
+
+    
+    # NOW REDIRECT AND SERVE UP THE PAGE
+    url = reverse('url', args=[this_id])
+    return HttpResponseRedirect(url)
 
 
 # USED FOR LONG DICTIONARY LOOKUPS, NOT FOR WEB ARTICLES

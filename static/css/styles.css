@@ -957,6 +957,11 @@ h3 {
   width: 100%; 
 }
 
+h3#examples:hover, h3#similar:hover {
+  cursor: pointer;
+  opacity: 0.8;   
+}
+
 h3 span.arrow {
   font-size: 16px;
   margin: 0 10px;
