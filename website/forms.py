@@ -5,17 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 
  
             
-# handles the submission of their personal details during the order process
-class CheckPinyinForm(forms.Form):
+class SearchForm(forms.Form):
     char = forms.CharField(widget=forms.Textarea, required=True, error_messages={'required': '* Please enter a character'})
     
 
-# I put this on all required fields, because it's easier to pick up
-# on them with CSS or JavaScript if they have a class of "required"
-# in the HTML. Your mileage may vary. If/when Django ticket #3515
-# lands in trunk, this will no longer be necessary.
-attrs_dict = {'class': 'required clearMeFocus'}    
-    
+
+attrs_dict = {'class': 'required clearMeFocus'}        
     
 class SimpleRegistrationForm(forms.Form):
     """

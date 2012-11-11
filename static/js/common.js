@@ -35,7 +35,6 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     function bindLoadContent() {
        $('.ajax, .wrapper, #crumbs a, a.single').unbind();
        loadContent();
-       bindWords();     
     }
     
     // LOADS A PAGE BASED SOLELY ON A URL
@@ -85,42 +84,28 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
 
     // THE MAIN SEARCH FUNCTION
     var pS;
-    function submitForm(e) {
+    function searchSubmit(e) {
        $('#loading').show();
        $('form, #header').animate({'top': '0px'}, 300);
        
        if ($('#id_char').val()!='') {
-
-            var key, count = 0;
-            
-            for(key in ($('#id_char').val())) { count++; }
-            if ( count < 10 ) {
-                
-                // HANDLE A SEARCH OF LESS THAN 10 CHARS
-                var url = '/search/'+$('#id_char').val();
-                loadPage(url);
-                history.pushState('', '', url);
-                return false;
-            } else {
-                
-                // HANDLE A SEARCH OF MORE THAN 10 CHARS
-                $.ajax({ 
-                    url: $('#search').attr('action'),
-                    type: 'POST',
-                    data: $('form').serialize(),
-                    dataType: 'json',
-                    success: function(data) {   
-                        history.pushState('', 'title', data.url);
-                        $('#container').html(data.html);
-                        bindWords();   
-                        $('#loading').hide();
-                    }, error: function() {
-                        $('#text').html('<p>There was some kind of error, please try again!</p>');
-                        $('#loading').hide();
-                    }
-                });
-                return false;
-            }
+            $.ajax({ 
+                url: $('#search').attr('action'),
+                type: 'POST',
+                data: $('form').serialize(),
+                dataType: 'json',
+                success: function(data) {   
+                    history.pushState('', 'title', data.url);
+                    $('#container').html(data.html);
+                    bindLoadContent(); 
+                    bindWords();
+                    $('#loading').hide();
+                }, error: function() {
+                    $('#text').html('<p>There was some kind of error, please try again!</p>');
+                    $('#loading').hide();
+                }
+            });
+            return false;
          } else {
              // HANDLE AN EMPTY SEARCH
              if ($('#search-error').length) {
@@ -166,7 +151,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
                    $('h3#examples .this').text("Sorry! We can't find any examples of "+word);
                 };
                 bindLoadContent();
-                 $('h3#examples').attr('onclick', '');
+                $('h3#examples').attr('onclick', '');
             },
             error: function() {
                 $('h3#examples .this').text("There was some kind of technical problem - please refresh the page and try again!");
@@ -353,7 +338,6 @@ function bindWords() {
        if (e.shiftKey) {addEditableWord(this);}  
        else { toggleUBI($(this)); }
     });
-
 
     $('.word').hover( function(e) {
        $('#userblock div#'+this.id).css({'position': 'relative', 'left': '-10px', 'color': '#C33636'}); 

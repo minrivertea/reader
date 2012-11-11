@@ -41,21 +41,10 @@ Stores a user's personal article list as a list of article UIDs
 
     articlelist     "ieur8, asdhf, 28jnf"
 
- 
-      
-text:[HASH]
-eg. TEXT:10HDJKHF8790
-Stores a long piece of text (eg. long chars submitted via search)
-      
-    user        chris@email.com
-    chars       [the chinese chars in a string]
-    timestamp   timestamp
-    hash        asdf7
-
     
 
 url:[hash]
-eg. url:85ur8
+eg. text:85ur8
 Stores the result of a bookmarklet search
 
     user

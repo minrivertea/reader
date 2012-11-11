@@ -9,13 +9,13 @@ import time
 import unicodedata
 from urlparse import urlparse
 
-from redis_helper import get_redis
-
 from django.core.signals import request_finished
 from django.utils.encoding import smart_str, smart_unicode
 
 from website.signals import word_searched, article_saved
-from website.views import group_words, split_unicode_chrs, search_redis
+from creader.views import _group_words 
+from utils.redis_helper import _search_redis, _get_redis
+from utils.helpers import _split_unicode_chrs
 
 
 
@@ -28,9 +28,8 @@ class Account(models.Model):
         return self.user.email
     
     def get_personal_words(self):
-        r_server = get_redis()
         key = "PW:%s" % self.user.email
-        wordlist = search_redis(key)['wordlist']
+        wordlist = _search_redis(key)['wordlist']
                 
         obj_list = []
         loop = 0
@@ -39,7 +38,7 @@ class Account(models.Model):
                 this_time = datetime.datetime.fromtimestamp(float(x.split('/')[1].strip(' ')))
                 w = x.split('/')[0].strip(' ')
                 key = "%sC:%s" % (len(smart_unicode(w)), w)
-                word = search_redis(key)
+                word = _search_redis(key)
                 word['time'] = str(this_time.date())
                 word['count'] = x.split('/')[2]
                 word['wordset'] = loop
@@ -51,10 +50,9 @@ class Account(models.Model):
         return obj_list
     
     def get_personal_articles(self):
-        r_server = get_redis()
         key = 'AL:%s' % self.user.email
         try:
-            articleslist = search_redis(key)['articlelist']
+            articleslist = _search_redis(key)['articlelist']
         except:
             articleslist = ''
         
@@ -63,7 +61,7 @@ class Account(models.Model):
         loop = 0
         for x in articleslist.split(','):
             key = "url:%s" % x.strip()
-            a = search_redis(key)
+            a = _search_redis(key)
             try:
                 if a['url'] in urls:
                     pass
@@ -89,11 +87,11 @@ def save_article(sender, **kwargs):
     except:
         return     
         
-    r_server = get_redis()
+    r_server = _get_redis()
     key = "AL:%s" % account.user.email 
     
     if r_server.exists(key):
-        current_list = search_redis(key)['articlelist']
+        current_list = _search_redis(key)['articlelist']
         
         new_value = ",".join((current_list, kwargs['article_id']))
     else:
@@ -122,12 +120,12 @@ def save_word(sender, **kwargs):
     things = split_unicode_chrs(kwargs['chars'])    
     obj_list = group_words(things, chinese_only=True)
                     
-    r_server = get_redis()
+    r_server = _get_redis()
     key = "PW:%s" % account.user.email
     
     this_users_words = ''
     if r_server.exists(key):
-        this_users_words = search_redis(key)['wordlist']
+        this_users_words = _search_redis(key)['wordlist']
         
     loop = 0
     new_words = []
