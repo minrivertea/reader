@@ -37,10 +37,12 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
        loadContent();
     }
     
+    
     // LOADS A PAGE BASED SOLELY ON A URL
     function loadPage(url) {
         $('#container').load(url, function() {
             bindLoadContent();
+            console.log('used loadPage');
             $('#loading').hide();    
         });    
     }
@@ -172,7 +174,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
                 } else {
                     $('h3#similar .this').text("We can't find any similar words to "+word);
                 };
-                bindLoadContent();
+                $('.wrapper').bind('click', searchSubmit);
                 $('h3#similar').attr('onclick', '');
             },
             error: function() {

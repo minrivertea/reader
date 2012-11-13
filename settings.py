@@ -121,6 +121,8 @@ DJANGO_STATIC_NAME_PREFIX = '/cache-forever'
 SITE_URL = 'http://kandongle.me'
 ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = "website.Account"
+DICT_FILE_LOCATION = '/home/ubuntu/django/reader/files/cedict_1_0_ts_utf-8_mdbg.txt'
+
 
 # EMAILS
 SERVER_EMAIL = 'info@kandongle.me' #important for sending error notifications 

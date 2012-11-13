@@ -9,7 +9,7 @@ it when the request stops.
 
 
 import redis
-
+import uuid
 from django.conf import settings
 from django.core.signals import request_finished
 import datetime
@@ -22,8 +22,8 @@ except ImportError:
 REDIS_HOST = getattr(settings, 'REDIS_HOST', '127.0.0.1')
 REDIS_PORT = getattr(settings, 'REDIS_PORT', 6379)
 REDIS_DB = getattr(settings, 'REDIS_DB', 8)
-
 REDIS_LOCAL = local()
+
 
 def _get_redis():
     try:
@@ -61,9 +61,9 @@ here so that it's nicely organised.
 def _search_redis(key, lookup=True):
     r_server = _get_redis()
     
-    stats_key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)    
+    _increment_stats('redis_hits')
+    
     if r_server.exists(key):
-        r_server.hincrby(stats_key, 'redis_hits', 1)
         if lookup == False:
             return True
         else:
@@ -75,31 +75,44 @@ def _search_redis(key, lookup=True):
 
 def _add_to_redis(key, values):
 
-    
+    #mapping = MAPPING_CHINESE_WORD
+    #for k, v in mapping.iteritems():
+    #    try:
+    #        mapping[k] = values[k]
+    #    except KeyError:
+    #        raise KeyError('Some kind of problem in _add_to_redis in redis_helper.py adding the values onto the mapping provided')
+        
+
     r_server = _get_redis()
+    
     if r_server.exists(key):
-        object = search_redis(key)
-        count = (int(object['count']) + 1)
-        new1 = "meaning%s" % count
-        new2 = "pinyin%s" % count
         
-        mapping = {
-            new1: values['meaning'],
-            new2: values['pinyin'], 
-            'count': count,
-        }
-        
-        r_server.hmset(key, mapping)
+        pass
+        # for the moment, we'll pass. Later, we'll meed to decide on 
+        # some kind of overwrite permissions or notifications.
                 
     else:
-        mapping = {
-            'chars': values['characters'],
-            'pinyin1': values['pinyin'], 
-            'meaning1': values['meaning'],
-            'count': 1,
-            'id': uuid.uuid4().hex,
-        }
         
-        r_server.hmset(key, mapping)
+        r_server.hmset(key, values)
         
     return True
+
+
+def _increment_stats(metric):
+    r_server = _get_redis()
+    key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)  
+
+    if r_server.exists(key):
+        r_server.hincrby(key, metric, 1)
+    else:
+        mapping = {
+                     'searches': 1,
+                     'redis_hits': 1,   
+                }
+                
+        _add_to_redis(key, values)
+    
+    return True    
+  
+
+    

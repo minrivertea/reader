@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     (r'^', include('website.urls')),
     (r'^reader/', include('creader.urls')),
 
+
     url(r'^accounts/register/$', register, {'backend': 'website.regbackend.SimpleBackend',}, name='registration_register'),
     (r'^accounts/', include('registration.backends.default.urls')),
     (r'^admin/', include(admin.site.urls)),
