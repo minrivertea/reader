@@ -118,7 +118,7 @@ def save_word(sender, **kwargs):
     
     # CLUGE THAT CONVERTS INCOMING CHARS INTO UNICODE        
     things = _split_unicode_chrs(kwargs['chars'])    
-    obj_list = group_words(things, chinese_only=True)
+    obj_list = _group_words(things, chinese_only=True)
                     
     r_server = _get_redis()
     key = "PW:%s" % account.user.email
