@@ -8,7 +8,7 @@
 {% if articles %}
 <ul id="vocablist" class="centred easy">
     {% for x in articles %}
-        <li class="wrapper" href="{% url url x.hash %}">
+        <li class="wrapper" href="{% url text x.hash %}">
             <span class="next">&#9658;</span>
             <div class="article">
                 <div class="title">{{ x.title }}</div>
