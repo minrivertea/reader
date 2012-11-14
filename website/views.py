@@ -31,6 +31,8 @@ from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _sp
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis, _increment_stats
 import utils.messages as messages
 
+from srs.views import _collect_vocab
+
 
 from creader.views import _group_words
 
@@ -153,6 +155,8 @@ def vocab(request):
     except:
         words = None
     title = "Your Vocabulary"
+    
+    _collect_vocab(request.user)
     
     if request.is_ajax():
         html = render_to_string('website/vocab_snippet.html', locals())

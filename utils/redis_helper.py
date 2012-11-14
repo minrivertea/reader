@@ -73,7 +73,7 @@ def _search_redis(key, lookup=True):
         return None
 
 
-def _add_to_redis(key, values):
+def _add_to_redis(key, values, user=None):
 
     #mapping = MAPPING_CHINESE_WORD
     #for k, v in mapping.iteritems():
@@ -84,10 +84,15 @@ def _add_to_redis(key, values):
         
 
     r_server = _get_redis()
-    
     if r_server.exists(key):
-        
-        pass
+        if user:
+            
+            if user.is_authenticated() and str(user.email) in key:
+                r_server.hmset(key, values)
+            else:
+                print "hmm, no user in the key - passing overwrite"
+                pass
+
         # for the moment, we'll pass. Later, we'll meed to decide on 
         # some kind of overwrite permissions or notifications.
                 

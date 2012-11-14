@@ -17,7 +17,7 @@ PW:[email]
 eg. PW:chris@email.com
 Stores a user's personal wordlist. Each word carries the format CHARS / TIMESTAMP / x SEARCHED / x TESTED / x CORRECT_TEST / DATE_LAST_TESTED
 
-    wordlist    "话 / 12345 / 5 /  \n"
+    wordlist    "话 / 1351254188.06 / 5 /  1 / 0 / 1351254188.06 \n"
 
 
 

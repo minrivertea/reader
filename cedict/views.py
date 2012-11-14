@@ -191,6 +191,8 @@ def get_examples(request, word):
 def get_similar(request, word):
     
     key = "*C:%s*" % word
+    print key
+    
     r_server = _get_redis()
     keys = r_server.keys(key)
     
