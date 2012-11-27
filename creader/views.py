@@ -280,17 +280,16 @@ def text(request, hashkey=None, words=None):
         
     chars = obj['chars'].decode('utf-8') # because redis stores things as strings...
     things = _split_unicode_chrs(chars)
-    obj_list = _group_words(things)
+    obj_list = _group_words(things) 
     
     
-    if request.is_ajax():
-        html = render_to_string('website/text_snippet.html', locals())
-        url = reverse('text', args=[hashkey])
-        data = {'html': html, 'url': url}
-        return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+    list_template = 'creader/text_page_snippet.html' 
+    
+    if request.GET.get('page'):
+        template = 'creader/text_page_snippet.html'
+        return render_to_response(template, locals())
         
-
-    return _render(request, 'website/text.html', locals())
+    return _render(request, 'creader/text.html', locals())
     
            
     
@@ -310,7 +309,6 @@ def url(request):
         # GIVE IT AN ID
         this_id = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(5))
         key = "text:%s" % this_id
-    
     
         if request.user.is_authenticated():
             user = request.user.email

@@ -32,51 +32,73 @@
 
 <body class="font1">
 
-    <div id="header" class="centred">
+    <div id="header">
+       <div id="header-inner" class="centred">
         <span id="logo"><a href="/">KanDongLe.Me?</a>  &raquo;</span>
-        <a href="/about/" title="about" class="ajax">About</a>
-        <a href="/bookmarklet/" title="bookmarklet" class="ajax">Bookmarklet</a>
+        <a href="{% url page 'about' %}" title="about" class="ajax">About</a>
+        <a href="{% url page 'bookmarklet' %}" title="bookmarklet" class="ajax">Bookmarklet</a>
         {% if user.is_authenticated %}
-            <div href="/" class="expandable">
-                <span class="linktext">Your account <span class="arrow">&#9660;</span></span>
+            <a href="{% url user %}">Your account</a>
+        {% else %}
+           <div href="/" class="expandable register">
+                <span class="linktext">Register</span>
                 <div class="subnav">
-                    <p>Logged in as {{ request.user.email }} - <a href="{% url auth_logout %}">logout</a></p>
-                    <ul>
-                        
-                        <li> <a class="ajax" href="/vocab/">Vocab</a> </li>
-                        <li> <a class="ajax" href="/articles/">Articles</a> </li>
-                    </ul>
+                    <p class="help"><strong>Register to use personalised reading lists, vocabulary and mobile applications.</strong> <br/><br/>We will never pass on your private information to any other individual or company. Your information is stored securely, your password encrypted, and your email will never be displayed publicly. We hate spam just as much as you do!</p>
+                    <form method="post" action=".">
+                       {% csrf_token %}
+                       <p>
+                            <input type="text" name="email" id="id_email" value="" title="" class="clearMeFocus"/>
+                            <label for="id_email">Your email address</label>
+                       </p>
+                       <p>
+                            <input type="password" name="password1" id="id_password1" value="" class="clearMeFocus"/>
+                            <label for="id_password1">Choose a password</label>
+                       </p>
+                       <input type="submit" value="Register now!" class="register button" />
+                     </form>
                 </div>
             </div>
-        {% else %}
-        <a href="{% url registration_register %}" title="register" class="">Register</a>
-        <a href="{% url auth_login %}">Login</a>
+           <div href="/" class="expandable login">
+                <span class="linktext">Login</span>
+                <div class="subnav">
+                     <p class="help">If you haven't got an account, <a href="{% url registration_register %}">register here</a> - or did you <a class="forgotten" href="{% url auth_password_reset %}">forget your password?</a>?</p>   
+
+                    <form method="post" action="{% url django.contrib.auth.views.login %}">
+                    {% csrf_token %}
+                    <p><label for="id_username">eg. john@example.com</label><input id="id_username" type="text" name="username" title="Your username" class="clearMeFocus" maxlength="30" /></p>
+                    <p><label for="id_password">Your password</label><input type="password" name="password" id="id_password" title="Your password" class="clearMeFocus" /></p>
+                     <input type="submit" value="Login" class="login button" /></p>
+                    <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
+                    </form>                
+                 </div>
+            </div>
         {% endif %}
     
-        <form id="search" action="{% url search %}" method="post" class="centred">
+        <form id="search" action="{% url search %}" method="post" class="{% if request.path == '/' %}home{% endif %}">
             {% csrf_token %}
-            <label for="id_char">The worlds greatest Chinese-English dictionary!</label>
+            <label for="id_char">Search for a Chinese word</label>
             <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >
             <input type="submit" value="Go" id="submit" class="submit button"/>
         </form>
+      </div>
     </div>
-    
-    <div id="userblock"></div>
-    
+        
     <div id="editable"></div>
         
     <img id="loading" src="/images/loading.gif"/>
     
-    <div id="container">  
+    <div id="container"> 
         {% block content %}{% endblock %}        
     </div>
     
 	<script type="text/javascript" src="{% slimfile '/js/common.js' %}"></script>
+	<script type="text/javascript" src="{% slimfile '/js/creader.js' %}"></script>
 	<script type="text/javascript">
 
 		$(document).ready( function() {
             $('#search').bind('submit', searchSubmit);
-            bindLoadContent();     
+            bindLoadContent(); 
+            bindWords();    
             clearInput();
             
             

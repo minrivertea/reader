@@ -33,6 +33,7 @@ class Account(models.Model):
                 
         obj_list = []
         loop = 0
+        # TODO - this needs to return something a little bit omre workable for the templates - eg. pinyin
         for x in wordlist.splitlines():
             try:
                 this_time = datetime.datetime.fromtimestamp(float(x.split('/')[1].strip(' ')))

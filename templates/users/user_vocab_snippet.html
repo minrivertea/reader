@@ -1,0 +1,14 @@
+
+{% include 'users/snippets/subnav.html' %}
+
+<ul id="wordlist" class="easy centred">
+    {% for w in words %}
+        <li class="wrapper" href="{% url user_vocab_item w.chars %}">
+            <span class="next">&#9658;</span>
+            <div class="line">
+                <div class="chars">{{ w.chars }}</div>
+                <div class="pinyin">{{ w.pinyin }}</div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
-{% load endless django_static %}
+{% load django_static %}
 
 {% block extrajs %}
 <script type="text/javascript">
-
+$(document).ready( function() {
+ clearInput();
+});
 </script>
 {% endblock %}
 
@@ -12,11 +14,10 @@
 {% block extracss %}
 <style type="text/css">
 
-
 </style>
 {% endblock %}
 
 
 {% block content %}
-    {% include snippet %}
+    {% include 'users/user_articles_snippet.html' %}    
 {% endblock %}

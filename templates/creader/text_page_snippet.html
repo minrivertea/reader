@@ -1,0 +1,17 @@
+{% load endless %}
+
+{% paginate obj_list %}
+<p>
+{% for x in obj_list %}
+
+    {% if x.is_linebreak %}<br clear="all"/><br clear="all"/>{% else %}
+    <span class="word{% if x.is_english %} english{% endif %}{% if x.is_number %} number{% endif %}{% if x.is_punctuation %} punctuation{% endif %}" id="word{{ x.wordset }}" chars="{{ x.chars }}" title="{{ x.meaning1 }}">
+        <span class="char">{{ x.chars }}</span>
+        {% if x.pinyin1 %} <span class="pinyin">{{ x.pinyin1 }}</span>{% endif %}
+    </span>
+    {% endif %}
+
+{% endfor %}
+</p>
+
+{% show_more "Scroll down to load the next page" %}

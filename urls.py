@@ -4,7 +4,7 @@ import django.views.static
 
 from registration.views import register
 
-from website.views import user, page
+from website.views import page
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -14,11 +14,12 @@ urlpatterns = patterns('',
     (r'^', include('website.urls')),
     (r'^reader/', include('creader.urls')),
     (r'^srs/', include('srs.urls')),
+    (r'^user/', include('users.urls')),
+
 
     url(r'^accounts/register/$', register, {'backend': 'website.regbackend.SimpleBackend',}, name='registration_register'),
     (r'^accounts/', include('registration.backends.default.urls')),
     (r'^admin/', include(admin.site.urls)),
-    url(r'^user/(\w+)/$', user, name="user"),
     url(r'^(?P<slug>[\w-]+)/$', page, name="page"),
 )
 

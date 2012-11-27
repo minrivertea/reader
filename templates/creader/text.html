@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load django_static %}
+
+{% block extrajs %}
+    <script src="{% staticfile '/js/endless/endless_on_scroll.js' %}"></script>
+    <script src="{% staticfile '/js/endless/endless.js' %}"></script>
+{% endblock %}
+
+
+{% block extracss %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+    {% include 'website/text_snippet.html' %}
+{% endblock %}

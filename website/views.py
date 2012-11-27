@@ -43,58 +43,110 @@ from cjklib.reading import ReadingFactory
 from website.forms import SearchForm
 from website.signals import *
   
+def _problem(request, problem=None):    
+    if request.is_ajax():
+        html = render_to_string('website/problem_snippet.html', locals())
+        url = '/problem/'
+        return HttpResponse(simplejson.dumps({'html':html, 'url':url}), mimetype="application/json")
+    return _render(request, 'website/problem.html', locals())
 
-def search(request, search_string=None):
+
+
+def search(request, search_string=None, title='Search', words=None):
     
-    if request.method == 'POST':
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            
-            _increment_stats('searches')
-            
-            search_string = form.cleaned_data['char']
-    else:
-        form = SearchForm()
     
-
-    if len(search_string) < 10:
-        if _is_english(search_string):
-            problem = messages.ENGLISH_WORD
-            if request.is_ajax():
-                html = render_to_string('website/problem_snippet.html', locals())
-                url = '/problem/'
-                
-                return HttpResponse(simplejson.dumps({'html':html, 'url':url}), mimetype="application/json")
-            return _render(request, 'website/problem.html', locals())
-
-        things = _split_unicode_chrs(search_string)
-        words = _group_words(things)
-        _update_crumbs(request)
-        title = "Search"
-        search = True
-
-        if request.user.is_authenticated():
-            word_searched.send(sender=word_searched, chars=search_string, time=datetime.datetime.now(), user_id=request.user.pk)
+    # CHECK IF IT'S A POST REQUEST OR URL SEARCH
+    if search_string == None:
+        if request.method != 'POST':
+            form = SearchForm()
+            return _render(request, 'website/home.html', locals())
         
-        if request.is_ajax():
-            html = render_to_string('website/vocab_snippet.html', locals())
-                                
+        else:
+            form = SearchForm(request.POST)
+            if form.is_valid():
+                _increment_stats('searches')
+                search_string = form.cleaned_data['char']
+
+    # IF THE SEARCH IS ENGLISH, RETURN ERROR
+    if _is_english(search_string):
+        return _problem(request, messages.ENGLISH_WORD)
+
+    # IF THE SEARCH IS OVER 10 CHARACTERS, RETURN A TEXT
+    if len(search_string) > 12:
+        from creader.views import text                
+        return text(request, words=search_string)
+          
+            
+    if not words:
+        things = _split_unicode_chrs(search_string)
+        words = _group_words(things)        
+        _update_crumbs(request)
+
+
+    if request.user.is_authenticated():
+        word_searched.send(sender=word_searched, chars=search_string, time=datetime.datetime.now(), user_id=request.user.pk)
+    
+    
+    title = "Search"
+    subtitle = "%s" % search_string
+    if request.is_ajax():
+        
+        html = render_to_string('website/wordlist_snippet.html', locals())
+        
+        if request.method == 'POST':        
             url = "/search/%s" % search_string
             data = {'html': html, 'url': url}
             return HttpResponse(simplejson.dumps(data), mimetype="application/json")
-        
-        return _render(request, 'website/vocab.html', locals())
+        else:
+            return HttpResponse(html)
     
-    # IF IT'S OVER 10 CHARACTERS, HANDLE LIKE A TEXT
-    else:
-        
-        from creader.views import text                
-        return text(request, words=form.cleaned_data['char'])
+    return _render(request, 'website/wordlist.html', locals())
+
+
+def search_contains(request, search_string):
+    key = "*C:*%s*" % search_string
+    
+    r_server = _get_redis()
+    keys = r_server.keys(key)
+    
+    words = []
+    for x in keys:
+        word = _search_redis(x)
+        try:
+            url = reverse('single_word', args=[word['chars']])
+            words.append(word)
+        except:
+            pass
 
     
-    return _render(request, 'website/home.html', locals())
+    words =  sorted(words, reverse=False, key=lambda thing: len(thing))
+    title = "Search"
+    subtitle = "Showing %s words containing <strong>%s</strong>" % (len(words), search_string)
+    _update_crumbs(request)
     
+    return _render(request, 'website/wordlist.html', locals())
 
+
+def search_beginning_with(request, search_string):
+    key = "*C:%s*" % search_string
+    r_server = _get_redis()
+    keys = r_server.keys(key)
+    
+    words = []
+    for x in keys:
+        word = _search_redis(x)
+        words.append(word)
+
+    
+    words =  sorted(words, reverse=False, key=lambda thing: len(thing))
+    title = "Search"
+    subtitle = "Showing words beginning with %s" % search_string
+    _update_crumbs(request)
+    
+    return _render(request, 'website/wordlist.html', locals())     
+    
+            
+    
 def home(request):
     _update_crumbs(request)                
     return _render(request, 'website/home.html', locals())
@@ -104,38 +156,21 @@ def home(request):
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
 def page(request, slug):
     template = 'website/pages/page.html'
-    snippet = 'website/pages/%s_snippet.html' % slug
+    snippet = 'website/pages/%s.html' % slug
     _update_crumbs(request)
     
-    if request.is_ajax():
-        
-        page = render_to_string(snippet, {'siteurl': RequestContext(request)['siteurl']})
-        return HttpResponse(page)
-            
-    return _render(request, template, locals())
+    return _render(request, template, locals(), page=slug)
 
 
-# CURRENTLY REDUNDANT    
-def user(request, pk):
-    user = get_object_or_404(User, pk=pk)
+    
+def user(request):
+    user = request.user
     return _render(request, 'website/user.html', locals())
 
 
 
-# GETS A LIST OF YOUR ARTICLES
+# TODO - THIS SHOULD RETURN A GENERIC, NON-USER-SPECIFIC ARTICLE VIEW
 def articles(request):
-    
-    if request.user.is_authenticated():        
-        articles = request.user.get_profile().get_personal_articles()        
-        
-    else:
-        pass
-    
-    if request.is_ajax():
-    
-        html = render_to_string('website/articles_snippet.html', locals())
-        return HttpResponse(html)
-    
     return _render(request, 'website/articles.html', locals())
 
 # DISPLAYS SITE STATISTICS
@@ -147,22 +182,10 @@ def stats(request):
     return _render(request, 'website/stats.html', locals())    
 
 
-# GENERATES A LIST OF USER'S PERSONAL VOCABULARY
-def vocab(request):
-    _update_crumbs(request)
-    try:
-        words = request.user.get_profile().get_personal_words()
-    except:
-        words = None
-    title = "Your Vocabulary"
+# TODO - THIS SHOULD RETURN SOME KIND OF GENERIC WORDS VIEW
+def words(request):
     
-    _collect_vocab(request.user)
-    
-    if request.is_ajax():
-        html = render_to_string('website/vocab_snippet.html', locals())
-        return HttpResponse(html)
-    
-    return _render(request, 'website/vocab.html', locals())
+    return _render(request, 'website/wordlist.html', locals())
 
  
 def get_personal_words(request):
@@ -178,7 +201,7 @@ def get_personal_words(request):
     if request.is_ajax():
         return HttpResponse(simplejson.dumps(words), mimetype="application/json")
     
-    return _render(request, 'website/vocab.html', locals())
+    return _render(request, 'website/wordlist.html', locals())
     
     
     

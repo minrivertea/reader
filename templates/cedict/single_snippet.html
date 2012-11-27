@@ -1,6 +1,8 @@
 {% load link_chars %}
 
-<div id="crumbs" class="centred"><span class="arrow">&#9658;</span><a href="{{ url }}">{{ title|capfirst }}</a>{{ crumbs|safe }}</div>
+<div id="crumbs" class="centred">
+    <span class="arrow">&#9658;</span><a href="{{ url }}">{{ title|capfirst }}</a>{{ crumbs|safe }}
+</div>
 
 <div id="text" class="centred">
     <div id="single">
@@ -27,9 +29,23 @@
     </div>
 </div>
 
-<h3 class="centred" id="examples" onclick="getExamples('{{ word.chars|safe }}');"><span class="arrow">&#9658;</span> Examples \ <span class="this">Click to show examples of this word</span></h3>
-<ul id="examplelist" class="centred"></ul>
-
-
-<h3 class="centred" id="similar" onclick="getSimilar('{{ word.chars|safe }}');"><span class="arrow">&#9658;</span> Similar words \ <span class="this">Click to show similar words</span></h3>
-<ul id="similarlist" class="centred"></ul>
+<ul id="wordlist" class="centred">
+    <li class="wrapper" href="">
+        <span class="next">&#9658;</span>
+        <div class="line">
+            Get examples of <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+        </div>
+    </li>
+    <li class="wrapper" href="{% url search_beginning_with word.chars %}">
+        <span class="next">&#9658;</span>
+        <div class="line">
+            Get words beginning with <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+        </div>
+    </li>
+    <li class="wrapper" href="{% url search_contains word.chars %}">
+        <span class="next">&#9658;</span>
+        <div class="line">
+            Get words containing <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+        </div>
+    </li>
+</ul>

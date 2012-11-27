@@ -8,12 +8,37 @@ PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.template.loader import render_to_string
+from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.utils import simplejson
+
+
+
 
 
 
 #render shortcut
-def _render(request, template, context_dict=None, **kwargs):
+def _render(request, template, context_dict=None, page=None, **kwargs):
+    
+    if request.is_ajax():
         
+        if page:
+            template = "".join((template.strip('page.html'), page, '.html'))
+            
+        else:
+            print template
+            template = template.replace('.html', "_snippet.html")
+            print template
+        
+        html = render_to_string(
+            template, 
+            context_dict or {}, 
+            context_instance=RequestContext(request),
+            **kwargs
+        )
+        data = {'html': html, 'url': request.path}
+        return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+
     return render_to_response(
         template, context_dict or {}, context_instance=RequestContext(request),
             **kwargs)  

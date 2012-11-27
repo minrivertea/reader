@@ -96,9 +96,6 @@ def copy_dictionary(request):
                 
                 r_server.hmset(key, mapping)
                 
-
-                
-    
     file.close()    
     return _render(request, 'website/success.html', locals())      
     
@@ -107,9 +104,7 @@ def single_word(request, word):
    
     key = "%sC:%s" % (len(word), word)
     word = _search_redis(key)
-    
-    
-    
+        
     _update_crumbs(request, smart_unicode(word['chars']))
     crumbs = _get_crumbs(request)
     
@@ -122,12 +117,7 @@ def single_word(request, word):
         url = reverse('vocab')
         title = "Vocabulary"
 
-    
-    if request.is_ajax():
-        html = render_to_string('website/single_snippet.html', locals())
-        return HttpResponse(html)
-
-    return _render(request, 'website/single.html', locals())   
+    return _render(request, 'cedict/single.html', locals())   
 
 
 
@@ -186,29 +176,4 @@ def get_examples(request, word):
         return HttpResponse(html)
     
     return _render(request, 'website/examples.html', locals())
-    
-
-def get_similar(request, word):
-    
-    key = "*C:%s*" % word
-    print key
-    
-    r_server = _get_redis()
-    keys = r_server.keys(key)
-    
-    similar = []
-    for x in keys:
-        new = x.split(':')[1]        
-        if smart_unicode(new) != word:
-            similar.append(new)
-    
-    
-    similar =  sorted(similar, reverse=False, key=lambda thing: len(thing))
-    
-    if request.is_ajax():
-        html = render_to_string('website/similar_snippet.html', locals())
-        return HttpResponse(html)
-    
-    return _render(request, 'website/similar.html', locals())    
-    
     
