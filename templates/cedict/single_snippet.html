@@ -4,7 +4,7 @@
     <span class="arrow">&#9658;</span><a href="{{ url }}">{{ title|capfirst }}</a>{{ crumbs|safe }}
 </div>
 
-<div id="text" class="centred">
+<div id="word" class="centred">
     <div id="single">
         <div id="chars">{% for x in chars %}<a href="{% url single_word x %}" class="single"><span class="chars">{{ x }}</span></a>{% endfor %}</div>
         <table>
