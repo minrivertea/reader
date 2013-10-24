@@ -2,3 +2,5 @@ django-endless-pagination
 redis
 cjklib
 BeautifulSoup4
+django-registration
+readability-lxml

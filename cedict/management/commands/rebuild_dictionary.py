@@ -26,6 +26,7 @@ class Command(NoArgsCommand):
         file = open(settings.DICT_FILE_LOCATION)
         r_server = _get_redis()
         
+        item_count = 0
         for line in file:
             if line.startswith("#"):
                 pass
@@ -44,7 +45,6 @@ class Command(NoArgsCommand):
     
                 if r_server.exists(key):
                     object = _search_redis(key)
-                    print object
                     try:
                         val = "meaning%s" % (int(object['count']) + 1)
                         object[val]
@@ -72,7 +72,10 @@ class Command(NoArgsCommand):
                     }
                     
                     r_server.hmset(key, mapping)
-                    
+                
+                item_count += 1
+        
+        print "%s dictionary items added" % item_count          
         file.close()        
 
 
