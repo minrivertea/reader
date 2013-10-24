@@ -8,6 +8,7 @@ PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+GA_IS_ON = False
 
 ADMINS = (
     ('Chris', 'chris@minrivertea.com'),
@@ -17,10 +18,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'reader',                      # Or path to database file if using sqlite3.
+        'USER': 'root',                      # Not used with sqlite3.
+        'PASSWORD': 'gumball',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -105,6 +106,7 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     'endless_pagination',
     'registration',
+    'cedict',
 )
 
 #ENDLESS PAGINATION SETTINGS:
@@ -112,7 +114,7 @@ ENDLESS_PAGINATION_PER_PAGE = 200
 ENDLESS_PAGINATION_LOADING = '<img src="/images/loading.gif" />'
 
 # django-static info
-DJANGO_STATIC = True
+DJANGO_STATIC = False
 DJANGO_STATIC_SAVE_PREFIX = '/tmp/cache-forever'
 DJANGO_STATIC_NAME_PREFIX = '/cache-forever'
 #DJANGO_STATIC_MEDIA_URL = '//static.kandongle.me'
@@ -122,7 +124,8 @@ DJANGO_STATIC_NAME_PREFIX = '/cache-forever'
 SITE_URL = 'http://kandongle.me'
 ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = "website.Account"
-DICT_FILE_LOCATION = '/home/ubuntu/django/reader/files/cedict_1_0_ts_utf-8_mdbg.txt'
+DICT_FILE_LOCATION = os.path.join(PROJECT_PATH, 'files/cedict_1_0_ts_utf-8_mdbg.txt')
+
 
 
 # EMAILS

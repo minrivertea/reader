@@ -6,7 +6,7 @@ import redis
 import os
 PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 
-from redis_helper import get_redis
+from utils.redis_helper import _get_redis
 
 from urlparse import urlparse
 from bs4 import BeautifulSoup
@@ -111,7 +111,7 @@ def _collect_vocab(user):
     
     # get the whole users' wordlist from redis:
     userkey = "PW:%s" % user.email
-    r_server = get_redis()
+    r_server = _get_redis()
     words = r_server.hgetall(userkey)
         
     # get any vocabulary that hasn't been tested before

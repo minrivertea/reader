@@ -24,7 +24,11 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
         });
         
         window.onpopstate = function(event) {
+    	   if ( $('form#search').hasClass('home') ) {
+                $('form#search').removeClass('home');   
+           }
     	   $("#loading").show();
+    	   
     	   loadPage(location.pathname);
 	    }
         
@@ -39,6 +43,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     
     // LOADS A PAGE BASED SOLELY ON A URL
     function loadPage(url) {
+        
         $.ajax({
            url: url,
            dataType: 'json',

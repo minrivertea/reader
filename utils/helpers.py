@@ -26,9 +26,7 @@ def _render(request, template, context_dict=None, page=None, **kwargs):
             template = "".join((template.strip('page.html'), page, '.html'))
             
         else:
-            print template
             template = template.replace('.html', "_snippet.html")
-            print template
         
         html = render_to_string(
             template, 

@@ -115,7 +115,7 @@ def _increment_stats(metric):
                      'redis_hits': 1,   
                 }
                 
-        _add_to_redis(key, values)
+        _add_to_redis(key, mapping)
     
     return True    
   

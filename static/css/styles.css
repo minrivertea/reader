@@ -8,10 +8,10 @@ body {
   margin: 0;
   padding: 0;
   color: #333;
-  font-size: 13px;
+  font-size: 15px;
   line-height: normal;
   background: #eff2f3;
-  font-family: Helvetica,"STKaiti",华文楷体, sans-serif;  
+  font-family: Open Sans,"STKaiti",华文楷体, sans-serif;  
 }
 
 a:link, a:visited {
@@ -23,9 +23,11 @@ a:hover, a:active {
    text-decoration: underline;
 }
 
-.button, a.button {
+.button, a.button, input.button {
     float: right;
-    border: 1px solid transparent;
+    font-family: Open Sans, sans-serif;
+    font-weight: 100;
+    font-size: 20px;
     height: auto;
     width: 58px;
     padding: 9px 10px;
@@ -35,9 +37,7 @@ a:hover, a:active {
     color: #fff;
     text-shadow: 0 1px 0 #C43A00;
     text-decoration: none;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: 20px;
+    
     letter-spacing: 0.5px;
     border-color: #A53A00;
     background: rgb(226,103,36); /* Old browsers */
@@ -92,45 +92,40 @@ p.red {
 /* HEADER STYLES */
 
 #header {
-  background: #333;
-  height: 60px;
-  box-shadow: 1px -3px 20px #222 inset;
-  margin: 0 0 20px;
-  border-bottom: 5px solid #E26724;
+    float: left;
+    height: auto;
+    margin: 0 0 20px;
 }
 
 #header-inner {
-  padding: 25px 0 0;   
+  padding: 15px 0 10px; 
+  border-bottom: 1px dashed #e1e1e1;  
 }
 
 #header #logo {
  display: block;
  float: left;
  font-weight: bold;
- font-family: Helvetica, Arial, sans-serif;
  font-size: 14px;
- letter-spacing: -0.5px;
  color: #E55C12;
  margin: 0 10px 0 0px;
 }
 
 #header #logo a {
- color: #fff;
+ color: #222;
 }
 
 #header a, #header .expandable {
   float: left;
   padding: 0px 10px; 
-  color: #c1c1c1; 
+  color: #E55C12; 
   text-decoration: none;
-  letter-spacing: -0.5px; 
-  font-weight: bold;
-  font-family: Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 18px;
 }
 
 #header a:hover, #header div.expandable:hover {
   text-decoration: underline;
-  color: #fff; 
   cursor: pointer;  
 }
 
@@ -254,16 +249,13 @@ p.red {
 #search {
     float: right;
     position: relative;
-    top: -6px;
     width: 248px;
 }
 
 #search-error {
     color: #999999;
-    font-family: Helvetica;
     font-size: 14px;
     font-weight: bold;
-    letter-spacing: -0.5px;
     position: absolute;
     right: 10px;
     top: 77px;
@@ -274,10 +266,8 @@ p.red {
     border-radius: 0 5px 5px 0;
     color: #FFFFFF;
     float: left;
-    font-size: 13px;
-    font-weight: bold;
-    height: 25px;
-    padding: 2px 4px 4px;
+    font-size: 14px;
+    padding: 2px 4px 1px;
     width: 35px;
 }
 
@@ -300,7 +290,7 @@ p.red {
     display: none;
     font-size: 12px;
     left: 5px;
-    padding: 7px 5px;
+    padding: 5px 5px;
     position: absolute;
     text-align: left;
     color: #666;
@@ -320,21 +310,22 @@ p.red {
 
 #search.home input#id_char {
     border-radius: 5px 0 0 5px;
-    font-size: 35px;
     height: auto;
-    padding: 8px 8px 5px;
+    padding: 13px 15px;
     position: relative;
-    width: 90%;
+    width: 85%;
+    font-family: Open Sans;
+    font-size: 20px;
+    font-weight: 100;
 }
 
 #search.home label {
     color: #E26724;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 25px;
+    font-weight: 100;
     left: 13px;
-    letter-spacing: -0.5px;
     position: absolute;
-    top: 9px;
+    top: 3px;
     z-index: 2;
 }
 
@@ -344,9 +335,11 @@ p.red {
 
 #search.home input[type="submit"] {
     border-radius: 0 5px 5px 0;
+    font-family: Open Sans;
     font-size: 20px;
-    height: 49px;
-    padding: 7px;
+    font-weight: 100;
+    height: auto;
+    padding: 12px 35px;
     width: auto;
 }
 
@@ -358,7 +351,6 @@ form {
  float: left;
  width: 100%;
  text-align: center;  
- margin: 0px 0 10px 0;
  display: ; 
 }
 
@@ -369,7 +361,6 @@ textarea {
  border-radius: 4px 4px 4px 4px;
  font-size: 32px;
  padding: 10px;
- font-family: "Times New Roman", serif;
 }
 
 input, textarea {
@@ -377,7 +368,6 @@ input, textarea {
   border: 1px solid #c1c1c1;
   padding: 10px;
   font-size: 20px;
-  font-family: Helvetica,"STKaiti",华文楷体,sans-serif;    
 }
 
 input.submit:hover {
@@ -385,7 +375,6 @@ input.submit:hover {
 }
 
 label {
-   font-family: Helvetica,"STKaiti",华文楷体,sans-serif;   
 }
 
 input[type=submit]:hover {
@@ -438,7 +427,6 @@ label.focus {
   border: 1px solid #d1d1d1;
   font-size: 26px;
   font-weight: bold;
-  font-family: Helvetica, Arial, sans-serif;
   color: #E55C12;
   text-shadow: 1px 1px 0 #fff;
   height: auto;
@@ -601,7 +589,6 @@ label.focus {
 
 #head .extra h4 {
   margin: 0; 
-  font-family: Helvetica, Arial, sans-serif;  
 }
 
 #head .extra ul {
@@ -656,11 +643,10 @@ label.focus {
 
 #crumbs {
     color: #333;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: normal;
-    letter-spacing: -0.5px;
-    padding: 0 0 15px;
-    border-bottom: 1px solid #e1e1e1;
+    padding: 0 0 20px;
+    border-bottom: 1px dashed #e1e1e1;
 }
 
 #crumbs .arrow {
@@ -751,9 +737,6 @@ body.color4 #tools {
 }
 
 #text {
-    background: none repeat scroll 0 0 #FFFFFF;
-    box-shadow: 0 1px 10px #E1E1E1;
-    padding: 30px 40px;
 }
 
 
@@ -895,13 +878,14 @@ body.color4 #tools {
 }
 
 #wordlist .pinyin {
-  text-transform: lowercase;
-  font-size: 16px;
-  width: 200px;
-  float: left;
-  position: relative;
-  top: 4px;
-  line-height: 1.6em;
+    float: left;
+    font-family: Helvetica Neue;
+    font-size: 14px;
+    font-weight: 200;
+    position: relative;
+    text-transform: lowercase;
+    top: 10px;
+    width: 200px;
 }
 
 #wordlist .meaning {
@@ -972,19 +956,19 @@ body.color4 #tools {
 
 
 body.font1, body.font1 .char, #head ul a.font1, body.font1 #lookups div span.title, body.font1 h1, body.font1 #editable .chars {
-  font-family: Helvetica,"STKaiti",华文楷体,sans-serif;  
+  font-family: Open Sans,"STKaiti",华文楷体,sans-serif;  
 }
 
 body.font2, body.font2 .char, #head ul a.font2, body.font2 #lookups div span.title, body.font2 h1, body.font2 #editable .chars {
-  font-family: Helvetica,"STSong", 华文宋体, sans-serif; 
+  font-family: Open Sans,"STSong", 华文宋体, sans-serif; 
 }
 
 body.font3, body.font3 .char, #head ul a.font3, body.font3 #lookups div span.title, body.font3 h1, body.font3 #editable .chars {
-  font-family: Helvetica,"STFangsong", 华文仿宋, sans-serif; 
+  font-family: Open Sans,"STFangsong", 华文仿宋, sans-serif; 
 }
 
 body.font4, body.font4 .char, #head ul a.font4, body.font4 #lookups div span.title, body.font4 h1, body.font4 #editable .chars {
-  font-family: Helvetica,"STHeiti", 华文黑体, sans-serif; 
+  font-family: Open Sans,"STHeiti", 华文黑体, sans-serif; 
 }
 
 .punctuation {
@@ -1062,7 +1046,6 @@ h1 {
 
 h3 {
   color: #E55C12;
-  font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
   font-size: 15px;
   margin: 40px 0 0px 0; 
@@ -1111,7 +1094,6 @@ h3 span.this {
     color: #E55C12;
     font-size: 14px;
     font-weight: bold;
-    font-family: Helvetica, Arial, sans-serif;
     padding: 9px 10px 5px 10px;
     text-decoration: none;
     text-shadow: none;
@@ -1262,35 +1244,34 @@ h3 span.this {
 
 /* flatpage about us styles */
 
-.flatpage {
+.text {
   float: left;
-  width: 100%;
 }
 
-.flatpage p {
+.text p {
   font-size: 18px;
   line-height: 1.8em;
   margin: 10px 0 20px;   
 }
 
-.flatpage p.big {
+.text p.big {
    font-size: 25px;  
 }
 
-.flatpage ul {
+.text ul {
   font-size: 18px;
   line-height: 1.8em;
   margin-bottom: 20px;
   list-style-type: square;   
 }
 
-.flatpage .explain {
+.text .explain {
   width: 100%;
   float: left;
   margin: 10px 0 20px 0;   
 }
 
-.explain .button {
+.text .button {
   position: relative;
   top: 35px;
   margin-left: 60px;
@@ -1299,11 +1280,11 @@ h3 span.this {
   border-width:   
 }
 
-.explain .button:hover {
+.text .button:hover {
   box-shadow: 0 0px 5px #444;   
 }
 
-.explain .guide {
+.text .guide {
   font-size: 12px;
   font-style: italic;
   position: relative;

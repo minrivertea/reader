@@ -67,16 +67,17 @@ def search(request, search_string=None, title='Search', words=None):
                 _increment_stats('searches')
                 search_string = form.cleaned_data['char']
 
+
     # IF THE SEARCH IS ENGLISH, RETURN ERROR
     if _is_english(search_string):
         return _problem(request, messages.ENGLISH_WORD)
+
 
     # IF THE SEARCH IS OVER 10 CHARACTERS, RETURN A TEXT
     if len(search_string) > 12:
         from creader.views import text                
         return text(request, words=search_string)
           
-            
     if not words:
         things = _split_unicode_chrs(search_string)
         words = _group_words(things)        
@@ -173,8 +174,10 @@ def user(request):
 def articles(request):
     return _render(request, 'website/articles.html', locals())
 
+
 # DISPLAYS SITE STATISTICS
 def stats(request):
+    
     # TODO - do monthly filtering, backwards and forwards, comparisons etc.
     key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
     stats = _search_redis(key)

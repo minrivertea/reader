@@ -1,5 +1,5 @@
 
-<div id="crumbs" class="centred"><span class="arrow">&#9658;</span><a href="{% url words %}">{{ title }}</a>{% if subtitle %}&nbsp;&nbsp;\&nbsp;&nbsp;{{ subtitle|safe }}{% endif %}</div>
+<div id="crumbs" class="centred">{% if subtitle %}{{ subtitle|safe }}{% endif %}</div>
 
 {% if words %}
     <ul id="wordlist" class="centred">

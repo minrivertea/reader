@@ -20,7 +20,7 @@
 	{% if ga_is_on %}
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 	{% else %}
-		<script type="text/javascript" src="{% staticfile '/js/jquery-1.8.1.min.js' %}"></script>
+		<script type="text/javascript" src="{% staticfile '/js/jquery-1.8.2.min.js' %}"></script>
 	{% endif %}
 	
 	
@@ -34,9 +34,9 @@
 
     <div id="header">
        <div id="header-inner" class="centred">
-        <span id="logo"><a href="/">KanDongLe.Me?</a>  &raquo;</span>
-        <a href="{% url page 'about' %}" title="about" class="ajax">About</a>
-        <a href="{% url page 'bookmarklet' %}" title="bookmarklet" class="ajax">Bookmarklet</a>
+        <span id="logo"><a href="/">KanDongLe.Me?</a></span>
+        <a href="{% url page 'about' %}" title="about" class="ajax">about</a>
+        {% comment %}
         {% if user.is_authenticated %}
             <a href="{% url user %}">Your account</a>
         {% else %}
@@ -73,6 +73,8 @@
                  </div>
             </div>
         {% endif %}
+        {% endcomment %}
+        
     
         <form id="search" action="{% url search %}" method="post" class="{% if request.path == '/' %}home{% endif %}">
             {% csrf_token %}
@@ -99,9 +101,7 @@
             $('#search').bind('submit', searchSubmit);
             bindLoadContent(); 
             bindWords();    
-            clearInput();
-            
-            
+            clearInput();            
 		});
 		
 	</script>

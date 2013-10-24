@@ -17,19 +17,5 @@
 
 
 {% block content %}
-
-<div id="text" class="centred easy">
-
-    <table>
-    {% for k,v in stats.items %}
-        <tr>
-        <td>{{ k|capfirst }}</td><td>{{ v }}</td>
-        </tr>
-    {% endfor %}
-    </table>
-
-
-</div>
-
-
+{% include 'website/stats_snippet.html' %}
 {% endblock %}
