@@ -32,7 +32,7 @@
 
 <body class="font1">
 
-    <div id="header">
+    <div id="header" class="{% if request.path == '/' %}home{% endif %}">
        <div id="header-inner" class="centred">
         <span id="logo"><a href="/">KanDongLe.Me?</a></span>
         <a href="{% url page 'about' %}" title="about" class="ajax">about</a>
@@ -76,7 +76,7 @@
         {% endcomment %}
         
     
-        <form id="search" action="{% url search %}" method="post" class="{% if request.path == '/' %}home{% endif %}">
+        <form id="search" action="{% url search %}" method="post" class="">
             {% csrf_token %}
             <label for="id_char">Search for a Chinese word</label>
             <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >

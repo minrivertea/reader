@@ -95,6 +95,11 @@ p.red {
     float: left;
     height: auto;
     margin: 0 0 20px;
+    position: relative;
+}
+
+#header.home {
+  top: 220px;   
 }
 
 #header-inner {
@@ -300,15 +305,15 @@ p.red {
    color: #d1d1d1;   
 }
 
-#search.home {
+#header.home #search {
   float: left;
   position: absolute;
-  top: 300px;  
+  top: 65px;  
   left: 0;
   width: 100%; 
 }
 
-#search.home input#id_char {
+#header.home #search input#id_char {
     border-radius: 5px 0 0 5px;
     height: auto;
     padding: 13px 15px;
@@ -319,7 +324,7 @@ p.red {
     font-weight: 100;
 }
 
-#search.home label {
+#header.home #search label {
     color: #E26724;
     font-size: 25px;
     font-weight: 100;
@@ -329,11 +334,11 @@ p.red {
     z-index: 2;
 }
 
-#search.home label.focus {
+#header.home #search label.focus {
   color: #e1e1e1;   
 }
 
-#search.home input[type="submit"] {
+#header.home #search input[type="submit"] {
     border-radius: 0 5px 5px 0;
     font-family: Open Sans;
     font-size: 20px;
@@ -772,7 +777,7 @@ body.color4 #tools {
 }
 
 #wordlist {
-    background: none repeat scroll 0 0 #E6EAEB;
+    background: none repeat scroll 0 0 #e7ecee;
     list-style-type: none;
     margin-top: 0;
     padding: 0;
@@ -809,10 +814,9 @@ body.color4 #tools {
 }
 
 .wrapper:before {
-    background: none repeat scroll 0 0 #E55C12;
+    background: none repeat scroll 0 0 #f4f6f7;
     border-radius: 15px 15px 15px 15px;
     content: " ";
-    display: none;
     height: 30px;
     position: absolute;
     right: 13px;
@@ -822,7 +826,8 @@ body.color4 #tools {
 }
 
 .wrapper:hover:before {
-  display: block;   
+  display: block; 
+  background: #fff;  
 }
 
 .wrapper:hover {
@@ -853,49 +858,51 @@ body.color4 #tools {
 }
 
 .wrapper span.next {
-    color: #fff;
+    color: #E7ECEE;
     position: absolute;
     right: 15px;
     top: 50%;
-    margin-top: -13px;
+    margin-top: -15px;
     text-shadow: none;
-    display: none;
     font-size: 21px;
 }
 
 .wrapper:hover span.next {
-  display: block;
-  cursor: pointer;   
+  cursor: pointer;
+  color: #E55C12;   
 }
 
 #wordlist .chars {
-  width: 220px;
-  color: #333;
-  text-shadow: 1px 2px 0 #fff;
-  font-size: 29px;
-  float: left;
-  position: relative;
+    bottom: 0;
+    color: #333333;
+    float: left;
+    font-size: 30px;
+    height: 40px;
+    margin: auto;
+    position: absolute;
+    text-shadow: 1px 1px 1px #FFFFFF;
+    top: 0;
+    width: 220px;
 }
 
-#wordlist .pinyin {
+#wordlist .pinyin, #wordlist .meaning {
     float: left;
     font-family: Helvetica Neue;
     font-size: 14px;
     font-weight: 200;
     position: relative;
+    left: 230px;  
+    margin: 5px 0;  
+}
+
+#wordlist .pinyin {
     text-transform: lowercase;
-    top: 10px;
     width: 200px;
 }
 
 #wordlist .meaning {
-  width: 500px; 
-  font-size: 16px; 
-  float: left;
-  position: relative;
-  top: 4px; 
-  color: #777;
-  line-height: 1.6em;
+    color: #777777;
+    width: 450px;
 }
 
 #previous-searches #wordlist .chars, #previous-searches #wordlist .pinyin, #previous-searches #wordlist .meaning {
@@ -1041,7 +1048,6 @@ body.font4, body.font4 .char, #head ul a.font4, body.font4 #lookups div span.tit
 
 h1 {
  margin: 0 0 10px 0;
- font-weight: normal;   
 }
 
 h3 {
@@ -1245,11 +1251,14 @@ h3 span.this {
 /* flatpage about us styles */
 
 .text {
-  float: left;
+    float: left;
+    left: -300px;
+    text-align: center;
+    width: 600px;
 }
 
 .text p {
-  font-size: 18px;
+  font-size: 22px;
   line-height: 1.8em;
   margin: 10px 0 20px;   
 }

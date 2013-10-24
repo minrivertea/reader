@@ -26,6 +26,10 @@ class Command(NoArgsCommand):
         file = open(settings.DICT_FILE_LOCATION)
         r_server = _get_redis()
         
+        # first things first, empty the whole database
+        r_server.flushdb()
+        
+        # NOW LETS START AGAIN
         item_count = 0
         for line in file:
             if line.startswith("#"):
@@ -44,6 +48,8 @@ class Command(NoArgsCommand):
                 key = "%sC:%s" % ((len((new[1]))/3), new[1])                
     
                 if r_server.exists(key):
+                    # if there's already a key, we just want to increment the meaning...
+                    
                     object = _search_redis(key)
                     try:
                         val = "meaning%s" % (int(object['count']) + 1)

@@ -9,7 +9,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     function loadContent() {
         $('.ajax, .wrapper, #crumbs a, a.single').click( function(e) {
             $('#loading').show();
-            $('#search.home').removeClass('home');
+            $('#header.home').removeClass('home');
             
             $('#head, h1.centred, #url').hide();
             if ($('#header').css('top') != 0) {
@@ -24,8 +24,8 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
         });
         
         window.onpopstate = function(event) {
-    	   if ( $('form#search').hasClass('home') ) {
-                $('form#search').removeClass('home');   
+    	   if ( $('#header').hasClass('home') ) {
+                $('#header').removeClass('home');   
            }
     	   $("#loading").show();
     	   
@@ -71,7 +71,7 @@ var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><
     // THE POST SEARCH FORM
     function searchSubmit(e) {
        $('#loading').show();
-       $('#search.home').removeClass('home');
+       $('#header.home').removeClass('home');
        
        if ($('#id_char').val()!='') {
             $.ajax({ 
