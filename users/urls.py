@@ -2,8 +2,6 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 import django.views.static
 
-from registration.views import register
-
 from users.views import *
 
 # Uncomment the next two lines to enable the admin:
