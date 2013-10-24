@@ -1,7 +1,5 @@
 local_settings.py
 *.pyc
 TODO
-
-requirements.txt
 *.DS_Store
 

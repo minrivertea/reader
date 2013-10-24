@@ -1,0 +1,4 @@
+django-endless-pagination
+redis
+cjklib
+BeautifulSoup4
