@@ -27,6 +27,9 @@ from django.utils import simplejson
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_str, smart_unicode
 
+
+
+
 from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis, _increment_stats
 import utils.messages as messages
@@ -39,6 +42,7 @@ from creader.views import _group_words
 from cjklib import characterlookup
 from cjklib.dictionary import *
 from cjklib.reading import ReadingFactory
+from fancy_cache import cache_page
 
 from website.forms import SearchForm
 from website.signals import *
@@ -51,7 +55,7 @@ def _problem(request, problem=None):
     return _render(request, 'website/problem.html', locals())
 
 
-
+@cache_page(3600)
 def search(request, search_string=None, title='Search', words=None):
     
     
@@ -147,7 +151,7 @@ def search_beginning_with(request, search_string):
     return _render(request, 'website/wordlist.html', locals())     
     
             
-    
+@cache_page(3600)   
 def home(request):
     _update_crumbs(request)                
     return _render(request, 'website/home.html', locals())
@@ -155,6 +159,7 @@ def home(request):
 
 
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
+@cache_page(3600)
 def page(request, slug):
     template = 'website/pages/page.html'
     snippet = 'website/pages/%s.html' % slug
