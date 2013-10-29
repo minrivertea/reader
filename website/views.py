@@ -184,7 +184,6 @@ def stats(request):
 
 # TODO - THIS SHOULD RETURN SOME KIND OF GENERIC WORDS VIEW
 def words(request):
-    
     return _render(request, 'website/wordlist.html', locals())
 
  

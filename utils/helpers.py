@@ -14,9 +14,6 @@ from django.utils import simplejson
 
 
 
-
-
-
 #render shortcut
 def _render(request, template, context_dict=None, page=None, **kwargs):
     
