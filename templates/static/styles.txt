@@ -1343,6 +1343,10 @@ h3 span.this {
   padding: 0px 10px;
 }
 
+.actions {
+    
+}
+
 /* FOR DJANGO-ENDLESS */
 
 .endless_container {

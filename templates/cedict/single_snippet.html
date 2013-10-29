@@ -1,5 +1,32 @@
 {% load link_chars %}
 
+<ul class="actions centred">
+    <li class="">
+        <a href="" data-pjax>
+            <span class="next">&#9658;</span>
+            <div class="line">
+                Get examples of <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+            </div>
+        </a>
+    </li>
+    <li class="">
+        <a href="{% url search_beginning_with word.chars %}" data-pjax>
+        <span class="next">&#9658;</span>
+        <div class="line">
+            Get words beginning with <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+        </div>
+        </a>
+    </li>
+    <li class="">
+        <a href="{% url search_contains word.chars %}" data-pjax>
+        <span class="next">&#9658;</span>
+        <div class="line">
+            Get words containing <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+        </div>
+        </a>
+    </li>
+</ul>
+
 <div id="word" class="centred">
     <div id="single">
         <div id="chars">
@@ -32,23 +59,4 @@
     </div>
 </div>
 
-<ul id="wordlist" class="centred">
-    <li class="wrapper" href="">
-        <span class="next">&#9658;</span>
-        <div class="line">
-            Get examples of <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
-        </div>
-    </li>
-    <li class="wrapper" href="{% url search_beginning_with word.chars %}">
-        <span class="next">&#9658;</span>
-        <div class="line">
-            Get words beginning with <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
-        </div>
-    </li>
-    <li class="wrapper" href="{% url search_contains word.chars %}">
-        <span class="next">&#9658;</span>
-        <div class="line">
-            Get words containing <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
-        </div>
-    </li>
-</ul>
+
