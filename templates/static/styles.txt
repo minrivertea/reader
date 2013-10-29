@@ -1345,7 +1345,8 @@ h3 span.this {
 
 .actions {
   list-style-type: none;
-  padding: 0;   
+  padding: 0;
+  margin: 0 0 0 50%;   
 }
 
 .actions li {
