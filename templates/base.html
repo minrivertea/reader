@@ -150,8 +150,11 @@
             	checkHeader();
         	}
             
-            // BIND VARIOUS LINK TO PJAX
+            /// BIND VARIOUS LINK TO PJAX
             $(document).pjax('a, a[data-pjax]', '#container');
+            
+            /// HELPS AVOID FREQUENT ABORTS CAUSED BY PJAX'S LOW DEFAULT TIMEOUT
+            $.pjax.defaults.timeout = 5000
 
             function clearInput() {		
             	$('.clearMeFocus').each( function() {
