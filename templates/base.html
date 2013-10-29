@@ -82,7 +82,7 @@
         <form id="search" data-pjax action="{% url search %}" method="post" class="">
             {% csrf_token %}
             <label for="id_char">Search for a Chinese word</label>
-            <input id="id_char" class="clearMeFocus empty" title="" name="char" value="" >
+            <input id="id_char" class="clearMeFocus empty" title="Search for a Chinese word" name="char" value="" placeholder="Search for a Chinese word" >
             <input type="submit" value="Go" id="submit" class="submit button"/>
         </form>
       </div>
@@ -101,7 +101,7 @@
 		$(document).ready( function() {
             
             
-            /// CHECK THE HEADER, IF IT'S THE HOMEPAGE, GIVE IT A CLASS
+            /// IF THIS IS THE HOMEPAGE, GIVE THE HEADER THE 'HOME' CLASS
             function checkHeader() {
             	if (window.location.pathname == '/') {
                     $('#header').addClass('home');  
@@ -110,12 +110,8 @@
             	}
             }
             
-            /// BINDS THE SEARCH FORM TO PJAX
-            /// $(document).on('submit', '#header form[data-pjax]', function(event) {
-            ///    $.pjax.submit(event, '#container'); 
-            ///    event.preventDefault;
-            /// }); 
-                    
+                 
+            /// BINDS THE SEARCH FORM TO PJAX        
             $(document).on('submit', '#header form[data-pjax]', function(event) {
                               
                if ($('#id_char').val() == '') {
@@ -139,23 +135,51 @@
               checkHeader();
             });
             
+            
             // HIDES THE LOADING SPINNER
             $(document).on('pjax:complete', function() {
               $('#loading').hide()
-              checkHeader();
             });
             
             // MAKES SURE THE HOME PAGE LOADS PROPERLY WITH BACK/FORWARDS CLICKS
             window.onpopstate = function(event) {   
             	checkHeader();
         	}
-        	
             
             // BIND VARIOUS LINK TO PJAX
             $(document).pjax('a, a[data-pjax]', '#container');
 
-            // bindWords();    
-            // clearInput();            
+            function clearInput() {		
+            	$('.clearMeFocus').each( function() {
+            	   if ($(this).val() == '') {
+            	      var id = $(this).attr('id');
+            	      $('label[for="'+id+'"]').show();
+            	   }
+            	});
+            	
+            	$('.clearMeFocus').focus(function() {	
+            		var id = $(this).attr('id');
+            		$('label[for="'+id+'"]').addClass('focus');
+            	});
+            	
+            	// if field is empty afterward, add text again
+            	$('.clearMeFocus').blur(function() {
+            		var id = $(this).attr('id');
+            		
+            		if($(this).val()=='') {
+            			$('label[for="'+id+'"]').removeClass('focus');
+            		}
+            	}); 
+            	
+            	$('.clearMeFocus').keyup( function() {
+            	    var id = $(this).attr('id');
+            	    if ($(this).val() != '') {
+            		  $('label[for="'+id+'"]').hide();
+            	    } else {
+            	      $('label[for="'+id+'"]').show();
+            	    }
+            	});  
+            }           
 		});
 		
 	</script>

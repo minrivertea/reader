@@ -272,13 +272,14 @@ p.red {
     border-radius: 5px 0 0 5px;
     color: #333333;
     float: left;
-    font-size: 13px;
+    font-size: 14px;
     height: 15px;
     line-height: 1em;
     margin: 0px;
     overflow: hidden;
     padding: 5px 5px 5px 8px;
     width: 200px;
+    font-family: Open Sans;
 }
 
 #search label {
@@ -309,7 +310,6 @@ p.red {
     padding: 13px 15px;
     position: relative;
     width: 85%;
-    font-family: Open Sans;
     font-size: 20px;
     font-weight: 100;
 }
