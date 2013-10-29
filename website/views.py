@@ -103,6 +103,7 @@ def search(request, search_string=None, title='Search', words=None):
 
 
 def search_contains(request, search_string):
+    
     key = "*C:*%s*" % search_string
     
     r_server = _get_redis()
@@ -148,7 +149,6 @@ def search_beginning_with(request, search_string):
 def home(request):
     _update_crumbs(request)                
     return _render(request, 'website/home.html', locals())
-
 
 
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
