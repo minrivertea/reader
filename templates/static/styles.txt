@@ -1344,7 +1344,17 @@ h3 span.this {
 }
 
 .actions {
-    
+  list-style-type: none;
+  padding: 0;   
+}
+
+.actions li {
+  float: right;
+  font-size: 14px;   
+}
+
+.actions li a span.black {
+  color: #000;   
 }
 
 /* FOR DJANGO-ENDLESS */
