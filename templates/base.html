@@ -154,7 +154,10 @@
             $(document).pjax('a, a[data-pjax]', '#container');
             
             /// HELPS AVOID FREQUENT ABORTS CAUSED BY PJAX'S LOW DEFAULT TIMEOUT
-            $.pjax.defaults.timeout = 5000
+            $(document).on('pjax:timeout', function(event) {
+              // Prevent default timeout redirection behavior
+              event.preventDefault()
+            })
 
             function clearInput() {		
             	$('.clearMeFocus').each( function() {
