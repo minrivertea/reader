@@ -108,17 +108,10 @@ p.red {
 }
 
 #header #logo {
- display: block;
- float: left;
- font-weight: bold;
- font-size: 14px;
- color: #E55C12;
  margin: 0 10px 0 0px;
-}
-
-#header #logo a {
  color: #222;
 }
+
 
 #header a, #header .expandable {
   float: left;
@@ -259,11 +252,8 @@ p.red {
 
 #search-error {
     color: #999999;
-    font-size: 14px;
-    font-weight: bold;
-    position: absolute;
-    right: 10px;
-    top: 77px;
+    font-size: 22px;
+    font-weight: normal;
 }
 
 #search input.submit {

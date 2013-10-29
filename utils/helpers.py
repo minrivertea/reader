@@ -35,7 +35,9 @@ def _render(request, template, context_dict=None, page=None, **kwargs):
             **kwargs
         )
         data = {'html': html, 'url': request.path}
-        return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+        #return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+        
+        return HttpResponse(html)
 
     return render_to_response(
         template, context_dict or {}, context_instance=RequestContext(request),

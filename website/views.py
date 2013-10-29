@@ -55,10 +55,8 @@ def _problem(request, problem=None):
     return _render(request, 'website/problem.html', locals())
 
 
-@cache_page(3600)
 def search(request, search_string=None, title='Search', words=None):
-    
-    
+     
     # CHECK IF IT'S A POST REQUEST OR URL SEARCH
     if search_string == None:
         if request.method != 'POST':
@@ -69,6 +67,7 @@ def search(request, search_string=None, title='Search', words=None):
             form = SearchForm(request.POST)
             if form.is_valid():
                 _increment_stats('searches')
+                
                 search_string = form.cleaned_data['char']
 
 
@@ -76,35 +75,30 @@ def search(request, search_string=None, title='Search', words=None):
     if _is_english(search_string):
         return _problem(request, messages.ENGLISH_WORD)
 
-
     # IF THE SEARCH IS OVER 10 CHARACTERS, RETURN A TEXT
     if len(search_string) > 12:
         from creader.views import text                
         return text(request, words=search_string)
+    
           
     if not words:
         things = _split_unicode_chrs(search_string)
         words = _group_words(things)        
         _update_crumbs(request)
 
-
+    # IF THE USER WAS LOGGED IN, RECORD IT IN THEIR 'SAVED WORDS'
     if request.user.is_authenticated():
-        word_searched.send(sender=word_searched, chars=search_string, time=datetime.datetime.now(), user_id=request.user.pk)
+        word_searched.send(
+            sender=word_searched, 
+            chars=search_string, 
+            time=datetime.datetime.now(), 
+            user_id=request.user.pk
+        )
     
     
     title = "Search"
     subtitle = "%s" % search_string
-    if request.is_ajax():
         
-        html = render_to_string('website/wordlist_snippet.html', locals())
-        
-        if request.method == 'POST':        
-            url = "/search/%s" % search_string
-            data = {'html': html, 'url': url}
-            return HttpResponse(simplejson.dumps(data), mimetype="application/json")
-        else:
-            return HttpResponse(html)
-    
     return _render(request, 'website/wordlist.html', locals())
 
 
@@ -151,7 +145,6 @@ def search_beginning_with(request, search_string):
     return _render(request, 'website/wordlist.html', locals())     
     
             
-@cache_page(3600)   
 def home(request):
     _update_crumbs(request)                
     return _render(request, 'website/home.html', locals())
@@ -159,7 +152,6 @@ def home(request):
 
 
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
-@cache_page(3600)
 def page(request, slug):
     template = 'website/pages/page.html'
     snippet = 'website/pages/%s.html' % slug

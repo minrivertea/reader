@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     # SEARCH URLS
     url(r'^search/(?P<search_string>[\w-]+)/bw/$', views.search_beginning_with, name="search_beginning_with"),
     url(r'^search/(?P<search_string>[\w-]+)/contains/$', views.search_contains, name="search_contains"),
-    url(r'^search/(?P<search_string>[\w-]+)/$', views.search, name="search"),
+    url(r'^search/(?P<search_string>[\w-]+)/$', views.search, name="search_with_string"),
     url(r'^search/$', views.search, name="search"),
     
     url(r'^get-personal-words/$', views.get_personal_words, name="get_personal_words"),

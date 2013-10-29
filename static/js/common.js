@@ -1,113 +1,110 @@
+/*
+It's worth detailing how the page/content loading happens. 
+
+Basically, we want everything to go through loadPage() via a normal GET URL. THere should be
+various handlers that filter requests through (eg. if someone clicks on a normal <a> link, then
+the loadLink() handler will convert the href into a URL. If someone submits a search, then 
+the searchSubmit() handler will convert the search into a URL.
+
+The 1st page loads, and it hits Django, which serves the full HTML/CSS/JS. From then on in:
+    
+    1. We catch any link clicks with loadLink()
+    2. The loading spinner is shown.
+    3. We get the relevant URL from the href attr of the item that was clicked
+    4. We get the HTML via loadPage()
+    5. We add the new URL to the browser history (so that users can click 'back')
+
+If someone just uses back/forward then it jumps directly to the loadPage() function.
+
+*/
+
 
 var vocabListHTML = '<div id="vocablist" class="centred"></div>';
 var crumbsHTML = '<div id="crumbs" class="centred"><span class="arrow">&#9658;</span></div>';
 var singleWordHTML = '<div id="single"><div id="chars"></div><div class="line"><div class="pinyin"></div><div class="meaning"></div></div></div>';
 
+    function checkHeader() {
+        if (window.location.pathname == '/') {
+            $('#header').addClass('home');   
+        } else {
+           if ($('#header').hasClass('home')) {
+             $('#header').removeClass('home');
+           }   
+        }
+    }
 
-
-    // LOADS AN HTML SNIPPET BASED ON A CLICK ACTION
-    function loadContent() {
-        $('.ajax, .wrapper, #crumbs a, a.single').click( function(e) {
-            $('#loading').show();
-            $('#header.home').removeClass('home');
-            
-            $('#head, h1.centred, #url').hide();
-            if ($('#header').css('top') != 0) {
-                $('#header').animate({'top':'0px',}, 300);
-            };
-            
-            newURL = $(this).attr('href');
+    // HAPPENS WHEN A USER CLICKS A LINK
+    function loadLink() {
+        $('.ajax, .wrapper, #crumbs a, a.single').click( function(e) {                        
+            var newURL = $(this).attr('href');
             $('.ajax, .wrapper, #crumbs a, a.single').unbind();
             loadPage(newURL);
-            history.pushState('', '', newURL);
-            e.preventDefault();
+            return false;
         });
-        
-        window.onpopstate = function(event) {
-    	   if ( $('#header').hasClass('home') ) {
-                $('#header').removeClass('home');   
-           }
-    	   $("#loading").show();
-    	   
-    	   loadPage(location.pathname);
-	    }
-        
     }
     
-    // BINDS VARIOUS ELEMENTS TO THE AJAXY LOADCONTENT ABOVE
-    function bindLoadContent() {
+    // BINDS VARIOUS ELEMENTS TO THE AJAXY loadLink ABOVE
+    function bindLoadLink() {
        $('.ajax, .wrapper, #crumbs a, a.single').unbind();
-       loadContent();
+       loadLink();
     }
     
-    
-    // LOADS A PAGE BASED SOLELY ON A URL
+    // LOADS A PAGE OF CONTENT WITH A URL
     function loadPage(url) {
-        
+        $('#loading').show();
+        history.pushState('', '', url);
         $.ajax({
            url: url,
            dataType: 'json',
            success: function(data) {
+              checkHeader();
               $('#container').html(data.html);
               $('#loading').hide();
-              bindLoadContent();
+              bindLoadLink();
               bindWords();
-           } 
+           }
         });
     }
+
+
+    // THIS MANAGES THE BROWSER FORWARDS/BACK BEHAVIOUR
+    window.onpopstate = function(event) {   
+    	alert('This is the popstate URL: ' + location.pathname);
+        loadPage(location.pathname);
+	}
     
     // SEARCH VIA URL
-    function searchByURL(e) {
-        $.ajax({
-           url: $(this).attr('href'),
-           dataType: 'json',
-           success: function(data) {
-               history.pushState('', 'title', data.url);
-               $('#container').html(data.html);
-           }
-        });   
-    }
+    // function searchByURL(e) {
+    //     $.ajax({
+    //        url: $(this).attr('href'),
+    //        dataType: 'json',
+    //        success: function(data) {
+    //            history.pushState('', 'title', data.url);
+    //            $('#container').html(data.html);
+    //        }
+    //     });   
+    // }
 
     // THE POST SEARCH FORM
     function searchSubmit(e) {
-       $('#loading').show();
-       $('#header.home').removeClass('home');
        
+       // MAKE SURE THERE'S A SEARCH QUERY
        if ($('#id_char').val()!='') {
-            $.ajax({ 
-                url: $('#search').attr('action'),
-                type: 'POST',
-                data: $('form').serialize(),
-                dataType: 'json',
-                success: function(data) {   
-                    history.pushState('', 'title', data.url);
-                    $('#container').html(data.html);
-                    bindLoadContent(); 
-                    bindWords();
-                    $('#loading').hide();
-                }, error: function() {
-                    $('#text').html('<p>There was some kind of error, please try again!</p>');
-                    $('#loading').hide();
-                }
-            });
+            
+            var newURL = $('#search').attr('action') + $('#id_char').val() ;
+            loadPage(newURL);
             return false;
-         } else {
+            
+       } else {
              // HANDLE AN EMPTY SEARCH
-             if ($('#search-error').length) {
-                $('#search-error').fadeIn(100);   
-             } else {
-                $('#header').append('<p id="search-error">You need to enter some words to search for!</p>');
-             };
-             $('#search-error').css('color', 'red').delay(1800).fadeOut(400);
+             $('#container').html('<p id="search-error" class="centred">You need to enter some words to search for!</p>');
+             $('#search-error').css('color', 'red').delay(11800).fadeOut(400);
              $('#id_char').focus();
-             $('#loading').hide(); 
              return false;
          }
     } 
     
-    
-    
-    
+        
     // GET'S A USERS PERSONAL VOCABULARY LIST
     function getPersonalWords() {
         $('#container').html('');
