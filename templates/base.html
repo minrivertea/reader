@@ -15,18 +15,20 @@
 	<meta name="robots" content="ALL" />
 	
 	<title>{% block pagetitle %}Chinese Dictionary and Reading Tools{% endblock %} | 看懂了么?</title>	
-	<link rel="stylesheet" href="{% slimfile '/css/styles.css' %}" />
+	<style type="text/css">
+	   {% include 'static/styles.txt' %}
+	</style>
+	
 	<link rel='shortcut icon' href="{% staticfile '/images/favicon.ico' %}" type="image/x-icon" />
-	{% if ga_is_on %}
-		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-	{% else %}
-		<script type="text/javascript" src="{% staticfile '/js/jquery-1.8.2.min.js' %}"></script>
-	{% endif %}
 	
-	<script type="text/javascript" src="{% slimfile '/js/jquery.pjax.js' %}"></script>
+	<script type="text/javascript">
+	   {% include 'static/jquery-1.8.2.min.js' %}
+	</script>
 	
+	<script type="text/javascript">
+	   {% include 'static/jquery.pjax.js' %}
+	</script>
 	
-
 	{% block extracss %}{% endblock %}
 
 
