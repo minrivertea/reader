@@ -4,21 +4,21 @@
     <li class="">
         <a href="" data-pjax>
             <div class="line">
-                Get examples of <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+                See examples of <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
             </div>
         </a>
     </li>
     <li class="">
         <a href="{% url search_beginning_with word.chars %}" data-pjax>
         <div class="line">
-            Get words beginning with <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+            See words beginning with <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
         </div>
         </a>
     </li>
     <li class="">
         <a href="{% url search_contains word.chars %}" data-pjax>
         <div class="line">
-            Get words containing <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+            See words containing <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
         </div>
         </a>
     </li>
