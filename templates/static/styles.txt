@@ -1308,7 +1308,7 @@ h3 span.this {
 }
 
 #single #chars {
-  font-size: 80px;
+  font-size: 140px;
   padding: 10px 0;
   float: left;
   width: 100%;

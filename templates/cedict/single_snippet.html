@@ -2,7 +2,14 @@
 
 <div id="word" class="centred">
     <div id="single">
-        <div id="chars">{% for x in chars %}<a href="{% url single_word x %}" class="single"><span class="chars">{{ x }}</span></a>{% endfor %}</div>
+        <div id="chars">
+            {% for x in chars %}
+                <a href="{% url single_word x %}" data-pjax class="single">
+                    <span class="chars">{{ x }}</span>
+                </a>
+            {% endfor %}
+        </div>
+        
         <table>
             <tr class="line">
                 <td valign="top" class="pinyin">{{ word.pinyin1 }}</td>
