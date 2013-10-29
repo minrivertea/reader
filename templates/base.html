@@ -133,6 +133,7 @@
                         
             /// SHOWS THE LOADING SPINNER
             $(document).on('pjax:send', function() {
+              $('#container').css({'opacity': '0.8',});
               $('#loading').show();
               checkHeader();
             });
@@ -140,7 +141,8 @@
             
             // HIDES THE LOADING SPINNER
             $(document).on('pjax:complete', function() {
-              $('#loading').hide()
+              $('#loading').hide();
+              $('#container').css({'opacity': '1',});
             });
             
             // MAKES SURE THE HOME PAGE LOADS PROPERLY WITH BACK/FORWARDS CLICKS
