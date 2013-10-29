@@ -18,7 +18,7 @@ from django.utils import simplejson
 def _render(request, template, context_dict=None, page=None, **kwargs):
     
     if request.is_ajax():
-        
+                
         if page:
             template = "".join((template.strip('page.html'), page, '.html'))
             

@@ -104,7 +104,7 @@ def single_word(request, word):
    
     key = "%sC:%s" % (len(word), word)
     word = _search_redis(key)
-        
+            
     _update_crumbs(request, smart_unicode(word['chars']))
     crumbs = _get_crumbs(request)
     

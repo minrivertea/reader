@@ -1332,13 +1332,13 @@ h3 span.this {
 }
 
 #single .pinyin {
-   font-size: 18px;
+   font-size: 22px;
    color: #E55C12; 
    padding: 0px 20px 0px 10px;
 }
 
 #single .meaning {
-  font-size: 18px;
+  font-size: 22px;
   color: #666;
   padding: 0px 10px;
 }

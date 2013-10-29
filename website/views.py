@@ -56,7 +56,7 @@ def _problem(request, problem=None):
 
 
 def search(request, search_string=None, title='Search', words=None):
-     
+        
     # CHECK IF IT'S A POST REQUEST OR URL SEARCH
     if search_string == None:
         if request.method == 'POST':
@@ -94,7 +94,6 @@ def search(request, search_string=None, title='Search', words=None):
             time=datetime.datetime.now(), 
             user_id=request.user.pk
         )
-    
     
     title = "Search"
     subtitle = "%s" % search_string
