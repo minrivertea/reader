@@ -872,7 +872,7 @@ body.color4 #tools {
     position: absolute;
     text-shadow: 1px 1px 1px #FFFFFF;
     top: 0;
-    width: 220px;
+    width: 245px;
 }
 
 #wordlist .pinyin, #wordlist .meaning {
@@ -881,18 +881,25 @@ body.color4 #tools {
     font-size: 14px;
     font-weight: 200;
     position: relative;
-    left: 230px;  
+    left: 260px;  
     margin: 5px 0;  
 }
 
 #wordlist .pinyin {
+    bottom: 0;
+    height: 20px;
+    margin: auto 0;
+    position: absolute;
     text-transform: lowercase;
+    top: 0;
+    left: 290px;
     width: 200px;
 }
 
 #wordlist .meaning {
     color: #777777;
-    width: 450px;
+    left: 490px;
+    width: 400px;
 }
 
 #previous-searches #wordlist .chars, #previous-searches #wordlist .pinyin, #previous-searches #wordlist .meaning {
