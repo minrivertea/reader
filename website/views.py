@@ -59,16 +59,16 @@ def search(request, search_string=None, title='Search', words=None):
      
     # CHECK IF IT'S A POST REQUEST OR URL SEARCH
     if search_string == None:
-        if request.method != 'POST':
-            form = SearchForm()
-            return _render(request, 'website/home.html', locals())
-        
-        else:
+        if request.method == 'POST':
             form = SearchForm(request.POST)
             if form.is_valid():
                 _increment_stats('searches')
-                
                 search_string = form.cleaned_data['char']
+                
+        else:
+            # NOT A POST AND NO SEARCH STRING - SHOW THEM THE PLAIN JANE SEARCH PAGE
+            form = SearchForm()
+            return _render(request, 'website/search.html', locals())
 
 
     # IF THE SEARCH IS ENGLISH, RETURN ERROR

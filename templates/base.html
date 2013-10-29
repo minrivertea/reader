@@ -118,9 +118,15 @@
                     
             $(document).on('submit', '#header form[data-pjax]', function(event) {
                               
-               /// CONVERT THE FORM INTO A GET REQUEST 
-               var url = '/search/' + $('#id_char').val() + '/';               
-               $.pjax({url: url, container: '#container'}); 
+               if ($('#id_char').val() == '') {
+                    /// HANDLES AN EMPTY SEARCH
+                    var url = '/search/';
+                    $.pjax({url: url, container: '#container'});
+               } else {               
+                   /// CONVERT THE FORM INTO A GET REQUEST 
+                   var url = '/search/' + $('#id_char').val() + '/';  
+                   $.pjax({url: url, container: '#container'}); 
+               }
                
                return false;
                           

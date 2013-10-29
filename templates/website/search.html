@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load endless django_static %}
+
+{% block extrajs %}
+<script type="text/javascript">
+$(document).ready(function() {
+   $('#id_char').focus();     
+    
+});
+</script>
+{% endblock %}
+
+
+{% block extracss %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+{% block content %}
+    {% include 'website/search_snippet.html' %}
+{% endblock %}
