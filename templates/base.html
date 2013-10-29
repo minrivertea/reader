@@ -151,9 +151,8 @@
         	}
         	
             
-            
-            // BIND ANY LINK TO PJAX
-            $(document).pjax('a, li.wrapper', '#container');
+            // BIND VARIOUS LINK TO PJAX
+            $(document).pjax('a, a[data-pjax]', '#container');
 
             // bindWords();    
             // clearInput();            

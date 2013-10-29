@@ -4,7 +4,8 @@
 {% if words %}
     <ul id="wordlist" class="centred">
     {% for w in words %}
-        <li class="wrapper" href="{% url single_word w.chars %}" id="char{{ w.wordset }}" chars="{{ w.chars }}">
+        <li class="wrapper" id="char{{ w.wordset }}" chars="{{ w.chars }}">
+            <a data-pjax href="{% url single_word w.chars %}">
             <span class="next">&#9658;</span>
             <div class="line">
                 <div class="chars">{{ w.chars }}</div>
@@ -25,6 +26,7 @@
                 <div class="meaning">{{ w.meaning3 }}</div>
             </div>
             {% endif %}
+            </a>
         </li>
     {% endfor %}
     </ul>
