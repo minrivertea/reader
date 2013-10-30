@@ -66,24 +66,24 @@ def _group_words(chars, chinese_only=False):
         
         nc = False
                 
-        # if it's a line break
+        # IS IT A LINEBREAK
         if nc == False and x == '\n':
             obj['is_linebreak'] = True
             nc = True
 
-            
+        # IS IT A SPACE    
         if nc == False and x == ' ':
             obj['is_space'] = True
             nc = True
 
             
-        # if the character is punctuation
+        # IS IT PUNCTUATION
         if nc == False and _is_punctuation(x):
             obj['is_punctuation'] = True 
             nc = True
     
         
-        # if the character is a number          
+        # IS IT A NUMBER?          
         if nc == False and _is_number(x):
             obj['is_number'] = True
             number = True

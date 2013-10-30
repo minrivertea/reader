@@ -886,19 +886,13 @@ body.color4 #tools {
 }
 
 #wordlist .pinyin {
-    bottom: 0;
-    height: 20px;
-    margin: auto 0;
-    position: absolute;
     text-transform: lowercase;
-    top: 0;
     left: 290px;
     width: 200px;
 }
 
 #wordlist .meaning {
     color: #777777;
-    left: 490px;
     width: 400px;
 }
 

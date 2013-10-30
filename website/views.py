@@ -28,14 +28,11 @@ from django.template.loader import render_to_string
 from django.utils.encoding import smart_str, smart_unicode
 
 
-
-
-from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs, _is_pinyin, _is_ambiguous
+from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs, _is_pinyin, _is_ambiguous, _convert_pinyin_to_numbered_notation
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis, _increment_stats
 import utils.messages as messages
 
 from srs.views import _collect_vocab
-
 
 from creader.views import _group_words
 
@@ -46,7 +43,7 @@ from fancy_cache import cache_page
 
 from website.forms import SearchForm
 from website.signals import *
-  
+
 def _problem(request, problem=None):    
     if request.is_ajax():
         html = render_to_string('website/problem_snippet.html', locals())
@@ -56,8 +53,11 @@ def _problem(request, problem=None):
     return _render(request, 'website/problem.html', locals())
 
 
+
 def search(request, search_string=None, title='Search', words=None):
-        
+    
+    
+       
     # CHECK IF IT'S A POST REQUEST OR URL SEARCH
     if search_string == None:
         if request.method == 'POST':
@@ -72,10 +72,53 @@ def search(request, search_string=None, title='Search', words=None):
             return _render(request, 'website/search.html', locals())
 
     if _is_ambiguous(search_string):
+        
         return _problem(request, messages.AMBIGUOUS_WORD)
-
+    
+    
     if _is_pinyin(search_string):
-        return _problem(request, messages.PINYIN_WORD)
+        
+                        
+        # BUILD A PINYIN KEY # now replace spaces with underscores
+        string = _convert_pinyin_to_numbered_notation(search_string).strip().replace(' ', '_')
+        key = "PINYIN:%s" % string
+        
+        r_server = _get_redis()
+        
+        print key
+        
+        if filter(lambda x: x not in '12345', key) == key:
+            key = "PINYIN:%s*" % string
+            keys = r_server.keys(key)
+            things = []
+            for k in keys:
+                object = _search_redis(k)['character_keys'].split(',')
+                for o in object:
+                    things.append(o)
+                
+        else:        
+            try:
+                things = _search_redis(key)['character_keys'].split(',')
+            except:
+                things = None
+        
+                        
+        # FINALLY, LETS GET THE WORDS
+        words = []
+        if things:
+            for x in things:
+                word = _search_redis(x)
+                try:
+                    url = reverse('single_word', args=[word['chars']])
+                    words.append(word)
+                except:
+                    pass
+            
+        return _render(request, 'website/wordlist.html', locals())
+    
+    
+            
+        
 
     # IF THE SEARCH IS ENGLISH, RETURN ERROR
     if _is_english(search_string):

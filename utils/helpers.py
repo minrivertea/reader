@@ -14,6 +14,7 @@ from django.utils import simplejson
 
 from cedict.pinyin import PINYIN_WORDS, AMBIGUOUS_WORDS
 
+from cjklib.reading import *
 
 
 #render shortcut
@@ -88,7 +89,7 @@ def _is_english(x):
         for y in x:
             if y in string.ascii_letters:
                 return True
-    
+        
     if x in string.ascii_letters:
         return True
     
@@ -130,12 +131,65 @@ def _get_crumbs(request):
 
 
 def _is_pinyin(x):
-    
     for thing in x.split(' '):
-        if thing in PINYIN_WORDS:
+                
+        # convert to numbered pinyin
+        word = filter(lambda x: x not in '12345', _convert_pinyin_to_numbered_notation(thing))
+        if word in PINYIN_WORDS:
             return True        
 
     return False
+
+def _convert_pinyin_to_numbered_notation(x):
+    
+    f = ReadingFactory()
+    
+    # IF THIS IS TONAL PINYIN (eg. 'nǚ') THEN DO THIS
+    numbered_pinyin = None
+    
+    
+    # IF THIS IS NUMBERED PINYIN (eg. 'nü3') THEN DO THIS
+    if filter(lambda y: y not in '12345', x) != x:
+        print "NUMBERED"
+        numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
+            sourceOptions={
+                'toneMarkType': 'numbers',  
+            },
+            targetOptions={
+                'toneMarkType': 'numbers',
+                'missingToneMark': 'noinfo', 
+                'yVowel': 'v',
+        })
+    
+    # IF THIS IS SUPER PLAIN-JANE PINYIN (eg. 'nv' or 'nu') THEN DO THIS
+    if len(filter(lambda x: x not in ("".join((string.ascii_letters, u'ü'))), x)) == 0:
+        print "PLAIN JANE"
+        numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
+            sourceOptions={
+                'toneMarkType': 'numbers',  
+            },
+            targetOptions={
+                'toneMarkType': 'numbers',
+                'missingToneMark': 'noinfo', 
+                'yVowel': 'v',
+        })
+        print numbered_pinyin
+                
+        
+    if not numbered_pinyin:
+        print "TONAL PINYIN"
+        numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
+            sourceOptions={
+                'missingToneMark': 'noinfo',
+            }, targetOptions={
+                'toneMarkType': 'numbers',
+                'missingToneMark': 'noinfo', 
+                'yVowel': 'v',
+            })
+
+
+       
+    return numbered_pinyin
 
 
 # ADD OR REMOVE ITEMS FROM THE BREADCRUMB    
