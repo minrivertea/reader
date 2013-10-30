@@ -51,7 +51,8 @@ def _problem(request, problem=None):
     if request.is_ajax():
         html = render_to_string('website/problem_snippet.html', locals())
         url = '/problem/'
-        return HttpResponse(simplejson.dumps({'html':html, 'url':url}), mimetype="application/json")
+        #return HttpResponse(simplejson.dumps({'html':html, 'url':url}), mimetype="application/json")
+        return HttpResponse(html)
     return _render(request, 'website/problem.html', locals())
 
 
