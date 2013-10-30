@@ -5,5 +5,8 @@
 
 NO_TEXT_FOUND = "Seems like we can't find an article with that URL. Perhaps it's been deleted, removed or you were given the wrong URL. <a href='/search/对不起/'>对不起</a>!"
 
-
 ENGLISH_WORD = "You've performed an English-Chinese search (translating English into Chinese) - we're not quite ready for that yet, please check back later!"
+
+PINYIN_WORD = "You've search for a pinyin word - right?"
+
+AMBIGUOUS_WORD = "The word you've search for could be pinyin or it could be English"

@@ -12,6 +12,8 @@ from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils import simplejson
 
+from cedict.pinyin import PINYIN_WORDS, AMBIGUOUS_WORDS
+
 
 
 #render shortcut
@@ -92,6 +94,12 @@ def _is_english(x):
     
     return False
 
+def _is_ambiguous(x):
+    for thing in x.split(' '):
+        if thing in AMBIGUOUS_WORDS:
+            return True
+    
+    return False
 
 
 # RETURNS A NICELY FORMATTED HTML BREADCRUMB
@@ -120,6 +128,14 @@ def _get_crumbs(request):
     crumbs_html = ' \ '.join(items) 
     return crumbs_html
 
+
+def _is_pinyin(x):
+    
+    for thing in x.split(' '):
+        if thing in PINYIN_WORDS:
+            return True        
+
+    return False
 
 
 # ADD OR REMOVE ITEMS FROM THE BREADCRUMB    

@@ -30,7 +30,7 @@ from django.utils.encoding import smart_str, smart_unicode
 
 
 
-from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs
+from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs, _is_pinyin, _is_ambiguous
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis, _increment_stats
 import utils.messages as messages
 
@@ -71,6 +71,11 @@ def search(request, search_string=None, title='Search', words=None):
             form = SearchForm()
             return _render(request, 'website/search.html', locals())
 
+    if _is_ambiguous(search_string):
+        return _problem(request, messages.AMBIGUOUS_WORD)
+
+    if _is_pinyin(search_string):
+        return _problem(request, messages.PINYIN_WORD)
 
     # IF THE SEARCH IS ENGLISH, RETURN ERROR
     if _is_english(search_string):
