@@ -56,8 +56,10 @@ def _problem(request, problem=None):
 
 def search(request, search_string=None, title='Search', words=None):
     
-    
-       
+    # replace search string underscores with spaces
+    if search_string:
+        search_string = search_string.replace('_', ' ')
+           
     # CHECK IF IT'S A POST REQUEST OR URL SEARCH
     if search_string == None:
         if request.method == 'POST':
@@ -84,11 +86,11 @@ def search(request, search_string=None, title='Search', words=None):
         key = "PINYIN:%s" % string
         
         r_server = _get_redis()
-        
-        print key
-        
+                
         if filter(lambda x: x not in '12345', key) == key:
-            key = "PINYIN:%s*" % string
+            if '_' in string:
+                string = string.replace('_', '?_')
+            key = "PINYIN:%s?" % string
             keys = r_server.keys(key)
             things = []
             for k in keys:

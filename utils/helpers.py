@@ -150,7 +150,6 @@ def _convert_pinyin_to_numbered_notation(x):
     
     # IF THIS IS NUMBERED PINYIN (eg. 'nü3') THEN DO THIS
     if filter(lambda y: y not in '12345', x) != x:
-        print "NUMBERED"
         numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
             sourceOptions={
                 'toneMarkType': 'numbers',  
@@ -162,8 +161,7 @@ def _convert_pinyin_to_numbered_notation(x):
         })
     
     # IF THIS IS SUPER PLAIN-JANE PINYIN (eg. 'nv' or 'nu') THEN DO THIS
-    if len(filter(lambda x: x not in ("".join((string.ascii_letters, u'ü'))), x)) == 0:
-        print "PLAIN JANE"
+    if len(filter(lambda x: x not in ("".join((string.ascii_letters, u'ü', ' ', '_'))), x)) == 0:
         numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
             sourceOptions={
                 'toneMarkType': 'numbers',  
@@ -173,11 +171,9 @@ def _convert_pinyin_to_numbered_notation(x):
                 'missingToneMark': 'noinfo', 
                 'yVowel': 'v',
         })
-        print numbered_pinyin
                 
         
     if not numbered_pinyin:
-        print "TONAL PINYIN"
         numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
             sourceOptions={
                 'missingToneMark': 'noinfo',

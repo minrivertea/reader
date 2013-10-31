@@ -122,10 +122,10 @@
                     $.pjax({url: url, container: '#container'});
                } else {               
                    /// CONVERT THE FORM INTO A GET REQUEST 
-                   var url = '/search/' + $('#id_char').val() + '/';  
+                   var string = $('#id_char').val().split(' ').join('_')
+                   var url = '/search/' + string + '/';  
                    $.pjax({url: url, container: '#container'}); 
                }
-               
                return false;
                           
             });
