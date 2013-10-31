@@ -1317,7 +1317,7 @@ h3 span.this {
 }
 
 #single #chars a {
-  color: #5E4313;
+  color: #692c0c;
 }
 
 #single #chars a:hover {
@@ -1334,7 +1334,6 @@ h3 span.this {
 
 #single .pinyin {
    font-size: 22px;
-   font-family: Helvetica, sans-serif;
    color: #E55C12; 
    padding: 0px 20px 0px 10px;
 }
