@@ -38,7 +38,7 @@
 
     <div id="header" class="{% if request.path == '/' %}home{% endif %}">
        <div id="header-inner" class="centred">
-        <a href="/" id="logo" data-ajax>KanDongLe.Me?</a>
+        <a href="/" id="logo" data-ajax>{{ sitename }}</a>
         
         <a href="{% url page 'about' %}" title="about" data-ajax>about</a>
         {% comment %}

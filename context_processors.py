@@ -6,5 +6,6 @@ def common(request):
     context = {}
     context['ga_is_on'] = settings.GA_IS_ON
     context['siteurl'] = settings.SITE_URL
+    context['sitename'] = settings.SITE_NAME
     return context
     
