@@ -131,61 +131,56 @@ def _get_crumbs(request):
 
 
 def _is_pinyin(x):
+    """
+    Checks if a given string is pinyin or not
+    """  
     for thing in x.split(' '):
-                
-        # convert to numbered pinyin
-        word = filter(lambda x: x not in '12345', _convert_pinyin_to_numbered_notation(thing))
-        if word in PINYIN_WORDS:
-            return True        
+        try:
+            word = filter(lambda x: x not in '12345', _filter_pinyin(thing))
+            if word in PINYIN_WORDS:
+                return True
+        except:
+            pass      
 
     return False
 
-def _convert_pinyin_to_numbered_notation(x):
+
+def _filter_pinyin(x):
+    """
+    Filters any incoming pinyin, regardless of what format and then 
+    spits out standardised numbered pinyin eg. takes something like 
+    "nǚháizi" and returns "nv3 hai2 zi5". If it gets something that
+    isn't pinyin, it won't handle it. The function calling _filter_pinyin
+    should handle any errors.
+    """
     
     f = ReadingFactory()
+    pinyin = None
     
-    # IF THIS IS TONAL PINYIN (eg. 'nǚ') THEN DO THIS
-    numbered_pinyin = None
-    
-    
-    # IF THIS IS NUMBERED PINYIN (eg. 'nü3') THEN DO THIS
+    # IF THE INPUT IS NUMBERED PINYIN (eg. 'nü3') THEN DO THIS
     if filter(lambda y: y not in '12345', x) != x:
-        numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
-            sourceOptions={
-                'toneMarkType': 'numbers',  
-            },
-            targetOptions={
-                'toneMarkType': 'numbers',
-                'missingToneMark': 'noinfo', 
-                'yVowel': 'v',
-        })
+        pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
+            sourceOptions={'toneMarkType': 'numbers', 'missingToneMark': 'fifth',},
+            targetOptions={'toneMarkType': 'numbers', 'yVowel': 'v',}
+        )
     
-    # IF THIS IS SUPER PLAIN-JANE PINYIN (eg. 'nv' or 'nu') THEN DO THIS
+    
+    # IF THE INPUT IS SUPER PLAIN-JANE PINYIN (eg. 'nv' or 'nu') THEN DO THIS
     if len(filter(lambda x: x not in ("".join((string.ascii_letters, u'ü', ' ', '_'))), x)) == 0:
-        numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
-            sourceOptions={
-                'toneMarkType': 'numbers',  
-            },
-            targetOptions={
-                'toneMarkType': 'numbers',
-                'missingToneMark': 'noinfo', 
-                'yVowel': 'v',
-        })
+        pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
+            sourceOptions={'toneMarkType': 'numbers',},
+            targetOptions={'toneMarkType': 'numbers', 'missingToneMark': 'noinfo', 'yVowel': 'v',}
+        )
+         
                 
-        
-    if not numbered_pinyin:
-        numbered_pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
-            sourceOptions={
-                'missingToneMark': 'noinfo',
-            }, targetOptions={
-                'toneMarkType': 'numbers',
-                'missingToneMark': 'noinfo', 
-                'yVowel': 'v',
-            })
+    # IF THE INPUT IS TONAL PINYIN (eg. nǚ hái zi)  
+    if not pinyin:
+        pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
+            sourceOptions={'missingToneMark': 'noinfo'}, 
+            targetOptions={'toneMarkType': 'numbers', 'missingToneMark': 'noinfo', 'yVowel': 'v'}
+        )
 
-
-       
-    return numbered_pinyin
+    return pinyin
 
 
 # ADD OR REMOVE ITEMS FROM THE BREADCRUMB    
@@ -216,7 +211,6 @@ def _update_crumbs(request, word=None):
         else:
             match = False
             loop +1
-            
     
     if match == True:
         head, sep, tail = crumbs.partition(word)

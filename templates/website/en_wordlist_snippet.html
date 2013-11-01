@@ -1,0 +1,19 @@
+
+{% if words %}
+    <ul id="wordlist" class="centred">
+    {% for w in words %}
+        <li class="wrapper" id="char{{ w.wordset }}" chars="{{ w.chars }}">
+            <a data-pjax href="">
+            <span class="next">&#9658;</span>
+            <div class="line en">
+                <div class="english">{{ search_string }}</div>
+                <div class="chinese">{{ w.chinese }}</div>
+                <div class="pinyin">{{ w.pinyin }}</div>
+            </div>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p class="centred">Sorry, no results found!</p>
+{% endif %}

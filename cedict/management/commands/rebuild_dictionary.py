@@ -11,7 +11,6 @@ import uuid
 
 # import various bits and pieces
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis
-from utils.helpers import _convert_pinyin_to_numbered_notation
 
 from cjklib import characterlookup
 from cjklib.dictionary import *
@@ -23,12 +22,16 @@ class Command(NoArgsCommand):
     help = 'Rebuilds from scratch the Chinese-English Dictionary'
 
     def handle_noargs(self, **options):
-        # EXAMPLE: 一中一台 [yi1 Zhong1 yi1 Tai2] /first meaning/second meaning/
+        # 一事無成 一事无成 [yi1 shi4 wu2 cheng2] /to have achieved nothing/to be a total failure/to get nowhere/
+
         file = open(settings.DICT_FILE_LOCATION)
         r_server = _get_redis()
         
-        # EMPTY THE WHOLE DATABASE NOW
-        r_server.flushdb()
+        # EMPTY ALL ZH AND PY KEYS FROM THE DATABASE (LEAVE THE EN ONES ALONE)
+        keys = r_server.keys('ZH:*')
+        for x in keys:
+            r_server.delete(x)
+            print "deleting %s" % x
         
         # NOW LETS START
         item_count = 0
@@ -36,22 +39,20 @@ class Command(NoArgsCommand):
             if line.startswith("#"):
                 pass
             else:
-                new = line.split()
-    
-                numbered_pinyin = line[(line.index('[')+1):(line.index(']'))]
                 
-                f = ReadingFactory()            
+                # GATHER ALL THE MAIN VARIABLES
+                new = line.split()
+                numbered_pinyin = line[(line.index('[')+1):(line.index(']'))]
+                f = ReadingFactory()
                 tonal_pinyin =  f.convert(numbered_pinyin, 'Pinyin', 'Pinyin',
                     sourceOptions={'toneMarkType': 'numbers', 'yVowel': 'v',
                     'missingToneMark': 'fifth'})
+                meanings = line[(line.index('/')+1):(line.rindex('/'))]               
+                pinyin_key = "PY:%s" % numbered_pinyin.replace(' ', '_')
+                character_key = "ZH:%sC:%s" % ((len((new[1]))/3), new[1]) 
                 
-                meanings = line[(line.index('/')+1):(line.rindex('/'))]
-    
-                # ADD A KEY WITH THE PINYIN NOW                
-                pinyin_key = "PINYIN:%s" % numbered_pinyin.replace(' ', '_')
-                character_key = "%sC:%s" % ((len((new[1]))/3), new[1]) 
                 
-                # NOW CHECK AND ADD A PINYIN KEY TO REDIS
+                # ADD THE PINYIN ENTRY
                 if r_server.exists(pinyin_key):
                     object = _search_redis(pinyin_key)
                     mapping = {
@@ -67,7 +68,7 @@ class Command(NoArgsCommand):
                     r_server.hmset(pinyin_key, mapping)                    
     
     
-                # NOW MOVE ON TO THE CHARACTER
+                # ADD THE CHARACTER ENTRY
                 if r_server.exists(character_key):
                      
                     object = _search_redis(character_key)
@@ -75,7 +76,6 @@ class Command(NoArgsCommand):
                         val = "meaning%s" % (int(object['count']) + 1)
                         object[val]
                     except KeyError:
-                        
                         count = (int(object['count']) + 1)
                         new1 = "meaning%s" % count
                         new2 = "pinyin%s" % count
@@ -85,7 +85,6 @@ class Command(NoArgsCommand):
                             new2: tonal_pinyin, 
                             'count': count,
                         }
-                        
                         r_server.hmset(character_key, mapping)
                             
                 else:

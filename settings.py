@@ -101,6 +101,7 @@ SITE_NAME = 'chinesedictionary.io'
 ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = "website.Account"
 DICT_FILE_LOCATION = os.path.join(PROJECT_PATH, 'files/cedict_1_0_ts_utf-8_mdbg.txt')
+ENGLISH_WORD_LIST = os.path.join(PROJECT_PATH, 'files/en_wordlist.txt')
 
 
 

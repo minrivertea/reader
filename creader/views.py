@@ -161,7 +161,7 @@ def _group_words(chars, chinese_only=False):
         
         r = False    
         while r == False:            
-            key = "%sC:%s" % (len("".join(search_string)), "".join(search_string))
+            key = "ZH:%sC:%s" % (len("".join(search_string)), "".join(search_string))
             r = r_server.exists(key)
             if r == True:
                 break
@@ -173,7 +173,7 @@ def _group_words(chars, chinese_only=False):
 
                 
         
-        key = "%sC:%s" % (len("".join(search_string)), "".join(search_string))
+        key = "ZH:%sC:%s" % (len("".join(search_string)), "".join(search_string))
         word = _search_redis(key)
 
         for k, v in word.iteritems():

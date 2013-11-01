@@ -28,7 +28,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import smart_str, smart_unicode
 
 
-from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs, _is_pinyin, _is_ambiguous, _convert_pinyin_to_numbered_notation
+from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs, _is_pinyin, _is_ambiguous, _filter_pinyin
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis, _increment_stats
 import utils.messages as messages
 
@@ -74,24 +74,29 @@ def search(request, search_string=None, title='Search', words=None):
             return _render(request, 'website/search.html', locals())
 
     if _is_ambiguous(search_string):
-        
         return _problem(request, messages.AMBIGUOUS_WORD)
     
     
     if _is_pinyin(search_string):
-        
-                        
+                                
         # BUILD A PINYIN KEY # now replace spaces with underscores
-        string = _convert_pinyin_to_numbered_notation(search_string).strip().replace(' ', '_')
-        key = "PINYIN:%s" % string
-        
+        string = _filter_pinyin(search_string).strip().replace(' ', '_')
+        key = "PY:%s" % string
+                
         r_server = _get_redis()
                 
         if filter(lambda x: x not in '12345', key) == key:
             if '_' in string:
                 string = string.replace('_', '?_')
-            key = "PINYIN:%s?" % string
+            key = "PY:%s?" % string
             keys = r_server.keys(key)
+            
+            # SPECIAL FILTER TO CHECK IF SOMETHING HAS NO RESULTS AND
+            # THE USER ENTERED A 'U' INSTEAD OF A 'V' (EG. NV HAI ZI)
+            if 'u' in string and keys == []:
+                key = key.replace('u', 'v')
+                keys = r_server.keys(key)
+            
             things = []
             for k in keys:
                 object = _search_redis(k)['character_keys'].split(',')
@@ -118,13 +123,18 @@ def search(request, search_string=None, title='Search', words=None):
             
         return _render(request, 'website/wordlist.html', locals())
     
-    
-            
-        
 
-    # IF THE SEARCH IS ENGLISH, RETURN ERROR
+
+    # IF THE SEARCH IS ENGLISH, RETURN ENGLISH
     if _is_english(search_string):
-        return _problem(request, messages.ENGLISH_WORD)
+        
+        key = "EN:%sW:%s" % (len(search_string.split(' ')), search_string)
+        print key
+        words = []
+        words.append(_search_redis(key))
+        
+        
+        return _render(request, 'website/en_wordlist.html', locals())
 
     # IF THE SEARCH IS OVER 10 CHARACTERS, RETURN A TEXT
     if len(search_string) > 12:

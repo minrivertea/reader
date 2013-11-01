@@ -23,6 +23,10 @@ a:hover, a:active {
    text-decoration: underline;
 }
 
+span.orange, .pinyin {
+  color: #E55C12;     
+}
+
 .button, a.button, input.button {
     float: right;
     font-family: Open Sans, sans-serif;
@@ -96,6 +100,7 @@ p.red {
     height: auto;
     margin: 0 0 20px;
     position: relative;
+    font-size: 18px;
 }
 
 #header.home {
@@ -108,152 +113,19 @@ p.red {
 }
 
 #header #logo {
- margin: 0 10px 0 0px;
+ margin: 0 0px 0 0px;
  color: #222;
 }
-
 
 #header a, #header .expandable {
   float: left;
   padding: 0px 10px; 
-  color: #E55C12; 
-  text-decoration: none;
-  font-weight: normal;
-  font-size: 18px;
-}
-
-#header a:hover, #header div.expandable:hover {
-  text-decoration: underline;
-  cursor: pointer;  
-}
-
-#header a:first-child {
-  padding: 0 10px 0 0;   
-}
-
-#header .expandable {
-  position: relative;
-  display: block; 
-  margin-top: -11px;
-  padding: 10px 10px 0 10px; 
-  border: 1px solid transparent; 
-}
-
-#header .expandable:hover .subnav:before {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    background: none repeat scroll 0 0 #333;
-    content: " ";
-    height: 36px;
-    left: 311px;
-    position: absolute;
-    top: -37px;
-    width: 114px;
-    z-index: 0;
-}
-
-#header .expandable.login:hover .subnav:before {
-  width: 60px;
-  left: 377px;
-}
-
-#header .expandable.register:hover .subnav:before {
-  width: 67px;
-  left: 315px;
-}
-
-#header .expandable span.linktext {
-  display: block;
-  position: relative;
-  z-index: 60;   
-}
-
-#header .expandable .subnav {
-    background: none repeat scroll 0 0 #333;
-    height: auto;
-    left: -315px;
-    padding: 20px;
-    position: absolute;
-    top: 34px;
-    width: 800px;
-    z-index: 50;
-    display: none;
-}
-
-#header .expandable.login .subnav {
-  left: -380px;   
-}
-
-#header .expandable form {
-    text-align: left;
-    float: left;
-    width: 250px;
-}
-
-#header .expandable.register p.help, #header .expandable.login p.help {
-  float: right;
-  width: 340px;   
-}
-
-#header .expandable input {
-    font-size: 14px;
-    width: 200px;
-}
-
-#header .expandable input[type=submit] {
-  width: 200px;   
-  float: left;
-}
-
-#header .expandable label {
-  font-size: 14px;
-  left: 20px;   
-}
-
-#header .expandable .subnav p {
-  margin: 0 0 15px;
-  padding: 0;
-  font-weight: normal;
-}
-
-#header .expandable .subnav p a {
-  float: none;
-  font-weight: normal; 
-  margin: 0;
-  padding: 0 2px;  
-}
-
-#header .expandable .subnav ul {
-    list-style-type: none;
-    margin: 0; 
-    padding: 0;   
-}
-
-#header .expandable:hover .subnav {
-  display: block;   
-}
-
-#header .expandable .subnav ul a {
-  color: #E55C12; 
-  margin: 0 15px; 
-}
-
-#header .expandable .subnav ul a:first-child {
-  margin-left: 0;   
 }
 
 #search {
     float: right;
     position: relative;
     width: 248px;
-}
-
-#search-error {
-    color: #999999;
-    font-size: 22px;
-    font-weight: normal;
 }
 
 #search input.submit {
@@ -345,8 +217,12 @@ p.red {
 form {
  float: left;
  width: 100%;
- text-align: center;  
- display: ; 
+ text-align: left;  
+}
+
+form p.help {
+    color: #777777;
+    font-size: 14px;
 }
 
 textarea {
@@ -498,7 +374,6 @@ label.focus {
 
 #lookups div .pinyin {
   text-transform: lowercase;
-  color: #E55C12;   
   margin-right: 10px;
 }
 
@@ -896,6 +771,23 @@ body.color4 #tools {
     width: 400px;
 }
 
+#wordlist .en .english {
+   color: #555;
+   float: left;
+   width: 400px;   
+}
+
+#wordlist .en .chinese {
+   float: left;
+   width: 200px;
+}
+
+#wordlist .en .pinyin {
+   float: left;
+   width: 200px;
+   left: 0;    
+}
+
 #previous-searches #wordlist .chars, #previous-searches #wordlist .pinyin, #previous-searches #wordlist .meaning {
   font-size: 14px;
   color: #666;
@@ -926,7 +818,6 @@ body.color4 #tools {
 }
 
 .word .pinyin {
-    color: #E55C12;
     display: none;
     padding-top: 5px;
     font-size: 12px;
@@ -1038,18 +929,14 @@ body.font4, body.font4 .char, #head ul a.font4, body.font4 #lookups div span.tit
 
 
 h1 {
- margin: 0 0 10px 0;
+    font-size: 38px;
+    font-weight: bold;
+    margin: 0 0 10px;
 }
 
 h3 {
-  color: #E55C12;
-  font-weight: bold;
-  font-size: 15px;
-  margin: 40px 0 0px 0; 
-  padding-bottom: 10px;
-  border-bottom: 2px dotted #e1e1e1;
-  float: left;
-  width: 100%; 
+    font-size: 22px;
+    margin: 0;
 }
 
 h3#examples:hover, h3#similar:hover {
@@ -1212,7 +1099,6 @@ h3 span.this {
 }
 
 #editable div .pinyin {
-  color: #E55C12; 
   font-size: 16px;  
   text-transform: lowercase;
 }
@@ -1242,20 +1128,22 @@ h3 span.this {
 /* flatpage about us styles */
 
 .text {
-    float: left;
-    left: -300px;
-    text-align: center;
-    width: 600px;
+    left: -480px;
+    width: 700px;
+}
+
+.text.center {
+  text-align: center;   
 }
 
 .text p {
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.8em;
-  margin: 10px 0 20px;   
+  margin: 0px 0 20px;   
 }
 
 .text p.big {
-   font-size: 25px;  
+   font-size: 28px;  
 }
 
 .text ul {
@@ -1334,7 +1222,6 @@ h3 span.this {
 
 #single .pinyin {
    font-size: 22px;
-   color: #E55C12; 
    padding: 0px 20px 0px 10px;
 }
 

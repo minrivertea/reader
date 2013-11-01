@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 import views
-from cedict.views import copy_dictionary, single_word
+from cedict.views import single_word
 
 urlpatterns = patterns('',
     
@@ -23,7 +23,6 @@ urlpatterns = patterns('',
     url(r'^words/(?P<word>[\w-]+)/$', single_word, name="single_word"),
     
     # UTILS URLS
-    url(r'^copy_dict/$', copy_dictionary, name="copy_dictionary"),
     url(r'^stats/$', views.stats, name="stats"),
     
     

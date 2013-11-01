@@ -41,6 +41,9 @@
         <a href="/" id="logo" data-ajax>{{ sitename }}</a>
         
         <a href="{% url page 'about' %}" title="about" data-ajax>about</a>
+        <a href="{% url page 'help' %}" title="help" data-ajax>help</a>
+        
+        
         {% comment %}
         {% if user.is_authenticated %}
             <a href="{% url user %}">Your account</a>
