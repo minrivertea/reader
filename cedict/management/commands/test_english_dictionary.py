@@ -33,10 +33,6 @@ class Command(NoArgsCommand):
             if r_server.exists(key):
                 print "got a match: %s" % line
                 item_count += 1
-            
-            
-            if item_count == 100:
-                break
                 
         
         print "Got back %s matches from the dictionary" % item_count          
