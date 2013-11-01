@@ -31,7 +31,6 @@ class Command(NoArgsCommand):
         for line in file:
             key = "EN:1W:%s" % line.strip()
             if r_server.exists(key):
-                print "got a match: %s" % line
                 item_count += 1
                 
         
