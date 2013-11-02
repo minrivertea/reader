@@ -82,6 +82,7 @@ INSTALLED_APPS = (
     'endless_pagination',
     'registration',
     'cedict',
+    'nginx_memcache',
 )
 
 #ENDLESS PAGINATION SETTINGS:
@@ -103,6 +104,33 @@ AUTH_PROFILE_MODULE = "website.Account"
 DICT_FILE_LOCATION = os.path.join(PROJECT_PATH, 'files/cedict_1_0_ts_utf-8_mdbg.txt')
 ENGLISH_WORD_LIST = os.path.join(PROJECT_PATH, 'files/en_wordlist.txt')
 
+# CACHE SETTINGS
+CACHE_NGINX = True
+CACHE_NGINX_TIME = 3600 * 24  # 1 day, in seconds
+
+# Default backend to use from settings.CACHES
+# May need to update the nginx conf if this is changed
+CACHE_NGINX_ALIAS = 'default'
+
+# Whether or not a DB-backed lookup table is useds
+CACHE_NGINX_USE_LOOKUP_TABLE = False  # default is False
+
+# Whether or not to cache HTTPS requests, and how to identify HTTPS requests from headers
+# (eg, if SSL termination has taken place before Django is hit)
+CACHE_NGINX_INCLUDE_HTTPS = True  # default is True
+CACHE_NGINX_ALTERNATIVE_SSL_HEADERS = (
+    ('X-Forwarded-Proto', 'HTTPS'),
+    ('X-Forwarded-SSL', 'on')
+)  # values in tuples are header, value that confirms was a HTTPS request
+# the examples above are the defaults. See middleware.py
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
 
 # EMAILS
