@@ -44,6 +44,8 @@ from fancy_cache import cache_page
 from website.forms import SearchForm
 from website.signals import *
 
+from fancy_cache import cache_page
+
 def _problem(request, problem=None):    
     if request.is_ajax():
         html = render_to_string('website/problem_snippet.html', locals())
@@ -53,7 +55,7 @@ def _problem(request, problem=None):
     return _render(request, 'website/problem.html', locals())
 
 
-
+@cache_page(3600)
 def search(request, search_string=None, title='Search', words=None):
     
     # replace search string underscores with spaces
