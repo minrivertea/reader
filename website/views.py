@@ -44,7 +44,9 @@ from fancy_cache import cache_page
 from website.forms import SearchForm
 from website.signals import *
 
-from fancy_cache import cache_page
+from nginx_memcache.decorators import cache_page_nginx
+
+
 
 def _problem(request, problem=None):    
     if request.is_ajax():
@@ -55,7 +57,7 @@ def _problem(request, problem=None):
     return _render(request, 'website/problem.html', locals())
 
 
-@cache_page(3600)
+@cache_page_nginx
 def search(request, search_string=None, title='Search', words=None):
     
     # replace search string underscores with spaces
@@ -207,13 +209,14 @@ def search_beginning_with(request, search_string):
     
     return _render(request, 'website/wordlist.html', locals())     
     
-@cache_page(3600)        
+@cache_page_nginx        
 def home(request):
     _update_crumbs(request)                
     return _render(request, 'website/home.html', locals())
 
 
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
+@cache_page_nginx
 def page(request, slug):
     template = 'website/pages/page.html'
     snippet = 'website/pages/%s.html' % slug
