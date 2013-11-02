@@ -207,7 +207,7 @@ def search_beginning_with(request, search_string):
     
     return _render(request, 'website/wordlist.html', locals())     
     
-            
+@cache_page(3600)        
 def home(request):
     _update_crumbs(request)                
     return _render(request, 'website/home.html', locals())
