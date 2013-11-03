@@ -46,7 +46,6 @@ class Command(NoArgsCommand):
         for x in keys:
             r_server.delete(x)
             item_count += 1
-        
         print "Deleted %s items" % item_count
         
         
@@ -103,12 +102,8 @@ class Command(NoArgsCommand):
                         continue
                     
                     # DEAL WITH INFINITIVE VERBS LIKE "TO DO" WITH 2 WORDS
-                    if len(ns.split(' ')) == 2 and ns.split(' ')[0] == 'to':
-                        ns = ns.lstrip('to ')
-                   
-                    # DEAL WITH INFINITIVE VERBS LIKE "TO GIVE AWAY" WITH 2 WORDS
-                    if len(ns.split(' ')) == 3 and ns.split(' ')[0] == 'to':
-                        ns = ns.lstrip('to ')
+                    if len(ns.split(' ')) <= 3 and ns.startswith('to '):
+                        ns = ns.split(' ', 1)[1]
                     
                     # REMOVE ITEMS LIKE "SEE XYZ"
                     if ns.split(' ')[0] == 'see' and ns[-1] not in string.ascii_letters:
@@ -118,11 +113,13 @@ class Command(NoArgsCommand):
                     if "..." in ns:
                         ns = ns.replace('...', '')                    
                     
-                    # FOR NOW, JUST ADD ITEMS WITH 1 WORD
-                    if len(ns.split(' ')) == 1:
+                    # FOR NOW, JUST ADD ITEMS WITH 2 WORDs
+                    if len(ns.split(' ')) <= 3:
                         key = "EN:%sW:%s" % (len(ns.split(' ')), ns)
                         
+                        
                         if r_server.exists(key):
+                            # TODO - WE NEED TO UPDATE THE EXISTING KEY NOW
                             pass
                         else:
                             mapping = {
@@ -132,12 +129,14 @@ class Command(NoArgsCommand):
                             }
                             
                             r_server.hmset(key, mapping)
+                        
+                        item_count += 1
                                         
                     
                 
                 
                 
-                item_count += 1                
+                                
         
         print "%s English dictionary items added" % item_count          
         file.close()        

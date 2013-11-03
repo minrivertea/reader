@@ -136,7 +136,7 @@ def _is_pinyin(x):
     """  
     for thing in x.split(' '):
         try:
-            word = filter(lambda x: x not in '12345', _filter_pinyin(thing))
+            word = filter(lambda x: x not in '12345', _clean_pinyin(thing))
             if word in PINYIN_WORDS:
                 return True
         except:
@@ -145,12 +145,12 @@ def _is_pinyin(x):
     return False
 
 
-def _filter_pinyin(x):
+def _clean_pinyin(x):
     """
     Filters any incoming pinyin, regardless of what format and then 
     spits out standardised numbered pinyin eg. takes something like 
     "nǚháizi" and returns "nv3 hai2 zi5". If it gets something that
-    isn't pinyin, it won't handle it. The function calling _filter_pinyin
+    isn't pinyin, it won't handle it. The function calling _clean_pinyin
     should handle any errors.
     """
     
@@ -164,7 +164,6 @@ def _filter_pinyin(x):
             targetOptions={'toneMarkType': 'numbers', 'yVowel': 'v',}
         )
     
-    
     # IF THE INPUT IS SUPER PLAIN-JANE PINYIN (eg. 'nv' or 'nu') THEN DO THIS
     if len(filter(lambda x: x not in ("".join((string.ascii_letters, u'ü', ' ', '_'))), x)) == 0:
         pinyin = f.convert(x, 'Pinyin', 'Pinyin', 
@@ -172,7 +171,6 @@ def _filter_pinyin(x):
             targetOptions={'toneMarkType': 'numbers', 'missingToneMark': 'noinfo', 'yVowel': 'v',}
         )
          
-                
     # IF THE INPUT IS TONAL PINYIN (eg. nǚ hái zi)  
     if not pinyin:
         pinyin = f.convert(x, 'Pinyin', 'Pinyin', 

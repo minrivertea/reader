@@ -28,7 +28,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import smart_str, smart_unicode
 
 
-from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs, _is_pinyin, _is_ambiguous, _filter_pinyin
+from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs, _is_pinyin, _is_ambiguous, _clean_pinyin
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis, _increment_stats
 import utils.messages as messages
 
@@ -43,6 +43,7 @@ from fancy_cache import cache_page
 
 from website.forms import SearchForm
 from website.signals import *
+
 
 from nginx_memcache.decorators import cache_page_nginx
 
@@ -84,7 +85,7 @@ def search(request, search_string=None, title='Search', words=None):
     if _is_pinyin(search_string):
                                 
         # BUILD A PINYIN KEY # now replace spaces with underscores
-        string = _filter_pinyin(search_string).strip().replace(' ', '_')
+        string = _clean_pinyin(search_string).strip().replace(' ', '_')
         key = "PY:%s" % string
                 
         r_server = _get_redis()

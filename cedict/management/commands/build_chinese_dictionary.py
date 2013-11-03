@@ -27,11 +27,24 @@ class Command(NoArgsCommand):
         file = open(settings.DICT_FILE_LOCATION)
         r_server = _get_redis()
         
-        # EMPTY ALL ZH AND PY KEYS FROM THE DATABASE (LEAVE THE EN ONES ALONE)
+        # EMPTY ALL ZH KEYS
+        item_count = 0
         keys = r_server.keys('ZH:*')
         for x in keys:
             r_server.delete(x)
-            print "deleting %s" % x
+            item_count += 1
+        print "Deleted %s Chinese characters" % item_count
+        
+        
+        # EMPTY ALL PY KEYS
+        item_count = 0
+        keys = r_server.keys('PY:*')
+        for x in keys:
+            r_server.delete(x)
+            item_count += 1
+        print "Deleted %s Pinyin entries" % item_count
+        
+        
         
         # NOW LETS START
         item_count = 0
@@ -100,7 +113,7 @@ class Command(NoArgsCommand):
                 
                 item_count += 1
         
-        print "%s dictionary items added" % item_count          
+        print "%s Chinese items added" % item_count          
         file.close()        
 
 
