@@ -112,6 +112,9 @@ class Command(NoArgsCommand):
                     r_server.hmset(character_key, mapping)
                 
                 item_count += 1
+                
+                print item_count
+               
         
         print "%s Chinese items added" % item_count          
         file.close()        
