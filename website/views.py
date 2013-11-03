@@ -61,6 +61,8 @@ def _problem(request, problem=None):
 @cache_page_nginx
 def search(request, search_string=None, title='Search', words=None):
     
+    r_server = _get_redis()
+    
     # replace search string underscores with spaces
     if search_string:
         search_string = search_string.replace('_', ' ')
@@ -78,50 +80,38 @@ def search(request, search_string=None, title='Search', words=None):
             form = SearchForm()
             return _render(request, 'website/search.html', locals())
 
+    # HANDLES AN AMBIGUOUS SEARCH
     if _is_ambiguous(search_string):
         return _problem(request, messages.AMBIGUOUS_WORD)
-    
-    
+
+
+    # HANDLES A PINYIN SEARCH    
     if _is_pinyin(search_string):
+        
                                 
-        # BUILD A PINYIN KEY # now replace spaces with underscores
-        string = _clean_pinyin(search_string).strip().replace(' ', '_')
-        key = "PY:%s" % string
-                
-        r_server = _get_redis()
-                
-        if filter(lambda x: x not in '12345', key) == key:
-            if '_' in string:
-                string = string.replace('_', '?_')
-            key = "PY:%s?" % string
+        # CLEAN UP THE INCOMING PINYIN AND MAKE A KEY
+        string = _clean_pinyin(search_string).strip()  
+        key = "PY:%sW:%s" % (len(string.split(' ')), string.replace(' ', '_'))       
+        
+        # IF THERE'S NO NUMBERS AT ALL IN THE STRING MAKE A NEW KEY:        
+        if filter(lambda x: x not in '12345', string) == string:
+            key = "PY:%sW:%s?" % (len(string.split(' ')), string.replace(' ', '?_'))
+                                
+        keys = r_server.keys(key)
+        
+        # SPECIAL FILTER TO CHECK IF SOMETHING HAS NO RESULTS AND
+        # THE USER ENTERED A 'U' INSTEAD OF A 'V' (EG. NV HAI ZI)
+        if 'u' in string and keys == []:
+            key = key.replace('u', '?')
             keys = r_server.keys(key)
             
-            # SPECIAL FILTER TO CHECK IF SOMETHING HAS NO RESULTS AND
-            # THE USER ENTERED A 'U' INSTEAD OF A 'V' (EG. NV HAI ZI)
-            if 'u' in string and keys == []:
-                key = key.replace('u', 'v')
-                keys = r_server.keys(key)
-            
-            things = []
-            for k in keys:
-                object = _search_redis(k)['character_keys'].split(',')
-                for o in object:
-                    things.append(o)
-                
-        else:        
-            try:
-                things = _search_redis(key)['character_keys'].split(',')
-            except:
-                things = None
-        
-                        
-        # FINALLY, LETS GET THE WORDS
         words = []
-        if things:
-            for x in things:
+        for k in keys:
+            char_keys = _search_redis(k)['char_keys'].split(',')
+            for x in char_keys:
                 word = _search_redis(x)
                 try:
-                    url = reverse('single_word', args=[word['chars']])
+                    word['chars']
                     words.append(word)
                 except:
                     pass
@@ -129,24 +119,21 @@ def search(request, search_string=None, title='Search', words=None):
         return _render(request, 'website/wordlist.html', locals())
     
 
-
     # IF THE SEARCH IS ENGLISH, RETURN ENGLISH
     if _is_english(search_string):
         
         key = "EN:%sW:%s" % (len(search_string.split(' ')), search_string)
-        print key
         words = []
         words.append(_search_redis(key))
         
-        
         return _render(request, 'website/en_wordlist.html', locals())
+
 
     # IF THE SEARCH IS OVER 10 CHARACTERS, RETURN A TEXT
     if len(search_string) > 12:
         from creader.views import text                
         return text(request, words=search_string)
     
-          
     if not words:
         things = _split_unicode_chrs(search_string)
         words = _group_words(things)        

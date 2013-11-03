@@ -19,6 +19,7 @@ u'run', # run run run
 u'sun', # the big thing in the sky
 u'pang', # pangs of guilt?
 u'me', # itu's all about me
+u'nu', # apparently it's the greek Νν as well as nu in pinyin
 ]
 
 
@@ -52,9 +53,12 @@ u'chong',
 u'chuan',
 u'chuang',
 u'chun',
-u'chi', 
+u'chi',
+u'chu'
+u'chun', 
 u'ci',
 u'cong',
+u'cu',
 u'cun',
 u'da',
 u'dan',
@@ -87,8 +91,16 @@ u'gua',
 u'gui',
 u'guo',
 u'ha',
+u'hai',
 u'han',
 u'hang',
+u'he',
+u'hen',
+u'heng',
+u'hu',
+u'hua',
+u'huan',
+u'huang',
 u'ji',
 u'jia',
 u'jian',

@@ -2,4 +2,6 @@ local_settings.py
 *.pyc
 TODO
 *.DS_Store
-
+files/
+nginx_memcache/
+*.rdb

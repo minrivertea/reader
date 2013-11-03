@@ -19,34 +19,30 @@ from cjklib.reading import ReadingFactory
 
 # this sends out the first 'review' email after the order was shipped.
 class Command(NoArgsCommand):
-    help = 'Rebuilds from scratch the Chinese-English Dictionary'
+    help = 'Builds the Chinese-English Dictionary.'
+
+    
+
+    def _del_keys(self, key):
+        r_server = _get_redis()
+        keys = r_server.keys(key)
+        item_count = 0
+        for x in keys:
+            r_server.delete(x)
+            item_count += 1
+        
+        print "Deleted %s items matching %s" % (item_count, key)
+        return
 
     def handle_noargs(self, **options):
         # 一事無成 一事无成 [yi1 shi4 wu2 cheng2] /to have achieved nothing/to be a total failure/to get nowhere/
 
-        file = open(settings.DICT_FILE_LOCATION)
-        r_server = _get_redis()
-        
-        # EMPTY ALL ZH KEYS
-        item_count = 0
-        keys = r_server.keys('ZH:*')
-        for x in keys:
-            r_server.delete(x)
-            item_count += 1
-        print "Deleted %s Chinese characters" % item_count
-        
-        
-        # EMPTY ALL PY KEYS
-        item_count = 0
-        keys = r_server.keys('PY:*')
-        for x in keys:
-            r_server.delete(x)
-            item_count += 1
-        print "Deleted %s Pinyin entries" % item_count
-        
-        
+        # EMPTY ALL ZH + PY KEYS
+        self._del_keys('ZH:*')
+        self._del_keys('PY:*')
         
         # NOW LETS START
+        file = open(settings.DICT_FILE_LOCATION)
         item_count = 0
         for line in file:
             if line.startswith("#"):
@@ -55,36 +51,38 @@ class Command(NoArgsCommand):
                 
                 # GATHER ALL THE MAIN VARIABLES
                 new = line.split()
-                numbered_pinyin = line[(line.index('[')+1):(line.index(']'))]
+                num_pinyin = line[(line.index('[')+1):(line.index(']'))]
                 f = ReadingFactory()
-                tonal_pinyin =  f.convert(numbered_pinyin, 'Pinyin', 'Pinyin',
+                tonal_pinyin =  f.convert(num_pinyin, 'Pinyin', 'Pinyin',
                     sourceOptions={'toneMarkType': 'numbers', 'yVowel': 'v',
                     'missingToneMark': 'fifth'})
                 meanings = line[(line.index('/')+1):(line.rindex('/'))]               
-                pinyin_key = "PY:%s" % numbered_pinyin.replace(' ', '_')
-                character_key = "ZH:%sC:%s" % ((len((new[1]))/3), new[1]) 
+                py_key = "PY:%sW:%s" % (len(num_pinyin.split(' ')), num_pinyin.replace(' ', '_'))
+                char_key = "ZH:%sC:%s" % ((len((new[1]))/3), new[1]) 
                 
                 
                 # ADD THE PINYIN ENTRY
-                if r_server.exists(pinyin_key):
-                    object = _search_redis(pinyin_key)
+                
+                r_server = _get_redis()
+                if r_server.exists(py_key):
+                    object = _search_redis(py_key)
                     mapping = {
-                        'character_keys': "".join( (object['character_keys'], ',', character_key) ),   
+                        'char_keys': "".join( (object['char_keys'], ',', char_key) ),   
                     }
-                    r_server.hmset(pinyin_key, mapping)
+                    r_server.hmset(py_key, mapping)
                                         
                 else:
                     mapping = {
-                        'character_keys': character_key,
+                        'char_keys': char_key,
                         'id': uuid.uuid4().hex,
                     }
-                    r_server.hmset(pinyin_key, mapping)                    
+                    r_server.hmset(py_key, mapping)                    
     
     
                 # ADD THE CHARACTER ENTRY
-                if r_server.exists(character_key):
+                if r_server.exists(char_key):
                      
-                    object = _search_redis(character_key)
+                    object = _search_redis(char_key)
                     try:
                         val = "meaning%s" % (int(object['count']) + 1)
                         object[val]
@@ -98,7 +96,7 @@ class Command(NoArgsCommand):
                             new2: tonal_pinyin, 
                             'count': count,
                         }
-                        r_server.hmset(character_key, mapping)
+                        r_server.hmset(char_key, mapping)
                             
                 else:
                     mapping = {
@@ -109,12 +107,11 @@ class Command(NoArgsCommand):
                         'id': uuid.uuid4().hex,
                     }
                     
-                    r_server.hmset(character_key, mapping)
+                    r_server.hmset(char_key, mapping)
                 
                 item_count += 1
-                
                 print item_count
-               
+                               
         
         print "%s Chinese items added" % item_count          
         file.close()        

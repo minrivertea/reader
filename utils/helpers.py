@@ -68,18 +68,14 @@ def _is_punctuation(x):
     return False
 
 def _is_number(x):
-
     for t in x:
-        
         if t.isdigit() or unicodedata.category(t).startswith('N'):
             return True
-        
         try:
             float(t)
             return True
         except ValueError:
             return False
-    
     return False
 
 
@@ -96,10 +92,16 @@ def _is_english(x):
     return False
 
 def _is_ambiguous(x):
+
+    count = 0
+    
     for thing in x.split(' '):
         if thing in AMBIGUOUS_WORDS:
-            return True
-    
+            count += 1
+        
+    if count == len(x.split(' ')):
+        return True
+            
     return False
 
 
@@ -129,18 +131,18 @@ def _get_crumbs(request):
     crumbs_html = ' \ '.join(items) 
     return crumbs_html
 
-
+# CHECKS IF THE INCOMING STRING IS PINYIN OR NOT
 def _is_pinyin(x):
-    """
-    Checks if a given string is pinyin or not
-    """  
+
     for thing in x.split(' '):
         try:
-            word = filter(lambda x: x not in '12345', _clean_pinyin(thing))
-            if word in PINYIN_WORDS:
+            # CLEAN THE PINYIN INTO NUMBERED PINYIN AND THEN STRIP THE NUMBERS
+            # AND THEN COMPARE TO OUR LIST OF PINYIN WORDS            
+            if filter(lambda x: x not in '12345', _clean_pinyin(thing)) in PINYIN_WORDS:
                 return True
         except:
             pass      
+
 
     return False
 
