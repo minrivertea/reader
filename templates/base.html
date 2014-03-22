@@ -40,13 +40,13 @@
        <div id="header-inner" class="centred">
         <a href="/" id="logo" data-ajax>{{ sitename }}</a>
         
-        <a href="{% url page 'about' %}" title="about" data-ajax>about</a>
-        <a href="{% url page 'help' %}" title="help" data-ajax>help</a>
+        <a href="{% url 'page' 'about' %}" title="about" data-ajax>about</a>
+        <a href="{% url 'page' 'help' %}" title="help" data-ajax>help</a>
         
         
         {% comment %}
         {% if user.is_authenticated %}
-            <a href="{% url user %}">Your account</a>
+            <a href="{% url 'user' %}">Your account</a>
         {% else %}
            <div href="/" class="expandable register">
                 <span class="linktext">Register</span>
@@ -69,9 +69,9 @@
            <div href="/" class="expandable login">
                 <span class="linktext">Login</span>
                 <div class="subnav">
-                     <p class="help">If you haven't got an account, <a href="{% url registration_register %}">register here</a> - or did you <a class="forgotten" href="{% url auth_password_reset %}">forget your password?</a>?</p>   
+                     <p class="help">If you haven't got an account, <a href="{% url 'registration_register' %}">register here</a> - or did you <a class="forgotten" href="{% url 'auth_password_reset' %}">forget your password?</a>?</p>   
 
-                    <form method="post" action="{% url django.contrib.auth.views.login %}">
+                    <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
                     {% csrf_token %}
                     <p><label for="id_username">eg. john@example.com</label><input id="id_username" type="text" name="username" title="Your username" class="clearMeFocus" maxlength="30" /></p>
                     <p><label for="id_password">Your password</label><input type="password" name="password" id="id_password" title="Your password" class="clearMeFocus" /></p>
@@ -84,7 +84,7 @@
         {% endcomment %}
         
     
-        <form id="search" data-pjax action="{% url search %}" method="post" class="">
+        <form id="search" data-pjax action="{% url 'search' %}" method="post" class="">
             {% csrf_token %}
             <label for="id_char">Search for a Chinese word</label>
             <input id="id_char" class="clearMeFocus empty" title="Search for a Chinese word" name="char" value="" placeholder="Search for a Chinese word" >

@@ -34,6 +34,8 @@ SITE_ID = 1
 USE_I18N = False
 USE_L10N = False
 
+SECRET_KEY = ''
+
 
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'static')
 MEDIA_URL = '/'
