@@ -9,14 +9,14 @@
         </a>
     </li>
     <li class="">
-        <a href="{% url search_beginning_with word.chars %}" data-pjax>
+        <a href="{% url 'search_beginning_with' word.chars %}" data-pjax>
         <div class="line">
             See words beginning with <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
         </div>
         </a>
     </li>
     <li class="">
-        <a href="{% url search_contains word.chars %}" data-pjax>
+        <a href="{% url 'search_contains' word.chars %}" data-pjax>
         <div class="line">
             See words containing <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
         </div>
@@ -28,7 +28,7 @@
     <div id="single">
         <div id="chars">
             {% for x in chars %}
-                <a href="{% url single_word x %}" data-pjax class="single">
+                <a href="{% url 'single_word' x %}" data-pjax class="single">
                     <span class="chars">{{ x }}</span>
                 </a>
             {% endfor %}
