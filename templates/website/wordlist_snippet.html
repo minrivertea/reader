@@ -3,7 +3,7 @@
     <ul id="wordlist" class="centred">
     {% for w in words %}
         <li class="wrapper" id="char{{ w.wordset }}" chars="{{ w.chars }}">
-            <a data-pjax href="{% url single_word w.chars %}">
+            <a data-pjax href="{% url 'single_word' w.chars %}">
             <span class="next">&#9658;</span>
             <div class="line">
                 <div class="chars">{{ w.chars }}</div>

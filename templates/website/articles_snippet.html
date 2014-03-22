@@ -2,13 +2,13 @@
 
 <div id="crumbs" class="centred">
     <span class="arrow">&#9658;</span>
-    <a href="{% url articles %}">Your Articles</a>
+    <a href="{% url 'articles' %}">Your Articles</a>
 </div>
 
 {% if articles %}
 <ul id="wordlist" class="centred easy">
     {% for x in articles %}
-        <li class="wrapper" href="{% url text x.hash %}">
+        <li class="wrapper" href="{% url 'text' x.hash %}">
             <span class="next">&#9658;</span>
             <div class="article">
                 <div class="title">{{ x.title }}</div>
