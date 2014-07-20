@@ -1,0 +1,62 @@
+<style type="text/css">
+
+#search {
+  width: 50%;
+  float: right;
+  margin: 3px 0 0;   
+}
+
+#search input#id_char {
+  float: left;
+  width:80%;
+  font-size: 13px;
+  padding: 5px 10px;
+}
+
+#search input.submit {
+  float: left;
+  font-size: 13px;
+  width: 10%;
+  padding: 4px 10px;   
+}
+
+</style>
+
+<div id="login" class="text centred">
+
+{% if user.is_authenticated %}
+<p class="big">You're already signed in - visit your <a href="">account page</a> here</p>
+{% else %}
+<p class="big">Create an account to turbo-charge your language learning.</p>
+
+<p><a href="{% url 'django.contrib.auth.views.login' %}">Already have an account? Click here to login</a></p>
+
+{% if form.errors %}
+<p class="red">{{ form.errors }}</p>
+{% endif %}
+
+<form method="post" action=".">
+{% csrf_token %}
+<p>
+     <input type="text" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="clearMeFocus"/>
+     <label for="id_email">Your email address</label>
+</p>
+<p>
+     <input type="password" name="password1" id="id_password1" value="" placeholder="Type your password once" class="clearMeFocus"/>
+     <label for="id_password1">Choose a password</label>
+</p>
+
+<p>
+     <input type="password" name="password2" id="id_password2" value="" placeholder="Type your password twice" class="clearMeFocus"/>
+     <label for="id_password1">Type your password twice</label>
+</p>
+
+<p class="help">We take your privacy seriously. By creating an account you agree to our terms and conditions, which you should read if you're at all concerned.</p>
+<input type="submit" value="Create account" class="button" />
+</form>
+
+
+{% endif %}
+
+</div>
+

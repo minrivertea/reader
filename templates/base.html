@@ -14,7 +14,7 @@
 	<meta name="DC.type" content="Django Site" />
 	<meta name="robots" content="ALL" />
 	
-	<title>{% block pagetitle %}Chinese Dictionary and Reading Tools{% endblock %} | 看懂了么?</title>	
+	<title>{% block pagetitle %}Chinese Dictionary and Learning Tools{% endblock %} | {{ site_name }}</title>	
 	<style type="text/css">
 	   {% include 'static/styles.txt' %}
 	</style>
@@ -34,7 +34,7 @@
 
 </head>
 
-<body class="font1">
+<body class="font1{% if show_sidebar %} sidebar{% endif %}">
 
     <div id="header" class="{% if request.path == '/' %}home{% endif %}">
        <div id="header-inner" class="centred">
@@ -42,58 +42,30 @@
         
         <a href="{% url 'page' 'about' %}" title="about" data-ajax>about</a>
         <a href="{% url 'page' 'help' %}" title="help" data-ajax>help</a>
-        
-        
-        {% comment %}
         {% if user.is_authenticated %}
-            <a href="{% url 'user' %}">Your account</a>
+        <a href="{% url 'user' %}">your account ({{ user.email }})</a>
         {% else %}
-           <div href="/" class="expandable register">
-                <span class="linktext">Register</span>
-                <div class="subnav">
-                    <p class="help"><strong>Register to use personalised reading lists, vocabulary and mobile applications.</strong> <br/><br/>We will never pass on your private information to any other individual or company. Your information is stored securely, your password encrypted, and your email will never be displayed publicly. We hate spam just as much as you do!</p>
-                    <form method="post" action=".">
-                       {% csrf_token %}
-                       <p>
-                            <input type="text" name="email" id="id_email" value="" title="" class="clearMeFocus"/>
-                            <label for="id_email">Your email address</label>
-                       </p>
-                       <p>
-                            <input type="password" name="password1" id="id_password1" value="" class="clearMeFocus"/>
-                            <label for="id_password1">Choose a password</label>
-                       </p>
-                       <input type="submit" value="Register now!" class="register button" />
-                     </form>
-                </div>
-            </div>
-           <div href="/" class="expandable login">
-                <span class="linktext">Login</span>
-                <div class="subnav">
-                     <p class="help">If you haven't got an account, <a href="{% url 'registration_register' %}">register here</a> - or did you <a class="forgotten" href="{% url 'auth_password_reset' %}">forget your password?</a>?</p>   
-
-                    <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-                    {% csrf_token %}
-                    <p><label for="id_username">eg. john@example.com</label><input id="id_username" type="text" name="username" title="Your username" class="clearMeFocus" maxlength="30" /></p>
-                    <p><label for="id_password">Your password</label><input type="password" name="password" id="id_password" title="Your password" class="clearMeFocus" /></p>
-                     <input type="submit" value="Login" class="login button" /></p>
-                    <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
-                    </form>                
-                 </div>
-            </div>
+        <a href="{% url 'auth_login' %}" data-ajax>login</a> 
+        <a href="{% url 'registration_register' %}">register</a>
         {% endif %}
-        {% endcomment %}
         
-    
+        
+            
         <form id="search" data-pjax action="{% url 'search' %}" method="post" class="">
             {% csrf_token %}
             <label for="id_char">Search for a Chinese word</label>
-            <input id="id_char" class="clearMeFocus empty" title="Search for a Chinese word" name="char" value="" placeholder="Search for a Chinese word" >
+            <input id="id_char" class="clearMeFocus empty" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search for a Chinese word" >
             <input type="submit" value="Go" id="submit" class="submit button"/>
         </form>
       </div>
     </div>
         
     <div id="editable"></div>
+    
+    <a href="#" id="sidebar_toggle" class="{% if show_sidebar %}open{% endif %}">{% if show_sidebar %}Hide{% else %}Show{% endif %} wordlist</a>
+    <div id="sidebar">
+        {% include 'users/user_vocab_snippet.html' %}
+    </div>
         
     <img id="loading" src="/images/loading.gif"/>
     
@@ -105,6 +77,28 @@
 
 		$(document).ready( function() {
             
+            /// TOGGLES THE SIDEBAR
+            $('#sidebar_toggle').click( function() {
+                $('body').toggleClass('sidebar');
+                var url = '';
+                if ($(this).hasClass('open')) {
+                    $(this).removeClass('open');
+                    $(this).text('Show wordlist');
+                    url = "{% url 'update_user_preferences' %}" + "?show_sidebar=False";
+                } else {
+                    url = "{% url 'update_user_preferences' %}" + "?show_sidebar=True";
+                    $(this).addClass('open');
+                    $(this).text('Hide wordlist');
+                }
+                
+                $.ajax({
+                    url: url,
+                    success: function() {
+                        /// nothing
+                    }    
+                });
+                return false;
+            });
             
             /// IF THIS IS THE HOMEPAGE, GIVE THE HEADER THE 'HOME' CLASS
             function checkHeader() {
@@ -123,16 +117,21 @@
                     /// HANDLES AN EMPTY SEARCH
                     var url = '/search/';
                     $.pjax({url: url, container: '#container'});
+                    
                } else {               
                    /// CONVERT THE FORM INTO A GET REQUEST 
                    var string = $('#id_char').val().split(' ').join('_')
                    var url = '/search/' + string + '/';  
-                   $.pjax({url: url, container: '#container'}); 
-               }
+                   $.pjax({url: url, container: '#container'});
+               };
+               
+               /// ADD THIS WORD TO THE WORDLIST?
+               
                return false;
-                          
+
             });
-                
+              
+             
                         
             /// SHOWS THE LOADING SPINNER
             $(document).on('pjax:send', function() {
@@ -146,6 +145,11 @@
             $(document).on('pjax:complete', function() {
               $('#loading').hide();
               $('#container').fadeIn(100);
+              
+              $('input#id_char').select();
+              
+              
+              
             });
             
             // MAKES SURE THE HOME PAGE LOADS PROPERLY WITH BACK/FORWARDS CLICKS
@@ -155,6 +159,8 @@
             
             /// BIND VARIOUS LINK TO PJAX
             $(document).pjax('a, a[data-pjax]', '#container');
+            
+            
             
             /// HELPS AVOID FREQUENT ABORTS CAUSED BY PJAX'S LOW DEFAULT TIMEOUT
             $(document).on('pjax:timeout', function(event) {

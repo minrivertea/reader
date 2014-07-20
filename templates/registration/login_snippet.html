@@ -1,0 +1,57 @@
+<style type="text/css">
+
+#search {
+  width: 50%;
+  float: right;
+  margin: 3px 0 0;   
+}
+
+#search input#id_char {
+  float: left;
+  width:80%;
+  font-size: 13px;
+  padding: 5px 10px;
+}
+
+#search input.submit {
+  float: left;
+  font-size: 13px;
+  width: 10%;
+  padding: 4px 10px;   
+}
+
+</style>
+
+
+<div id="login" class="text centred">
+
+{% if user.is_authenticated %}
+<p class="big">You're already signed in - visit your <a href="">account page</a> here</p>
+{% else %}
+<p class="big">Login to your account</p>
+
+
+{% if form.errors %}
+<p class="red">Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<form method="post" action="{% url 'auth_login' %}">
+{% csrf_token %}
+<p>
+     <input type="text" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="clearMeFocus"/>
+     <label for="id_email">Your email address</label>
+</p>
+<p>
+     <input type="password" name="password" id="id_password" value="" placeholder="Type your password" class="clearMeFocus"/>
+     <label for="id_password1">Choose a password</label>
+</p>
+<p class="help small"><a href="{% url 'auth_password_reset' %}">Forgot your password?</a><br/>
+Don't have an account?  <a href="{% url 'registration_register' %}">Click here to create a new one</a></p>
+
+<input type="submit" value="Login" class="button" />
+</form>
+
+
+{% endif %}
+
+</div>

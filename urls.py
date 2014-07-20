@@ -14,7 +14,6 @@ urlpatterns = patterns('',
     (r'^srs/', include('srs.urls')),
     (r'^user/', include('users.urls')),
 
-    (r'^accounts/', include('registration.backends.default.urls')),
     (r'^admin/', include(admin.site.urls)),
     url(r'^(?P<slug>[\w-]+)/$', page, name="page"),
 )

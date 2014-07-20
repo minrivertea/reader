@@ -1,25 +1,11 @@
-{% extends "base.html" %}
+{% extends base_template %}
 
 {% block pagetitle %}Logout{% endblock %}
 
-{% block extracss %}
-<style type="text/css">
-#search {
-  display: none;   
-}
 
-#text {
-  margin-top: 10%;   
-}
-</style>
-{% endblock %}
 
 {% block content %}
-<div id="text" class="centred easy">
 
-<h1>Logout successful</h1>
+{% include 'registration/logout_snippet.html' %}
 
-<p>You're logged out now - go back to the <a href="/">homepage</a>.</em></p>
-
-</div>
 {% endblock %}

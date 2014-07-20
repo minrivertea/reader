@@ -66,29 +66,37 @@ def search(request, search_string=None, title='Search', words=None):
     # replace search string underscores with spaces
     if search_string:
         search_string = search_string.replace('_', ' ')
-           
+               
+    
+    if search_string == None and request.method != 'POST':
+        form = SearchForm()
+        return _render(request, 'website/search.html', locals())
+          
     # CHECK IF IT'S A POST REQUEST OR URL SEARCH
-    if search_string == None:
-        if request.method == 'POST':
-            form = SearchForm(request.POST)
-            if form.is_valid():
-                _increment_stats('searches')
-                search_string = form.cleaned_data['char']
-                
+    if search_string == None and request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            _increment_stats('searches')
+            search_string = form.cleaned_data['char']
+
         else:
             # NOT A POST AND NO SEARCH STRING - SHOW THEM THE PLAIN JANE SEARCH PAGE
             form = SearchForm()
             return _render(request, 'website/search.html', locals())
+        
+    
+
+
 
     # HANDLES AN AMBIGUOUS SEARCH
     if _is_ambiguous(search_string):
         return _problem(request, messages.AMBIGUOUS_WORD)
 
 
+
     # HANDLES A PINYIN SEARCH    
     if _is_pinyin(search_string):
         
-                                
         # CLEAN UP THE INCOMING PINYIN AND MAKE A KEY
         string = _clean_pinyin(search_string).strip()  
         key = "PY:%sW:%s" % (len(string.split(' ')), string.replace(' ', '_'))       
@@ -130,23 +138,25 @@ def search(request, search_string=None, title='Search', words=None):
 
 
     # IF THE SEARCH IS OVER 10 CHARACTERS, RETURN A TEXT
-    if len(search_string) > 12:
-        from creader.views import text                
-        return text(request, words=search_string)
+    #if len(search_string) > 12:
+    #    from creader.views import text                
+    #    return text(request, words=search_string)
     
     if not words:
         things = _split_unicode_chrs(search_string)
         words = _group_words(things)        
-        _update_crumbs(request)
+
 
     # IF THE USER WAS LOGGED IN, RECORD IT IN THEIR 'SAVED WORDS'
     if request.user.is_authenticated():
-        word_searched.send(
-            sender=word_searched, 
-            chars=search_string, 
-            time=datetime.datetime.now(), 
-            user_id=request.user.pk
-        )
+        for x in words:
+            word_searched.send(
+                sender=word_searched, 
+                word=x, 
+                time=datetime.datetime.now(), 
+                user_id=request.user.email
+            )
+    
     
     title = "Search"
     subtitle = "%s" % search_string

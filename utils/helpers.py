@@ -94,11 +94,10 @@ def _is_english(x):
 def _is_ambiguous(x):
 
     count = 0
-    
     for thing in x.split(' '):
         if thing in AMBIGUOUS_WORDS:
             count += 1
-        
+       
     if count == len(x.split(' ')):
         return True
             
@@ -220,5 +219,19 @@ def _update_crumbs(request, word=None):
     
     request.session['crumbs'] = new_crumb
     return new_crumb
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         
 

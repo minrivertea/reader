@@ -9,14 +9,14 @@ body {
   padding: 0;
   color: #333;
   font-size: 15px;
-  line-height: normal;
-  background: #eff2f3;
-  font-family: Open Sans,"STKaiti",华文楷体, sans-serif;  
+  line-height: 2em;
+  background: #fff;
+  font-family: Georgia,"STKaiti",华文楷体, sans-serif;  
 }
 
 a:link, a:visited {
   text-decoration: none;
-  color: #E55C12;   
+  color: #316a9b;   
 }
 
 a:hover, a:active {
@@ -24,34 +24,25 @@ a:hover, a:active {
 }
 
 span.orange, .pinyin {
-  color: #E55C12;     
+  color: #316a9b;     
 }
 
 .button, a.button, input.button {
     float: right;
-    font-family: Open Sans, sans-serif;
     font-weight: 100;
     font-size: 20px;
     height: auto;
     width: 58px;
     padding: 9px 10px;
-    background: #F8F0F0;
+
     position: relative;
     top: 0px;
     color: #fff;
-    text-shadow: 0 1px 0 #C43A00;
     text-decoration: none;
-    
     letter-spacing: 0.5px;
     border-color: #A53A00;
-    background: rgb(226,103,36); /* Old browsers */
-background: -moz-linear-gradient(top, rgba(226,103,36,1) 0%, rgba(229,92,18,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(226,103,36,1)), color-stop(100%,rgba(229,92,18,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, rgba(226,103,36,1) 0%,rgba(229,92,18,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, rgba(226,103,36,1) 0%,rgba(229,92,18,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, rgba(226,103,36,1) 0%,rgba(229,92,18,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom, rgba(226,103,36,1) 0%,rgba(229,92,18,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e26724', endColorstr='#e55c12',GradientType=0 ); /* IE6-9 */
+    background: #316a9b;
+    font-family: Georgia, sans-serif;
 }
 
 
@@ -61,21 +52,23 @@ a.button {
 }
 
 .button:hover, a.button:hover {
-    background: rgb(224,112,51); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(224,112,51,1) 0%, rgba(226,103,36,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(224,112,51,1)), color-stop(100%,rgba(226,103,36,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(224,112,51,1) 0%,rgba(226,103,36,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e07033', endColorstr='#e26724',GradientType=0 ); /* IE6- */
-    box-shadow: 0 0px 2px #777;
-    border-color: #BF5200 #A53A00 #A53A00 #BF5200 ;
+    background: #2373b8;
     color: #fff;    
 }
 
 p.red {
   color: red;   
+}
+
+.small, span.small {
+  font-size: 0.7em;   
+}
+
+hr {
+  border: 1px solid #e1e1e1;
+  border-width: 1px 0 0 0;
+  margin: 25px 0;
+  float: left;
 }
 
 .centred {
@@ -84,6 +77,14 @@ p.red {
     margin-left: 50%;
     position: relative;
     width: 960px;
+}
+
+body.sidebar .centred {
+    float: left;
+    left: -480px;
+    margin-left: 45%;
+    position: relative;
+    width: 960px;    
 }
 
 #loading {
@@ -98,18 +99,19 @@ p.red {
 #header {
     float: left;
     height: auto;
-    margin: 0 0 20px;
+    margin: 0 0 30px;
     position: relative;
-    font-size: 18px;
+    background: #f9f9f9;
 }
 
 #header.home {
-  top: 220px;   
+  top: 220px;
+  background: none;
 }
 
 #header-inner {
-  padding: 15px 0 10px; 
-  border-bottom: 1px dashed #e1e1e1;  
+  padding: 25px 0 25px; 
+  font-size: 13px;
 }
 
 #header #logo {
@@ -122,10 +124,13 @@ p.red {
   padding: 0px 10px; 
 }
 
+
+
 #search {
-    float: right;
+    float: left;
     position: relative;
-    width: 248px;
+    width: 100%; 
+    margin: 10px 0 0;
 }
 
 #search input.submit {
@@ -133,25 +138,28 @@ p.red {
     border-radius: 0 5px 5px 0;
     color: #FFFFFF;
     float: left;
-    font-size: 14px;
-    padding: 2px 4px 1px;
-    width: 35px;
+    font-size: 20px;
+    height: auto;
+    padding: 10px 35px;
+    width: auto;
 }
 
 #search input#id_char {
     background: none repeat scroll 0 0 #FFFFFF;
-    border:none;
-    border-radius: 5px 0 0 5px;
+    border: 1px solid #e1e1e1;
+    border-radius: 0;
     color: #333333;
     float: left;
-    font-size: 14px;
-    height: 15px;
     line-height: 1em;
     margin: 0px;
     overflow: hidden;
-    padding: 5px 5px 5px 8px;
-    width: 200px;
-    font-family: Open Sans;
+    font-family: Georgia, sans-serif;
+    font-size: 18px;
+    
+    height: auto;
+    padding: 13px 15px;
+    position: relative;
+    width: 85%;
 }
 
 #search label {
@@ -168,47 +176,104 @@ p.red {
    color: #d1d1d1;   
 }
 
-#header.home #search {
-  float: left;
-  position: absolute;
-  top: 65px;  
-  left: 0;
-  width: 100%; 
-}
 
-#header.home #search input#id_char {
-    border-radius: 5px 0 0 5px;
-    height: auto;
-    padding: 13px 15px;
-    position: relative;
-    width: 85%;
-    font-size: 20px;
-    font-weight: 100;
-}
 
-#header.home #search label {
-    color: #E26724;
-    font-size: 25px;
-    font-weight: 100;
-    left: 13px;
-    position: absolute;
-    top: 3px;
-    z-index: 2;
-}
 
 #header.home #search label.focus {
   color: #e1e1e1;   
 }
 
-#header.home #search input[type="submit"] {
-    border-radius: 0 5px 5px 0;
-    font-family: Open Sans;
-    font-size: 20px;
-    font-weight: 100;
-    height: auto;
-    padding: 12px 35px;
-    width: auto;
+/* END HEADER STYLES */
+
+/* SIDEBAR STYLES */
+
+#sidebar_toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #1f4e77;
+  color:  #bad2e6;
+  padding: 10px 15px;
+  font-size: 11px; 
+  line-height: 1em;
+  text-align: center; 
 }
+
+body.sidebar #sidebar_toggle {
+  right: 200px;   
+}
+
+#sidebar {
+  position: fixed;
+  top: -50px;
+  padding-top: 50px;
+  right: -50px;
+  height: 105%;
+  width: 250px;
+  background: #316a9b;
+  display: block;
+  box-shadow: inset 0 1px 15px #0c3050;
+  border-left: 2px solid #1f4e77;
+  display: none;
+}
+
+body.sidebar #sidebar {
+  display: inline-block;   
+}
+
+#sidebar ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;   
+}
+
+#sidebar ul li {
+  width: 100%;
+  float: left;
+  position: relative;   
+}
+
+#sidebar ul li a {
+  border-bottom: 1px solid #4175a2;
+  padding: 5px 5% 5px 30px;
+  width: 90%;
+  float: left;
+  color: #bad2e6;
+}
+
+#sidebar ul li a:hover {
+  color: #fff;   
+}
+
+#sidebar ul li:hover a.remove {
+  display: inline-block;   
+}
+
+#sidebar ul li a.remove {
+    border: medium none;
+    bottom: 0;
+    float: none;
+    font-family: Arial;
+    font-size: 11px;
+    font-weight: bold;
+    height: 15px;
+    line-height: 1em;
+    margin: auto 0;
+    padding: 0;
+    position: absolute;
+    left: 12px;
+    top: 0;
+    width: 10px;
+    display: none;
+    color: #bad2e6;
+}
+
+#sidebar ul li a.remove:hover {
+  color: #fff;   
+}
+
+/* END SIDEBAR STYLES */
+
 
 
 
@@ -220,9 +285,15 @@ form {
  text-align: left;  
 }
 
+.text form p {
+  margin: 10px 0 10px;
+}
+
 form p.help {
-    color: #777777;
-    font-size: 14px;
+  color: #777777;
+  font-size: 0.8em;
+  line-height: 1.8em;
+  margin: 20px 0;
 }
 
 textarea {
@@ -235,10 +306,11 @@ textarea {
 }
 
 input, textarea {
-  background-color: #fff;
-  border: 1px solid #c1c1c1;
-  padding: 10px;
-  font-size: 20px;
+    background-color: #fff;
+    border: 1px solid #c1c1c1;
+    font-family: Georgia;
+    font-size: 13px;
+    padding: 10px;
 }
 
 input.submit:hover {
@@ -642,7 +714,7 @@ body.color4 #tools {
 }
 
 #wordlist {
-    background: none repeat scroll 0 0 #e7ecee;
+    background: none;
     list-style-type: none;
     margin-top: 0;
     padding: 0;
@@ -652,13 +724,8 @@ body.color4 #tools {
   width: 96%;
   padding: 10px 2% 10px;
   float: left;
-  border-bottom: 1px solid #d1d1d1;
-  border-top: 1px solid transparent;
+  border-bottom: 1px solid #e1e1e1;
   position: relative;   
-}
-
-#wordlist .wrapper:last-child, #previous-searches .wrapper:last-child {
-  border-bottom: 1px solid transparent;   
 }
 
 #previous-searches {
@@ -679,8 +746,7 @@ body.color4 #tools {
 }
 
 .wrapper:before {
-    background: none repeat scroll 0 0 #f4f6f7;
-    border-radius: 15px 15px 15px 15px;
+    background: none;
     content: " ";
     height: 30px;
     position: absolute;
@@ -696,7 +762,6 @@ body.color4 #tools {
 }
 
 .wrapper:hover {
-  background: #EFF2F3;
   cursor: pointer;
 }
 
@@ -742,19 +807,17 @@ body.color4 #tools {
     color: #333333;
     float: left;
     font-size: 30px;
-    height: 40px;
+    height: 36px;
     margin: auto;
     position: absolute;
-    text-shadow: 1px 1px 1px #FFFFFF;
     top: 0;
     width: 245px;
 }
 
 #wordlist .pinyin, #wordlist .meaning {
     float: left;
-    font-family: Helvetica Neue;
-    font-size: 14px;
-    font-weight: 200;
+    font-size: 15px;
+    line-height: 1.8em;
     position: relative;
     left: 260px;  
     margin: 5px 0;  
@@ -845,19 +908,19 @@ body.color4 #tools {
 
 
 body.font1, body.font1 .char, #head ul a.font1, body.font1 #lookups div span.title, body.font1 h1, body.font1 #editable .chars {
-  font-family: Open Sans,"STKaiti",华文楷体,sans-serif;  
+  font-family: Georgia,sans-serif;  
 }
 
 body.font2, body.font2 .char, #head ul a.font2, body.font2 #lookups div span.title, body.font2 h1, body.font2 #editable .chars {
-  font-family: Open Sans,"STSong", 华文宋体, sans-serif; 
+  font-family: Georgia,"STSong", 华文宋体, sans-serif; 
 }
 
 body.font3, body.font3 .char, #head ul a.font3, body.font3 #lookups div span.title, body.font3 h1, body.font3 #editable .chars {
-  font-family: Open Sans,"STFangsong", 华文仿宋, sans-serif; 
+  font-family: Georgia,"STFangsong", 华文仿宋, sans-serif; 
 }
 
 body.font4, body.font4 .char, #head ul a.font4, body.font4 #lookups div span.title, body.font4 h1, body.font4 #editable .chars {
-  font-family: Open Sans,"STHeiti", 华文黑体, sans-serif; 
+  font-family: Georgia,"STHeiti", 华文黑体, sans-serif; 
 }
 
 .punctuation {
@@ -929,14 +992,17 @@ body.font4, body.font4 .char, #head ul a.font4, body.font4 #lookups div span.tit
 
 
 h1 {
-    font-size: 38px;
-    font-weight: bold;
-    margin: 0 0 10px;
+    font-size: 34px;
+    font-weight: normal;
+    margin: 0 0 30px;
 }
+
+
 
 h3 {
     font-size: 22px;
-    margin: 0;
+    font-weight: normal;
+    margin: 10px 0;
 }
 
 h3#examples:hover, h3#similar:hover {
@@ -1129,7 +1195,7 @@ h3 span.this {
 
 .text {
     left: -480px;
-    width: 700px;
+    width: 800px;
 }
 
 .text.center {
@@ -1137,20 +1203,16 @@ h3 span.this {
 }
 
 .text p {
-  font-size: 18px;
-  line-height: 1.8em;
   margin: 0px 0 20px;   
 }
 
 .text p.big {
-   font-size: 28px;  
+   font-size: 24px;
+   line-height: 1.8em;  
 }
 
 .text ul {
-  font-size: 18px;
-  line-height: 1.8em;
   margin-bottom: 20px;
-  list-style-type: square;   
 }
 
 .text .explain {
@@ -1182,23 +1244,51 @@ h3 span.this {
   top: 40px;   
 }
 
-.explain img {
-  position: relative;
-  left: 40px;   
+#login {
+  text-align: center;
+  width: 700px;
+  position: absolute;
+  top:0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  height: 450px;
 }
 
+#login form {
+  float: none;
+  text-align: center;
+}
+
+#login form label {
+  display: none;
+}
+
+#login form input {
+  width: 400px;
+}
+
+#login form input[type="submit"] {
+  float: none;
+  border: none;
+height: auto;
+  padding: 10px 20px;
+  font-size: 13px;
+  margin: 0; 
+  position: static;
+}
 
 /* SINGLE WORD LOOKUP STYLES */
 
 #single {
   float: left;
-  width: 97%;
-  padding-left: 3%;
+  width: 100%;
 }
 
 #single #chars {
   font-size: 140px;
-  padding: 10px 0;
+  padding: 60px 0 80px;
   float: left;
   width: 100%;
   margin: 0 20px 0 0;   
@@ -1222,7 +1312,7 @@ h3 span.this {
 
 #single .pinyin {
    font-size: 22px;
-   padding: 0px 20px 0px 10px;
+   padding: 0px 20px 0px 0px;
 }
 
 #single .meaning {
@@ -1234,13 +1324,14 @@ h3 span.this {
 .actions {
   list-style-type: none;
   padding: 0;
-  margin: 0 0 0 50%;   
+  margin-bottom: 80px;
+  margin-top: 0;   
 }
 
 .actions li {
-  float: right;
-  font-size: 14px;
-  margin: 0 0 0 20px;   
+  float: left;
+  font-size: 13px;
+  margin: 0 30px 0px 0px;   
 }
 
 .actions li a span.black {

@@ -70,6 +70,7 @@ ROOT_URLCONF = 'reader.urls'
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, "templates/")
 )
+BASE_TEMPLATE = 'base.html'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -78,6 +79,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'website',
+    'users',
     'django.contrib.admin',
     'django_static',
     #'debug_toolbar',
@@ -102,7 +104,7 @@ DJANGO_STATIC_NAME_PREFIX = '/cache-forever'
 SITE_URL = 'http://chinesedictionary.io'
 SITE_NAME = 'chinesedictionary.io'
 ACCOUNT_ACTIVATION_DAYS = 7
-AUTH_PROFILE_MODULE = "website.Account"
+
 DICT_FILE_LOCATION = os.path.join(PROJECT_PATH, 'files/cedict_1_0_ts_utf-8_mdbg.txt')
 ENGLISH_WORD_LIST = os.path.join(PROJECT_PATH, 'files/en_wordlist.txt')
 
@@ -117,6 +119,17 @@ CACHES = {
     }
 }
 
+# ACCOUNTS AND USERS STUFF
+# ------------------------------------------------------
+
+ACCOUNT_ACTIVATION_DAYS = 7
+AUTHENTICATION_BACKENDS = (
+    'users.custom_authentication_backend.CustomAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/user/'
+
 
 # EMAILS
 SERVER_EMAIL = 'info@chinesedictionary.io' #important for sending error notifications 
@@ -130,13 +143,7 @@ try:
 except ImportError:
     pass
     
-LOG_FILENAME = ""
 
-import logging 
-                    
-logging.basicConfig(filename=LOG_FILENAME,
-                   level=logging.DEBUG,
-                   datefmt="%Y-%m-%d %H:%M:%S",
-                   format="%(asctime)s %(levelname)s %(name)s %(message)s",
-                  )
+
+
 

@@ -1,6 +1,18 @@
-{% include 'users/snippets/subnav.html' %}
 
-<div id="text" class="centred">
-    <h1>Your account</h1>
+<div class="text centred">
+    <p class="big">Your account ({{ user.email }})</p>
     
+    <ul>
+    {% for x in user.get_personal_words %}
+        {{ x }}
+        
+        <li>
+            {{ x.chars }} ({{ x.pinyin1 }}) {{ x.count }}
+            <br/> {{ x.pinyin1 }}
+        </li>
+    {% endfor %}
+    </ul>
+    
+    
+    <a href="{% url 'auth_logout' %}">Logout</a>
 </div>

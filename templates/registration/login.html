@@ -1,67 +1,9 @@
-{% extends "base.html" %}
-
-{% block pagetitle %}Login{% endblock %}
-
-{% block extracss %}
-
-<style type="text/css">
+{% extends base_template %}
 
 
-#text {
-  margin-top: 30px;   
-}
-
-form p {
-  width: 100%;
-  float: left;
-  margin: 0 0 15px 0;   
-}
-
-form p.help {
-  font-size: 14px;
-  text-align: left; 
-  margin: 10px 0 25px;  
-}
-
-input {
-  float: left;
-  width: 400px;   
-}
-
-input[type=submit] {
-  float: left;
-  width: auto;    
-}
-
-ul.errorlist {
-  font-size: 16px;
-  color: red;
-  list-style-type: square;   
-}
-
-</style>
-{% endblock %}
 
 {% block content %}
 
-<div id="crumbs" class="centred"><span class="arrow">&#9658;</span><a href="">Login</a>&nbsp;&nbsp;\&nbsp;&nbsp;You know what to do...</div>
 
-<div id="text" class="centred easy">
-
-{% if form.errors %}
-<p class="red">Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-<form method="post" action="{% url django.contrib.auth.views.login %}">
-{% csrf_token %}
-<p><label for="id_username">eg. john@example.com</label><input id="id_username" type="text" name="username" title="Your username" class="clearMeFocus" maxlength="30" /></p>
-<p><label for="id_password">Your password</label><input type="password" name="password" id="id_password" title="Your password" class="clearMeFocus" /></p>
-    <input type="submit" value="Login" class="login button" /></p>
-     <p class="help">If you haven't got an account, <a href="{% url registration_register %}">register here</a> - or did you <a class="forgotten" href="{% url auth_password_reset %}">forget your password?</a>?</p>   
-
-
-<input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
-</form>
-
-</div>
+{% include 'registration/login_snippet.html' %}
 {% endblock %}

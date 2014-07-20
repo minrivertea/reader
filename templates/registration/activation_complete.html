@@ -3,11 +3,9 @@
 
 {% block content %}
 
-<div class="super">
+<div class="text centred">
 
-<h3>Your account has been activated!</h3>
-<p>Thanks for taking the time to create an account. You can now <a href="/accounts/login">login</a> and start using the site.</p>
-
+<p class="big">Your account has been activated! You can now <a href="{% url 'auth_login' %}">login</a> and start using the site.</p>
 
 </div>
 {% endblock %}

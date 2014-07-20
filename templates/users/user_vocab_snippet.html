@@ -1,14 +1,7 @@
+{% load convert_timestamp %}
 
-{% include 'users/snippets/subnav.html' %}
-
-<ul id="wordlist" class="easy centred">
-    {% for w in words %}
-        <li class="wrapper" href="{% url user_vocab_item w.chars %}">
-            <span class="next">&#9658;</span>
-            <div class="line">
-                <div class="chars">{{ w.chars }}</div>
-                <div class="pinyin">{{ w.pinyin }}</div>
-            </div>
-        </li>
+<ul>
+    {% for k,v in request.user.get_personal_words.items %}
+        <li><a href="{% url 'single_word' k %}">{{ k }} <span class="small">{{ v.last_searched|convert_timestamp|timesince }}</span></a> <a class="remove" href="{% url 'remove_personal_word' k %}">x</a></li>
     {% endfor %}
 </ul>

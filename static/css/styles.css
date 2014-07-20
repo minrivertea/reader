@@ -11,7 +11,7 @@ body {
   font-size: 15px;
   line-height: normal;
   background: #eff2f3;
-  font-family: Open Sans,"STKaiti",华文楷体, sans-serif;  
+  font-family: Helvetica,"STKaiti",华文楷体, sans-serif;  
 }
 
 a:link, a:visited {
@@ -25,7 +25,7 @@ a:hover, a:active {
 
 .button, a.button, input.button {
     float: right;
-    font-family: Open Sans, sans-serif;
+    font-family: Helvetica, sans-serif;
     font-weight: 100;
     font-size: 20px;
     height: auto;
@@ -279,7 +279,7 @@ p.red {
     overflow: hidden;
     padding: 5px 5px 5px 8px;
     width: 200px;
-    font-family: Open Sans;
+    font-family: Helvetica;
 }
 
 #search label {
@@ -330,7 +330,7 @@ p.red {
 
 #header.home #search input[type="submit"] {
     border-radius: 0 5px 5px 0;
-    font-family: Open Sans;
+    font-family: Helvetica;
     font-size: 20px;
     font-weight: 100;
     height: auto;
@@ -953,19 +953,19 @@ body.color4 #tools {
 
 
 body.font1, body.font1 .char, #head ul a.font1, body.font1 #lookups div span.title, body.font1 h1, body.font1 #editable .chars {
-  font-family: Open Sans,"STKaiti",华文楷体,sans-serif;  
+  font-family: Helvetica,"STKaiti",华文楷体,sans-serif;  
 }
 
 body.font2, body.font2 .char, #head ul a.font2, body.font2 #lookups div span.title, body.font2 h1, body.font2 #editable .chars {
-  font-family: Open Sans,"STSong", 华文宋体, sans-serif; 
+  font-family: Helvetica,"STSong", 华文宋体, sans-serif; 
 }
 
 body.font3, body.font3 .char, #head ul a.font3, body.font3 #lookups div span.title, body.font3 h1, body.font3 #editable .chars {
-  font-family: Open Sans,"STFangsong", 华文仿宋, sans-serif; 
+  font-family: Helvetica,"STFangsong", 华文仿宋, sans-serif; 
 }
 
 body.font4, body.font4 .char, #head ul a.font4, body.font4 #lookups div span.title, body.font4 h1, body.font4 #editable .chars {
-  font-family: Open Sans,"STHeiti", 华文黑体, sans-serif; 
+  font-family: Helvetica,"STHeiti", 华文黑体, sans-serif; 
 }
 
 .punctuation {
