@@ -72,7 +72,7 @@ class CustomRegistrationView(RegistrationView):
         else:
             site = RequestSite(request)
         username = email
-        new_user = CustomRegistrationProfile.objects.create_inactive_user(username, email,
+        new_user = RegistrationProfile.objects.create_inactive_user(username, email,
                                                                     password, site)
         signals.user_registered.send(sender=self.__class__,
                                      user=new_user,
