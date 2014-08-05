@@ -5,3 +5,4 @@ BeautifulSoup4
 django-registration
 readability-lxml
 django-fancy-cache
+South
