@@ -1,18 +1,5 @@
-{% extends "base.html" %}
+{% extends base_template %}
 
-{% load endless django_static %}
-
-{% block extrajs %}
-<script type="text/javascript">
-</script>
-{% endblock %}
-
-
-{% block extracss %}
-<style type="text/css">
-
-</style>
-{% endblock %}
 
 {% block content %}
     {% include 'website/search_snippet.html' %}

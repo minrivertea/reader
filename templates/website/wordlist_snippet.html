@@ -1,29 +1,35 @@
+{% load convert_backslashes %}
+
+
+{% if title %}
+<div class="centred">
+<p class="big">{{ title }}</p>
+</div>
+{% endif %}
 
 {% if words %}
+
     <ul id="wordlist" class="centred">
+    
     {% for w in words %}
         <li class="wrapper" id="char{{ w.wordset }}" chars="{{ w.chars }}">
             <a data-pjax href="{% url 'single_word' w.chars %}">
+            
+            
             <span class="next">&#9658;</span>
-            <div class="line">
-                <div class="chars">{{ w.chars }}</div>
-                <div class="pinyin">{{ w.pinyin1 }}</div>
-                <div class="meaning">{{ w.meaning1 }}</div>
-            </div>
-            {% if w.meaning2 %}
-            <div class="line">
-                <div class="chars">&nbsp;</div>
-                <div class="pinyin">{{ w.pinyin2 }}</div>
-                <div class="meaning">{{ w.meaning2 }}</div>
-            </div>
-            {% endif %}
-            {% if w.meaning3 %}
-            <div class="line">
-                <div class="chars">&nbsp;</div>
-                <div class="pinyin">{{ w.pinyin3 }}</div>
-                <div class="meaning">{{ w.meaning3 }}</div>
-            </div>
-            {% endif %}
+            
+            
+            
+            <div class="chars">{{ w.chars }}</div>
+            {% for x in w.meanings %}
+                <div class="line">
+                    
+                    <div class="pinyin">{{ x.pinyin }}</div>
+                    <div class="meaning">{{ x.meaning|safe }}</div>
+                </div>
+            {% endfor %}
+            
+            
             </a>
         </li>
     {% endfor %}

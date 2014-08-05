@@ -1,0 +1,40 @@
+
+<style type="text/css">
+#search {
+ display: none;
+}
+
+</style>
+
+<div id="login" class="text centred">
+
+{% if user.is_authenticated %}
+<p class="big">You're already signed in - visit your <a href="">account page</a> here</p>
+{% else %}
+<p class="big">Login to your account</p>
+
+<p><a href="{% url 'page' 'register' %}">Don't have an account? Click here to create a new one</a></p>
+
+{% if form.errors %}
+<p class="red">Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+{% csrf_token %}
+<p>
+     <input type="text" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="clearMeFocus"/>
+     <label for="id_email">Your email address</label>
+</p>
+<p>
+     <input type="password" name="password1" id="id_password1" value="" placeholder="Type your password" class="clearMeFocus"/>
+     <label for="id_password1">Choose a password</label>
+</p>
+<p class="help small"><a href="">Forgot your password?</a></p>
+<input type="submit" value="Login" class="button" />
+</form>
+
+
+{% endif %}
+
+</div>
+

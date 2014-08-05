@@ -37,11 +37,11 @@ from forms import CustomAuthenticationForm
 from django.contrib.auth import REDIRECT_FIELD_NAME
 
 
-from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs
-from utils.redis_helper import _get_redis, _search_redis, _add_to_redis, _increment_stats
+from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs
+from utils.redis_helper import _get_redis, _search_redis, _add_to_redis
 import utils.messages as messages
 
-from srs.views import _collect_vocab
+from users.models import PersonalWordlist
 
 
 @sensitive_post_parameters()
@@ -85,20 +85,55 @@ def login(request, template_name='registration/login.html',
 
 
 def user(request):
-    user = request.user
     return _render(request, 'users/user.html', locals())
 
 
 
-def remove_personal_word(request, word):
+def view_wordlist(request):
+    return _render(request, 'users/wordlist.html', locals())
+
+
+
+def personal_word_remove(request, word):
     
-    user = request.user
-    user._remove_personal_word(word)
+    wordlist = PersonalWordlist(request.user.email)
+    wordlist.remove_word(word)
+        
+    if request.is_ajax():
+        return HttpResponse('OK')
+        
+    url = request.META.get('HTTP_REFERER','/')
+    return HttpResponseRedirect(url)
+
+
+def personal_word_reviewed(request, word):
+    
+    wordlist = PersonalWordlist(request.user.email)
+    wordlist._update_word(word, reviewed=True)
     
     if request.is_ajax():
         
-        return HttpResponse('OK')
+        snippet = "<li>OK, you'll be tested on this word soon!</li>"
+                
+        return HttpResponse(snippet)
+    
+    url = request.META.get('HTTP_REFERER','/')
+    return HttpResponseRedirect(url)
+    
+    
+def personal_word_review_exchange_word(request, word):
         
+    from srs.strategies import ReviewNew
+    strategy = ReviewNew(request.user.email)
+    new_word = strategy._exchange_word(word, exclusions=strategy.items())
+    
+    if request.is_ajax():
+        
+        snippet = render_to_string('srs/testlist_snippet.html', {'w': new_word,})
+                
+        return HttpResponse(snippet)
+        
+    
     url = request.META.get('HTTP_REFERER','/')
     return HttpResponseRedirect(url)
 

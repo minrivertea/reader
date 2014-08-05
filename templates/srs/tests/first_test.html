@@ -1,0 +1,53 @@
+
+
+
+<div class="chars">
+    {{ word.chars }}
+</div>
+
+{% if word.meanings|length > 1 %}
+<p class="help">{{ word.chars }} has {{ word.meanings|length }} pronunciations</p>
+{% endif %}
+
+
+
+<form action="{% url 'submit_answer' %}" method="post" id="item_{{ word.id }}" class="test">
+{% csrf_token %}
+
+<input id="id_characters" type="hidden" name="characters" value="{{ word.chars }}">
+
+<table>
+
+{% for y in word.meanings %}
+<tr>
+        
+    <td class="pinyin">
+        <input type="hidden" name="pinyin_{{ forloop.counter }}_answer" value="{{ y.pinyin }}" />
+        <input class="pinyin" name="pinyin_{{forloop.counter }}" id="id_pinyin_{{ forloop.counter }}" type="text" placeholder="Type numbered pinyin here eg. lin3" />  
+    </td>
+    
+    
+    <td class="meaning">
+        <input type="hidden" name="meaning_{{ forloop.counter }}_answer" id="id_meaning_{{ forloop.counter }}_answer" value="{{ y.meaning }}" />
+        
+        
+        <input name="meaning_{{ forloop.counter }}" checked="" id="id_meaning_{{ forloop.counter }}_{{ forloop.counter }}" value="{{ y.meaning }}" type="radio" />
+        
+        <label for="id_meaning_{{ forloop.counter }}_{{ forloop.counter }}">{{ y.meaning }}</label>
+        
+        
+        <input name="meaning_{{ forloop.counter }}" checked="" id="id_meaning_{{ forloop.counter }}_{{ forloop.counter|add:'1' }}" value="{{ y.alternative_meaning }}" type="radio" />
+        <label for="id_meaning_{{ forloop.counter }}_{{ forloop.counter|add:'1' }}">{{ y.alternative_meaning }}</label>
+        
+    </td>
+</tr>
+{% endfor %}
+
+
+</table>
+
+<button type="button" form="">Skip this question</button>
+<button type="submit" form="item_{{ word.id }}">Confirm</button>
+
+</form>
+

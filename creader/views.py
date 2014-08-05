@@ -41,7 +41,7 @@ from cjklib.reading import ReadingFactory
 from website.forms import SearchForm
 from website.signals import *
 
-
+from cedict.words import ChineseWord
 
 
 
@@ -52,18 +52,17 @@ def _group_words(chars, chinese_only=False):
     skip = 0
 
     for x in chars:
-    
+        
         if skip != 0:
             skip -= 1
             loop += 1
             continue
-                            
         
         obj = {
              'chars': x,
              'wordset': loop,   
         }
-        
+                
         nc = False
                 
         # IS IT A LINEBREAK
@@ -76,7 +75,6 @@ def _group_words(chars, chinese_only=False):
             obj['is_space'] = True
             nc = True
 
-            
         # IS IT PUNCTUATION
         if nc == False and _is_punctuation(x):
             obj['is_punctuation'] = True 
@@ -107,6 +105,9 @@ def _group_words(chars, chinese_only=False):
             obj['chars'] = num
             nc = True
         
+        
+        
+        
         # IS THE CHARACTER ENGLISH?            
         if nc == False and _is_english(x):            
             obj['is_english'] = True
@@ -130,24 +131,19 @@ def _group_words(chars, chinese_only=False):
 
             obj['chars'] = eng_word
             nc = True
-
         
         # IF THE CHARACTER IS NOT CHINESE
         if nc == True:
             if chinese_only == False:
                 obj_list.append(obj)
                 
-            else:
-                pass
-                
             loop += 1
             continue
 
         search_string = [x,]
-        r_server = _get_redis()
                 
-        # THIS LOOP WILL BUILD OUR CHINESE WORD - GUESSING WE WON'T HAVE MANY MORE THAN 5 CHARS
-        for i in range(1,5):
+        # THIS LOOP WILL BUILD OUR CHINESE WORD - GUESSING WE WON'T HAVE MANY MORE THAN 10 CHARS
+        for i in range(1,10):
             try:
                 next_chars = chars[loop+i]
                 if _is_punctuation(next_chars):
@@ -159,32 +155,40 @@ def _group_words(chars, chinese_only=False):
                 break
         
         
-        r = False    
-        while r == False:            
-            key = "ZH:%sC:%s" % (len("".join(search_string)), "".join(search_string))
+        r_server = _get_redis()
+        r = False   
+        
+        
+        while r == False and len(search_string) > 0:            
+            
+            key = "ZH:%sC:%s" % ( len(search_string), "".join(search_string))
             r = r_server.exists(key)
-            if r == True:
+            
+            if r:
                 break
             else:
                 try:
                     search_string.pop()
                 except IndexError:
                     pass
+        
 
                 
-        
-        key = "ZH:%sC:%s" % (len("".join(search_string)), "".join(search_string))
-        word = _search_redis(key)
+        # initialise a ChineseWord object and add it to our object_list
+        the_string = "".join(search_string)
+        word = ChineseWord(chars=the_string)
 
-        for k, v in word.iteritems():
-            obj[k] = v        
+        obj_list.append(word)
         
-        obj_list.append(obj)
+        # tells us how many characters need to be skipped before we start searching again
+        # because maybe this word included the subsequent 3 chars, so let's not searhc them
+        # again
         skip += (len(search_string)-1)
-        
         loop += 1
+        
      
     return obj_list  
+    
     
 def readabilityParser(html):
     text = Document(html).summary()

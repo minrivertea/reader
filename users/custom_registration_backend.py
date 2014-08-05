@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 from registration import signals
-from registration.models import RegistrationProfile
+from registration.models import RegistrationProfile, RegistrationManager
 from registration.views import RegistrationView 
 from registration.forms import RegistrationForm
 
@@ -34,6 +34,8 @@ class CustomRegistrationForm(forms.Form):
             raise forms.ValidationError(_("An account with that email already exists."))
         else:
             return self.cleaned_data['email']
+    
+    
 
     def clean(self):
         """
@@ -47,8 +49,8 @@ class CustomRegistrationForm(forms.Form):
             if self.cleaned_data['password1'] != self.cleaned_data['password2']:
                 raise forms.ValidationError(_("The two password fields didn't match."))
         return self.cleaned_data
-        
-        
+       
+
 
 class CustomRegistrationView(RegistrationView):
     """
@@ -70,7 +72,7 @@ class CustomRegistrationView(RegistrationView):
         else:
             site = RequestSite(request)
         username = email
-        new_user = RegistrationProfile.objects.create_inactive_user(username, email,
+        new_user = CustomRegistrationProfile.objects.create_inactive_user(username, email,
                                                                     password, site)
         signals.user_registered.send(sender=self.__class__,
                                      user=new_user,

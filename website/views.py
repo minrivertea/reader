@@ -28,11 +28,10 @@ from django.template.loader import render_to_string
 from django.utils.encoding import smart_str, smart_unicode
 
 
-from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _get_crumbs, _update_crumbs, _is_pinyin, _is_ambiguous, _clean_pinyin
-from utils.redis_helper import _get_redis, _search_redis, _add_to_redis, _increment_stats
+from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs, _is_pinyin, _is_ambiguous, _clean_pinyin
+from utils.redis_helper import _get_redis, _search_redis, _add_to_redis
 import utils.messages as messages
 
-from srs.views import _collect_vocab
 
 from creader.views import _group_words
 
@@ -43,6 +42,8 @@ from fancy_cache import cache_page
 
 from website.forms import SearchForm
 from website.signals import *
+
+from cedict.words import ChineseWord
 
 
 from nginx_memcache.decorators import cache_page_nginx
@@ -62,7 +63,7 @@ def _problem(request, problem=None):
 def search(request, search_string=None, title='Search', words=None):
     
     r_server = _get_redis()
-    
+        
     # replace search string underscores with spaces
     if search_string:
         search_string = search_string.replace('_', ' ')
@@ -99,19 +100,20 @@ def search(request, search_string=None, title='Search', words=None):
         
         # CLEAN UP THE INCOMING PINYIN AND MAKE A KEY
         string = _clean_pinyin(search_string).strip()  
-        key = "PY:%sW:%s" % (len(string.split(' ')), string.replace(' ', '_'))       
+        key = settings.PINYIN_WORD_KEY % (len(string.split(' ')), string.replace(' ', '_'))       
         
         # IF THERE'S NO NUMBERS AT ALL IN THE STRING MAKE A NEW KEY:        
         if filter(lambda x: x not in '12345', string) == string:
-            key = "PY:%sW:%s?" % (len(string.split(' ')), string.replace(' ', '?_'))
+            key = settings.PINYIN_WORD_KEY % (len(string.split(' ')), string.replace(' ', '?_'))
                                 
-        keys = r_server.keys(key)
+        keys = r_server.scan_iter(key)
+        
         
         # SPECIAL FILTER TO CHECK IF SOMETHING HAS NO RESULTS AND
         # THE USER ENTERED A 'U' INSTEAD OF A 'V' (EG. NV HAI ZI)
         if 'u' in string and keys == []:
             key = key.replace('u', '?')
-            keys = r_server.keys(key)
+            keys = r_server.scan_iter(key)
             
         words = []
         for k in keys:
@@ -130,7 +132,7 @@ def search(request, search_string=None, title='Search', words=None):
     # IF THE SEARCH IS ENGLISH, RETURN ENGLISH
     if _is_english(search_string):
         
-        key = "EN:%sW:%s" % (len(search_string.split(' ')), search_string)
+        key = settings.ENGLISH_WORD_KEY % (len(search_string.split(' ')), search_string)
         words = []
         words.append(_search_redis(key))
         
@@ -142,74 +144,50 @@ def search(request, search_string=None, title='Search', words=None):
     #    from creader.views import text                
     #    return text(request, words=search_string)
     
+    
     if not words:
         things = _split_unicode_chrs(search_string)
         words = _group_words(things)        
-
-
+    
+        
     # IF THE USER WAS LOGGED IN, RECORD IT IN THEIR 'SAVED WORDS'
     if request.user.is_authenticated():
         for x in words:
             word_searched.send(
                 sender=word_searched, 
-                word=x, 
+                word=x.chars, 
                 time=datetime.datetime.now(), 
                 user_id=request.user.email
             )
     
     
-    title = "Search"
-    subtitle = "%s" % search_string
+     
+    # if there's only 1 word, take us straight to the single word definition
+    if len(words) == 1:
+        word = words[0]
+        url = reverse('single_word', args=[word])
+        return HttpResponseRedirect(url)
+    
         
     return _render(request, 'website/wordlist.html', locals())
 
 
-def search_contains(request, search_string):
-    
-    key = "*C:*%s*" % search_string
-    
-    r_server = _get_redis()
-    keys = r_server.keys(key)
-    
-    words = []
-    for x in keys:
-        word = _search_redis(x)
-        try:
-            url = reverse('single_word', args=[word['chars']])
-            words.append(word)
-        except:
-            pass
+def search_contains(request, word):
 
-    
-    words =  sorted(words, reverse=False, key=lambda thing: len(thing))
-    title = "Search"
-    subtitle = "Showing %s words containing <strong>%s</strong>" % (len(words), search_string)
-    _update_crumbs(request)
+    words = ChineseWord()._contains(word)
     
     return _render(request, 'website/wordlist.html', locals())
 
 
-def search_beginning_with(request, search_string):
-    key = "*C:%s*" % search_string
-    r_server = _get_redis()
-    keys = r_server.keys(key)
+def search_starts_with(request, word):
     
-    words = []
-    for x in keys:
-        word = _search_redis(x)
-        words.append(word)
-
-    
-    words =  sorted(words, reverse=False, key=lambda thing: len(thing))
-    title = "Search"
-    subtitle = "Showing words beginning with %s" % search_string
-    _update_crumbs(request)
+    words = ChineseWord()._starts_with(word)
     
     return _render(request, 'website/wordlist.html', locals())     
     
+    
 @cache_page_nginx        
 def home(request):
-    _update_crumbs(request)                
     return _render(request, 'website/home.html', locals())
 
 
@@ -218,7 +196,6 @@ def home(request):
 def page(request, slug):
     template = 'website/pages/page.html'
     snippet = 'website/pages/%s.html' % slug
-    _update_crumbs(request)
     
     return _render(request, template, locals(), page=slug)
 

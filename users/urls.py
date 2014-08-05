@@ -12,7 +12,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^srs/', include('srs.urls')),
     url(r'^$', user, name="user"),
+    
     
     # django-registration urls
     url(r'^register/$', CustomRegistrationView.as_view(), name='registration_register'),
@@ -39,9 +41,21 @@ urlpatterns = patterns('',
                            name='auth_password_reset_done'),
     
     (r'^', include('registration.backends.default.urls')),
-   
-   
-    url(r'^remove_personal_word/(?P<word>[\w-]+)$', remove_personal_word, name="remove_personal_word"),
+       
+    # personal word actions
+    url(r'^wordlist/$', view_wordlist, name="view_wordlist"),
+    url(r'^personal_word_reviewed/(?P<word>[\w-]+)$', 
+            personal_word_reviewed, 
+            name="personal_word_reviewed"
+        ),
+    url(r'^personal_word_review_exchange_word/(?P<word>[\w-]+)$', 
+            personal_word_review_exchange_word, 
+            name="personal_word_review_exchange_word"
+        ),
+    url(r'^personal_word_remove/(?P<word>[\w-]+)$', 
+            personal_word_remove, 
+            name="personal_word_remove"
+        ),
     url(r'^update_prefs/$', update_user_preferences, name='update_user_preferences'),
 )
 

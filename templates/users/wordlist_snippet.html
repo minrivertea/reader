@@ -1,0 +1,32 @@
+{% load convert_timestamp %}
+
+<style type="text/css">
+table td {
+  padding: 10px 15px;
+  border: 1px solid #e1e1e1;
+  border-width: 0 1px 1px 0;
+     
+}
+</style>
+
+<div class="text centred" id="account">
+
+<table cellspacing="0">
+        
+    {% for k,v in request.user.get_personal_words.words.items %}
+        <tr>
+            <td>{{ k }}</td>
+            <td>created on {{ v.created|convert_timestamp }}</td>
+            <td>Next {{ v.next_action }} on {{ v.next_action_date|convert_timestamp }}</td>
+            <td>
+                {% if v.test_date %}
+                Pinyin {% if v.pinyin_pass %} Pass{% else %} Fail{% endif %}<br/>
+                Meaning {% if v.meaning_pass %} Pass{% else %} Fail{% endif %}
+                {% endif %}
+            </td>
+            <td><a class="remove" href="{% url 'personal_word_remove' k %}">x</a></td>            
+        </tr>
+    {% endfor %}
+</table>
+
+</div>

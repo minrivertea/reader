@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf8 -*-
+
 # Django settings for reader project.
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
@@ -36,10 +39,17 @@ USE_L10N = False
 
 SECRET_KEY = ''
 
+# STATIC FILES
+# ------------------------------------------------------
 
-MEDIA_ROOT = os.path.join(PROJECT_PATH, 'static')
-MEDIA_URL = '/'
+MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+STATIC_ROOT = ''
 ADMIN_MEDIA_PREFIX = '/media/'
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_PATH, "static"),
+)
 
 
 
@@ -72,32 +82,29 @@ TEMPLATE_DIRS = (
 )
 BASE_TEMPLATE = 'base.html'
 
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+    'django.contrib.admin',
+    'django.contrib.staticfiles',
+    # 'django_static',
+    # 'debug_toolbar',
+    # 'endless_pagination',
+    'registration',
     'website',
     'users',
-    'django.contrib.admin',
-    'django_static',
-    #'debug_toolbar',
-    'endless_pagination',
-    'registration',
     'cedict',
+    'srs',
+    'south',
     'nginx_memcache',
 )
 
-#ENDLESS PAGINATION SETTINGS:
-ENDLESS_PAGINATION_PER_PAGE = 200
-ENDLESS_PAGINATION_LOADING = '<img src="/images/loading.gif" />'
 
-# django-static info
-DJANGO_STATIC = True
-DJANGO_STATIC_SAVE_PREFIX = '/tmp/cache-forever'
-DJANGO_STATIC_NAME_PREFIX = '/cache-forever'
-#DJANGO_STATIC_MEDIA_URL = '//static.kandongle.me'
+
 
 
 #random stuff
@@ -105,8 +112,10 @@ SITE_URL = 'http://chinesedictionary.io'
 SITE_NAME = 'chinesedictionary.io'
 ACCOUNT_ACTIVATION_DAYS = 7
 
+
 DICT_FILE_LOCATION = os.path.join(PROJECT_PATH, 'files/cedict_1_0_ts_utf-8_mdbg.txt')
 ENGLISH_WORD_LIST = os.path.join(PROJECT_PATH, 'files/en_wordlist.txt')
+
 
 # CACHE SETTINGS
 CACHE_NGINX = True
@@ -131,8 +140,28 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = '/user/'
 
 
+
+# KEYS FOR REDIS SEARCHING
+# ------------------------------------------------------
+
+CHINESE_WORD_KEY = "ZH:%sC:%s" # eg. ZH:2C:好吧 (the middle '2C' means how many characters)
+PINYIN_WORD_KEY = "PY:%sW:%s"
+ENGLISH_WORD_KEY = "EN:%sW:%s"
+
+
+
+# RANDOM SETTINGS FOR THE SRS
+# ------------------------------------------------------
+
+DEFAULT_REVIEW_TEST_INTERVAL = 3 # days
+
+
+
 # EMAILS
+# ------------------------------------------------------
+EMAIL_BASE_HTML_TEMPLATE = ''
 SERVER_EMAIL = 'info@chinesedictionary.io' #important for sending error notifications 
+SITE_EMAIL = ''
 EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''

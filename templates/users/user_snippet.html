@@ -1,18 +1,15 @@
 
-<div class="text centred">
-    <p class="big">Your account ({{ user.email }})</p>
+<div class="text centred" id="account">
+    <p class="big">Your account ({{ user.email }}) - <span class="small"> <a href="{% url 'auth_logout' %}">Logout</a></span></p>
     
-    <ul>
-    {% for x in user.get_personal_words %}
-        {{ x }}
+    <div class="box">
+        <a href="{% url 'test_home' %}"><span class="link"></span></a>
+        Tests
+    </div>  
+    
+    <div class="box">
+        <a href=""><span class="link"></span></a>
+        Update your preferences
+    </div>    
         
-        <li>
-            {{ x.chars }} ({{ x.pinyin1 }}) {{ x.count }}
-            <br/> {{ x.pinyin1 }}
-        </li>
-    {% endfor %}
-    </ul>
-    
-    
-    <a href="{% url 'auth_logout' %}">Logout</a>
 </div>

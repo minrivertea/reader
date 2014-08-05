@@ -19,6 +19,26 @@ from cjklib.reading import ReadingFactory
 
 # this sends out the first 'review' email after the order was shipped.
 class Command(NoArgsCommand):
+    """ 
+    We're going to build the Chinese character dictionary. There's around
+    100k individual entries. Each one has a key like "ZH:2C:好吧" and corresponds
+    to a value like this:
+    
+    {
+        'chars': '好吧',        
+        'trad_chars': '好吧',
+        'hsk_level': '', # leave empty for the moment
+        'meanings': [
+            {'pinyin': 'hao ba', 'meaning': 'okay, yes', 'weight':'1'},
+            {'pinyin': 'hao ba', 'meaning': 'I suppose so', 'weight':'2'}            
+        ]
+    }
+    
+    This is all coded into JSON and then dumped as a string into Redis, so that
+    we can easily JSON.loads it on the way out and use it nicely.    
+    """
+    
+    
     help = 'Builds the Chinese-English Dictionary.'
 
     
@@ -57,12 +77,20 @@ class Command(NoArgsCommand):
                     sourceOptions={'toneMarkType': 'numbers', 'yVowel': 'v',
                     'missingToneMark': 'fifth'})
                 meanings = line[(line.index('/')+1):(line.rindex('/'))]               
+                
+                # clean the characters a bit
+                characters = new[1]
+                
+                # remove ugly commas from characters
+                if '，' in characters:
+                    characters = characters.replace('，', '')
+                
+                
                 py_key = "PY:%sW:%s" % (len(num_pinyin.split(' ')), num_pinyin.replace(' ', '_'))
-                char_key = "ZH:%sC:%s" % ((len((new[1]))/3), new[1]) 
+                char_key = "ZH:%sC:%s" % ((len((characters))/3), characters) 
                 
                 
                 # ADD THE PINYIN ENTRY
-                
                 r_server = _get_redis()
                 if r_server.exists(py_key):
                     object = _search_redis(py_key)
@@ -100,11 +128,10 @@ class Command(NoArgsCommand):
                             
                 else:
                     mapping = {
-                        'chars': new[1],
+                        'chars': characters,
                         'pinyin1': tonal_pinyin, 
                         'meaning1': meanings,
                         'count': 1,
-                        'id': uuid.uuid4().hex,
                     }
                     
                     r_server.hmset(char_key, mapping)

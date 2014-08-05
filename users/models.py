@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,\
     PermissionsMixin
 from django.db import models
@@ -13,17 +14,15 @@ from django.shortcuts import get_object_or_404
 import datetime
 import time
 import unicodedata
-import ast
+import json
+import uuid
 from urlparse import urlparse
 
-from django.core.signals import request_finished
-from django.utils.encoding import smart_str, smart_unicode
+from django.utils.encoding import smart_unicode
 
-from website.signals import word_searched, article_saved
-from creader.views import _group_words 
-from utils.redis_helper import _search_redis, _get_redis
-from utils.helpers import _split_unicode_chrs
-
+from website.signals import word_searched, word_viewed
+from utils.redis_helper import _get_redis
+from cedict.words import ChineseWord
 
 
 class CustomUserManager(BaseUserManager):
@@ -70,6 +69,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     objects = CustomUserManager()
+    
+    # preferences
+    test_items_limit = models.IntegerField(default=5)
+    review_interval = models.IntegerField(default=1) # days between search and 1st review
+
 
     USERNAME_FIELD = 'email'
 
@@ -79,166 +83,236 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_absolute_url(self):
         return "/users/%s/" % urlquote(self.pk)
-
-    def get_full_name(self):
-        """
-        Returns the first_name plus the last_name, with a space in between.
-        """
-        full_name = '%s %s' % (self.first_name, self.last_name)
-        return full_name.strip()
-
-    def get_short_name(self):
-        "Returns the short name for the user."
-        return self.first_name
+        
     
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    # define here other needed methods
-    def get_personal_words(self):
-                
-        key = "PW:%s" % self.email
-        wordlist = ast.literal_eval(_search_redis(key)['wordlist'])
-        
+    def get_personal_words(self):        
+        wordlist = PersonalWordlist(self.email)                
         return wordlist
     
     def _remove_personal_word(self, word):
         
         # GET THE EXISTING WORDLIST
-        key = "PW:%s" % self.email
-        wordlist = ast.literal_eval(_search_redis(key)['wordlist'])
-        
-        to_delete = []
-        for x in wordlist:
-            if word == smart_unicode(x):
-                to_delete.append(x)
-        
-        for x in to_delete:
-            del wordlist[x]
-                
-        # UPDATE REDIS
-        r_server = _get_redis()
-        mapping = {
-            'wordlist': wordlist,
-        }
-        r_server.hmset(key, mapping) 
+        wordlist = PersonalWordlist(self.email)
+        wordlist.remove_word(word) 
         
         # RETURN THE UPDATED WORDLIST
         return wordlist
-        
-        
-    
-    def get_personal_articles(self):
-        key = 'AL:%s' % self.user.email
-        try:
-            articleslist = _search_redis(key)['articlelist']
-        except:
-            articleslist = ''
-        
-        obj_list = []
-        urls = []
-        loop = 0
-        for x in articleslist.split(','):
-            key = "url:%s" % x.strip()
-            a = _search_redis(key)
-            try:
-                if a['url'] in urls:
-                    pass
-                else:
-                    urls.append(a['url'])
-                    a['date'] = datetime.datetime.fromtimestamp(float(a['timestamp'].strip()))
-                    a['shorturl'] = urlparse(a['url']).netloc
-                    obj_list.append(a)
-            except:
-                pass
-                
-        return obj_list
-        
 
+
+
+        
+class PersonalWordlist(object):
+    """
+    The personal word list is stored in redis with a key that is
+    the user's email address. The corresponding value that redis provides
+    is a dictionary of words.    
+    """
+    
+    
+    def __init__(self, email):
+        self.key = "PW:%s" % email
+        self.user = User.objects.get(email=email)
+        
+        r_server = _get_redis()
+        
+        # WARNING: uncomment this to completely clear wordlist for testing
+        # r_server.delete(self.key)
+                
+        if r_server.get(self.key):         
+            self.words = json.loads(r_server.get(self.key))
+        else:
+            self.words = {}
+            self._update_list(self.words)
+                        
+    
+    def count(self):
+        """ Returns the length of the wordlist (ie. how many personal words)"""
+        return len(self.words)
+        
+                                
+    def _update_list(self, wordlist):
+        """ Take a dictionary of words and update the whole list"""
+        
+        r_server = _get_redis() 
+        r_server.set(self.key, json.dumps(wordlist))
+    
+    
+    def get_items(self, review=False, test=False, timestamp=None):
+                
+        action = None
+        if review:
+            action = 'review'
+        if test:
+            action = 'test'
+        
+        items = []
+        for x,v in self.words.iteritems():
+            v['chars'] = x
+            
+            if action:
+                if v['next_action'] != action:
+                    continue
+                
+            if timestamp:
+                if v['next_action_date'] > timestamp:
+                    continue
+
+            items.append(v)
+             
+                    
+        return items
+       
+    def _add_word(self, word):
+        """ Add a word to the personal wordlist """
+        
+        wl = self.words
+        word = smart_unicode(word)
+                
+        if word in wl:
+            values = wl[word]
+            now = datetime.datetime.now()
+            gap = time.time() - time.mktime((now - datetime.timedelta(hours=2)).timetuple())
+            this_gap = time.time() - values['search_date']
+            if this_gap > gap:
+                values['last_search'] = time.time() # now
+                values['search_count'] += 1
+                wl[word] = values
+            
+        else:
+            # we're creating a new word here, so this is the 
+            # base for all items in the personal wordlist
+            values = {}
+            values['created'] = time.time() # now
+            values['search_date'] = time.time()  # now
+            values['search_count'] = 1
+            
+            values['view_date'] = time.time()  # now
+            values['view_count'] = 1
+            
+            values['review_date'] = None
+            values['review_count'] = 0
+            
+            values['priority'] = 1 # this is how 'valuable' this word is
+            
+            # assume this word hasn't been tested and not passed anything
+            values['test_date'] = ''
+            values['character_pass'] = False
+            values['pinyin_pass'] = False
+            values['meaning_pass'] = False
+            
+            # define here what and when the next action should come
+            values['next_action'] = 'review'
+            one_day_later = datetime.datetime.now() + datetime.timedelta(days=1)
+            values['next_action_date'] = time.mktime( ( one_day_later ).timetuple() )
+            
+            wl[word] = values          
+        
+                        
+        self._update_list(wl)
+    
+    
+    def remove_word(self, word):
+        
+        wl = self.words
+        word = smart_unicode(word)
+        
+        if word in wl:
+            del wl[word]
+        
+        self._update_list(wl)
+        
+            
+    def _update_word(self, word, view_count=False, reviewed=False, test_results=None):
+        
+        wordlist = self.words
+        word = smart_unicode(word)
+        
+        if word in wordlist:
+        
+            # update the number of times the word has been viewed
+            if view_count:
+                wordlist[word]['view_count'] += 1
+            
+            
+            # update the number of times the word has been reviewed
+            if reviewed:
+                
+                wordlist[word]['review_count'] += 1
+                wordlist[word]['review_date'] = time.time()
+                wordlist[word]['next_action'] = 'test'
+                
+                three_days_later = datetime.datetime.now() + datetime.timedelta(days=3)
+                wordlist[word]['next_action_date'] = time.mktime( ( three_days_later ).timetuple() )
+            
+            
+            # UPDATE THE WORD BASED ON A TEST THEY JUST COMPLETED
+            if test_results:
+                
+                # get the last test/review date:
+                if wordlist[word]['test_date'] == '':
+                    last_action_date = wordlist[word]['review_date']
+                else:
+                    if wordlist[word]['review_date'] > wordlist[word]['test_date']:
+                        last_action_date = wordlist[word]['review_date']
+                    else:
+                        last_action_date = wordlist[word]['test_date']
+                
+                
+                passed = True
+                for k,v in test_results.iteritems():
+                    wordlist[word][k] = v
+                    if v == False:
+                        passed = False
+                
+                if passed:
+                    wordlist[word]['next_action'] = 'test'
+                    
+                    today = (datetime.datetime.fromtimestamp(int(time.time())))
+                    last_date = (datetime.datetime.fromtimestamp(int(last_action_date)))
+                    new_gap = datetime.timedelta(seconds=(today-last_date).total_seconds() * 2.6)
+                    new_date = datetime.datetime.now() + new_gap
+                    wordlist[word]['next_action_date'] = time.mktime( ( new_date ).timetuple())
+                
+                else:
+                    wordlist[word]['next_action'] = 'review'
+                    tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+                    wordlist[word]['next_action_date'] = time.mktime((tomorrow).timetuple())
+                
+            
+            self._update_list(wordlist)
+            
+        else:
+            self.add_word(word)                
+                    
 
 
 # SIGNAL HANDLERS
 # -----------------------------------------------
-
-# SAVE AN ARTICLE IN THE USERS PERSONAL ARTICLE LIST:
-def save_article(sender, **kwargs):
-    try:
-        account = get_object_or_404(User, pk=kwargs['user_id']).get_profile()
-    except:
-        return     
-        
-    r_server = _get_redis()
-    key = "AL:%s" % account.user.email 
-    
-    if r_server.exists(key):
-        current_list = _search_redis(key)['articlelist']
-        
-        new_value = ",".join((current_list, kwargs['article_id']))
-    else:
-        new_value = kwargs['article_id']
-    
-    
-    mapping = {
-        'articlelist': new_value,
-    }
-    
-    r_server.hmset(key, mapping)
-    
-article_saved.connect(save_article)    
-    
-           
-
-
-# SAVES A SEARCHED WORD TO THE USER'S PERSONAL WORD LIST
-def save_word(sender, **kwargs):
+          
+def _word_searched(sender, **kwargs):
     """
     This takes a single word from the search function and adds
     it to the user's personal words. This function doesn't split up 
     characters or words, it just accepts whatever comes in, and 
     then adds it to the dictionary.
     """
-        
-    word = kwargs['word']['chars']
-
-
-    # PREPARE CONNECTION AND THE USER'S KEY              
-    r_server = _get_redis()
-    key = "PW:%s" % kwargs['user_id']    
-    
-    # RETRIEVE THE WORDLIST FROM REDIS OR CREATE A NEW ONE
-    if r_server.exists(key):        
-        wordlist = ast.literal_eval(_search_redis(key)['wordlist'])
-    else:
-        wordlist = {}    
-    
             
-    # DECIDE IF THE WORD IS NEW OR NOT
-    if word in wordlist:
-        
-        # ONLY UPDATE VALUES IF THE LAST_SEARCHED TIME AND CURRENT TIME ARE GREATER THAN 2 HOURS
-        now = datetime.datetime.now()
-        two_hour_gap = time.time() - time.mktime((now - datetime.timedelta(hours=2)).timetuple())
-        this_gap = time.time() - wordlist[word]['last_searched']
-        
-        if this_gap > two_hour_gap:
-            wordlist[word]['last_searched'] = time.time()
-            wordlist[word]['searched_count'] += 1
-        else:
-            pass
-                
-    else:
-        # ADD IT TO THE LIST IF IT'S NEW
-        vals = {}
-        vals['created'] = time.time() # now
-        vals['last_searched'] = time.time() # now
-        vals['searched_count'] = 1
-        wordlist[word] = vals       
-    
-    mapping = {
-        'wordlist': wordlist,
-    }
-                    
-    r_server.hmset(key, mapping)        
+    pwl = PersonalWordlist(kwargs['user_id'])
+    pwl._add_word(kwargs['word'])
 
-word_searched.connect(save_word)
+
+def _word_viewed(sender, **kwargs):
+    """
+    Updates a word's view count
+    """
+    
+    pwl = PersonalWordlist(kwargs['user_id'])
+    pwl._update_word(kwargs['word'], view_count=True)
+    
+# CONNECT SOME SIGNALS TO SOME FUNCTIONS
+word_searched.connect(_word_searched, dispatch_uid=uuid.uuid4().hex)
+word_viewed.connect(_word_viewed, dispatch_uid=uuid.uuid4().hex)
 

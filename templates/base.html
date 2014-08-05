@@ -1,10 +1,10 @@
-{% load django_static %}
+{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    
+    <meta content="text/html" charset=utf-8" http-equiv="Content-Type" />
 	<meta content="en-gb" http-equiv="Content-Language" />
 	<meta content="{% block metadescription %}{% endblock %}" name="description" />
 	
@@ -19,10 +19,11 @@
 	   {% include 'static/styles.txt' %}
 	</style>
 	
-	<link rel='shortcut icon' href="{% staticfile '/images/favicon.ico' %}" type="image/x-icon" />
+	<link rel='shortcut icon' href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
 	
 	<script type="text/javascript">
 	   {% include 'static/jquery-1.8.2.min.js' %}
+
 	</script>
 	
 	<script type="text/javascript">
@@ -38,76 +39,79 @@
 
     <div id="header" class="{% if request.path == '/' %}home{% endif %}">
        <div id="header-inner" class="centred">
-        <a href="/" id="logo" data-ajax>{{ sitename }}</a>
         
-        <a href="{% url 'page' 'about' %}" title="about" data-ajax>about</a>
-        <a href="{% url 'page' 'help' %}" title="help" data-ajax>help</a>
+        <a href="/" id="logo" alt="home link" title="Home - {{ sitename }}" data-ajax><span></span></a>
+        
+        {% url 'page' 'about' as about_url %}
+            <a id="about_link" href="{{ about_url }}" title="about" class="{% if about_url in request.path %}selected{% endif %}" data-ajax>about</a>
+        
+        
         {% if user.is_authenticated %}
-        <a href="{% url 'user' %}">your account ({{ user.email }})</a>
+            {% url 'user' as user_url %}
+            <a id="account_link" href="{{ user_url }}" class="{% if user_url in request.path %}selected{% endif %}">
+            your account
+            </a>
         {% else %}
-        <a href="{% url 'auth_login' %}" data-ajax>login</a> 
-        <a href="{% url 'registration_register' %}">register</a>
+            <a id="login_link" href="{% url 'auth_login' %}" data-ajax>login</a> 
+            <a id="register_link" href="{% url 'registration_register' %}">register</a>
         {% endif %}
         
         
             
         <form id="search" data-pjax action="{% url 'search' %}" method="post" class="">
             {% csrf_token %}
-            <label for="id_char">Search for a Chinese word</label>
+            <label for="id_char"></label>
             <input id="id_char" class="clearMeFocus empty" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search for a Chinese word" >
             <input type="submit" value="Go" id="submit" class="submit button"/>
         </form>
       </div>
     </div>
-        
-    <div id="editable"></div>
     
-    <a href="#" id="sidebar_toggle" class="{% if show_sidebar %}open{% endif %}">{% if show_sidebar %}Hide{% else %}Show{% endif %} wordlist</a>
-    <div id="sidebar">
-        {% include 'users/user_vocab_snippet.html' %}
-    </div>
-        
-    <img id="loading" src="/images/loading.gif"/>
+    <img id="loading" src="{% static 'images/loading.gif' %}"/>
     
     <div id="container"> 
         {% block content %}{% endblock %}        
     </div>
     
+    
+  
+    <script type="text/javascript" src="{% static 'js/jquery-pinyin-converter.js' %}"></script>
 	<script type="text/javascript">
 
 		$(document).ready( function() {
             
-            /// TOGGLES THE SIDEBAR
-            $('#sidebar_toggle').click( function() {
-                $('body').toggleClass('sidebar');
-                var url = '';
-                if ($(this).hasClass('open')) {
-                    $(this).removeClass('open');
-                    $(this).text('Show wordlist');
-                    url = "{% url 'update_user_preferences' %}" + "?show_sidebar=False";
-                } else {
-                    url = "{% url 'update_user_preferences' %}" + "?show_sidebar=True";
-                    $(this).addClass('open');
-                    $(this).text('Hide wordlist');
-                }
-                
-                $.ajax({
-                    url: url,
-                    success: function() {
-                        /// nothing
-                    }    
-                });
-                return false;
+
+            /// ASSIGN VARIOUS CLASSES BASED ON LOCATION
+
+            var noHeaderURLs = [];
+            noHeaderURLs.push("{% url 'home' %}");
+            
+            function isInArray(value, array) {
+              return array.indexOf(value) > -1;
+            }       
+            
+            function checkHeader() {
+            	
+            	$('#header').removeClass('home');
+            	$('#header').removeClass('small_search');
+            	
+            	if ( isInArray(window.location.pathname, noHeaderURLs) ) {
+            	   $('#header').addClass('home');  
+            	} else {
+            	   $('#header').addClass('small_search');
+            	}
+            	            	      
+            }
+            
+            
+            $('#header a').click( function() {
+               $('#header a').removeClass('selected');
+               $(this).addClass('selected'); 
             });
             
-            /// IF THIS IS THE HOMEPAGE, GIVE THE HEADER THE 'HOME' CLASS
-            function checkHeader() {
-            	if (window.location.pathname == '/') {
-                    $('#header').addClass('home');  
-            	} else {
-            	    $('#header').removeClass('home');  
-            	}
-            }
+            
+            
+            
             
                  
             /// BINDS THE SEARCH FORM TO PJAX        
@@ -126,10 +130,11 @@
                };
                
                /// ADD THIS WORD TO THE WORDLIST?
-               
                return false;
 
             });
+              
+              
               
              
                         
@@ -143,16 +148,19 @@
             
             // HIDES THE LOADING SPINNER
             $(document).on('pjax:complete', function() {
+              
+              /// HIDE THE LOADING SPINNER
               $('#loading').hide();
+              
+              /// FADE IN THE MAIN CONTENT
               $('#container').fadeIn(100);
               
+              /// MAKE SURE THE CURSOR IS IN THE SEARCH BOX
               $('input#id_char').select();
-              
-              
               
             });
             
-            // MAKES SURE THE HOME PAGE LOADS PROPERLY WITH BACK/FORWARDS CLICKS
+            /// USED FOR THE BACK/FORWARDS CLICKS OR SWIPES
             window.onpopstate = function(event) {   
             	checkHeader();
         	}
@@ -160,7 +168,23 @@
             /// BIND VARIOUS LINK TO PJAX
             $(document).pjax('a, a[data-pjax]', '#container');
             
-            
+            $('form.test').submit( function() {
+               var thisForm = $(this);
+               
+               $.ajax({
+                 url: thisForm.attr('action'),
+                 data: thisForm.serialize(),
+                 type: 'POST',
+                 success: function(status) {
+                    thisForm.parent('div.test_item').slideUp(300, function() {
+                        thisForm.parent('div.test_item').remove();   
+                    });
+                 },
+               });
+               
+               return false;
+                
+            });
             
             /// HELPS AVOID FREQUENT ABORTS CAUSED BY PJAX'S LOW DEFAULT TIMEOUT
             $(document).on('pjax:timeout', function(event) {
@@ -168,37 +192,8 @@
               event.preventDefault()
             })
 
-            function clearInput() {		
-            	$('.clearMeFocus').each( function() {
-            	   if ($(this).val() == '') {
-            	      var id = $(this).attr('id');
-            	      $('label[for="'+id+'"]').show();
-            	   }
-            	});
-            	
-            	$('.clearMeFocus').focus(function() {	
-            		var id = $(this).attr('id');
-            		$('label[for="'+id+'"]').addClass('focus');
-            	});
-            	
-            	// if field is empty afterward, add text again
-            	$('.clearMeFocus').blur(function() {
-            		var id = $(this).attr('id');
-            		
-            		if($(this).val()=='') {
-            			$('label[for="'+id+'"]').removeClass('focus');
-            		}
-            	}); 
-            	
-            	$('.clearMeFocus').keyup( function() {
-            	    var id = $(this).attr('id');
-            	    if ($(this).val() != '') {
-            		  $('label[for="'+id+'"]').hide();
-            	    } else {
-            	      $('label[for="'+id+'"]').show();
-            	    }
-            	});  
-            }           
+            checkHeader();
+                      
 		});
 		
 	</script>

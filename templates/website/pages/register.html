@@ -1,0 +1,35 @@
+
+<div id="login" class="text centred">
+
+{% if user.is_authenticated %}
+<p class="big">You're already signed in - visit your <a href="">account page</a> here</p>
+{% else %}
+<p class="big">Create an account to turbo-charge your language learning.</p>
+
+<p><a href="{% url 'page' 'login' %}">Already have an account? Click here to login</a></p>
+
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+{% csrf_token %}
+<p>
+     <input type="text" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="clearMeFocus"/>
+     <label for="id_email">Your email address</label>
+</p>
+<p>
+     <input type="password" name="password1" id="id_password1" value="" placeholder="Type your password once" class="clearMeFocus"/>
+     <label for="id_password1">Choose a password</label>
+</p>
+
+<p>
+     <input type="password" name="password2" id="id_password2" value="" placeholder="Type your password twice" class="clearMeFocus"/>
+     <label for="id_password1">Type your password twice</label>
+</p>
+
+<p class="help">We take your privacy seriously. By creating an account you agree to our terms and conditions, which you should read if you're at all concerned.</p>
+<input type="submit" value="Create account" class="button" />
+</form>
+
+
+{% endif %}
+
+</div>
+

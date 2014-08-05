@@ -1,0 +1,11 @@
+You've got words you need to review/test: 
+
+{% if review_url %}
+Click this link to start reviewing your words:
+{{ site_url }}{{ review_url }}
+{% endif %}
+
+{% if test_url %}
+Click this link to start testing your words:
+{{ site_url }}{{ test_url }}
+{% endif %}

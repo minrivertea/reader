@@ -6,7 +6,7 @@ html {
 
 body {
   margin: 0;
-  padding: 0;
+  padding: 0 0 0px 0;
   color: #333;
   font-size: 15px;
   line-height: 2em;
@@ -16,31 +16,30 @@ body {
 
 a:link, a:visited {
   text-decoration: none;
-  color: #316a9b;   
+  color: #2772b2;   
 }
 
 a:hover, a:active {
    text-decoration: underline;
 }
 
-span.orange, .pinyin {
-  color: #316a9b;     
+span.orange, span.pinyin {
+  color: #2772b2;     
 }
 
 .button, a.button, input.button {
-    float: right;
+    float: left;
     font-weight: 100;
     font-size: 20px;
     height: auto;
-    width: 58px;
+    width: auto;
     padding: 9px 10px;
-
+    border: none;
     position: relative;
     top: 0px;
     color: #fff;
     text-decoration: none;
     letter-spacing: 0.5px;
-    border-color: #A53A00;
     background: #316a9b;
     font-family: Georgia, sans-serif;
 }
@@ -49,6 +48,15 @@ span.orange, .pinyin {
 a.button {
   float: left;
   width: auto;   
+}
+
+span.link {
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  position: absolute;
+  top: 0;
+  left: 0;   
 }
 
 .button:hover, a.button:hover {
@@ -69,6 +77,7 @@ hr {
   border-width: 1px 0 0 0;
   margin: 25px 0;
   float: left;
+  width: 100%;
 }
 
 .centred {
@@ -104,27 +113,71 @@ body.sidebar .centred {
     background: #f9f9f9;
 }
 
-#header.home {
-  top: 220px;
-  background: none;
-}
 
 #header-inner {
-  padding: 25px 0 25px; 
+  padding: 0px 0 0px; 
   font-size: 13px;
 }
 
 #header #logo {
- margin: 0 0px 0 0px;
- color: #222;
+  margin: 0;
+  height: 30px;
+  width: 30px;
+  display: none;    
+}
+
+#header #logo span {
+    background: url("/static/images/sprite.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    display: block;
+    height: 21px;
+    position: relative;
+    top: 4px;
+    width: 28px;
+}
+
+#header.home #logo {
+  display: none;    
 }
 
 #header a, #header .expandable {
-  float: left;
-  padding: 0px 10px; 
+    border-right: 1px solid #f1f1f1;
+    float: left;
+    padding: 10px 15px;
+    position: relative;
 }
 
+#header #about_link, #header #login_link, #header #register_link, #header #account_link {
+  float: right;
+}
 
+#header a.selected {
+    background: none repeat scroll 0 0 #f1f1f1;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #e1e1e1;
+    box-shadow: 1px 1px 0 #e1e1e1 inset;
+    color: #333;
+    text-shadow: 0 1px 0 #fff;
+}
+
+#header a.selected:before {
+    border-color: #f1f1f1 transparent;
+    border-style: solid solid none solid;
+    border-width: 15px 15px 0 15px;
+    content: " ";
+    display: block;
+    height: 0;
+    left: 50%;
+    margin-left: -15px;
+    position: absolute;
+    bottom: -15px;
+    width: 0;
+    z-index: 10;
+}
+
+#header.home #search {
+  position: absolute;
+  top: 300px;   
+}
 
 #search {
     float: left;
@@ -155,126 +208,61 @@ body.sidebar .centred {
     overflow: hidden;
     font-family: Georgia, sans-serif;
     font-size: 18px;
-    
     height: auto;
     padding: 13px 15px;
     position: relative;
-    width: 85%;
+    width: 82%;
 }
 
-#search label {
-    display: none;
-    font-size: 12px;
+#header.small_search #search {
+  width: 75%;
+  float: left;
+  margin: 0;   
+}
+
+#header.small_search #search input#id_char {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    float: left;
+    font-size: 13px;
+    padding: 19px 10px 17px 40px;
+    width: 80%;
+    color: #999;
+}
+
+#header.small_search #search input#id_char:focus {
+  color: #222;   
+}
+
+#header.small_search #search label[for="id_char"] {
+    background: url("/static/images/sprite.png") no-repeat scroll -28px 1px #f9f9f9;
+    content: " ";
+    display: block;
+    height: 22px;
     left: 5px;
-    padding: 5px 5px;
     position: absolute;
-    text-align: left;
-    color: #666;
-}
-
-#search label.focus {
-   color: #d1d1d1;   
+    top: 13px;
+    width: 22px;
+    z-index: 1000;
 }
 
 
-
+#header.small_search #search input.submit {
+    display: none;
+    background: none repeat scroll 0 0 transparent;
+    border-radius: 0;
+    color: #333;
+    float: right;
+    font-size: 13px;
+    padding: 16px 10px;
+    width: 10%;
+}
 
 #header.home #search label.focus {
   color: #e1e1e1;   
 }
 
 /* END HEADER STYLES */
-
-/* SIDEBAR STYLES */
-
-#sidebar_toggle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: #1f4e77;
-  color:  #bad2e6;
-  padding: 10px 15px;
-  font-size: 11px; 
-  line-height: 1em;
-  text-align: center; 
-}
-
-body.sidebar #sidebar_toggle {
-  right: 200px;   
-}
-
-#sidebar {
-  position: fixed;
-  top: -50px;
-  padding-top: 50px;
-  right: -50px;
-  height: 105%;
-  width: 250px;
-  background: #316a9b;
-  display: block;
-  box-shadow: inset 0 1px 15px #0c3050;
-  border-left: 2px solid #1f4e77;
-  display: none;
-}
-
-body.sidebar #sidebar {
-  display: inline-block;   
-}
-
-#sidebar ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;   
-}
-
-#sidebar ul li {
-  width: 100%;
-  float: left;
-  position: relative;   
-}
-
-#sidebar ul li a {
-  border-bottom: 1px solid #4175a2;
-  padding: 5px 5% 5px 30px;
-  width: 90%;
-  float: left;
-  color: #bad2e6;
-}
-
-#sidebar ul li a:hover {
-  color: #fff;   
-}
-
-#sidebar ul li:hover a.remove {
-  display: inline-block;   
-}
-
-#sidebar ul li a.remove {
-    border: medium none;
-    bottom: 0;
-    float: none;
-    font-family: Arial;
-    font-size: 11px;
-    font-weight: bold;
-    height: 15px;
-    line-height: 1em;
-    margin: auto 0;
-    padding: 0;
-    position: absolute;
-    left: 12px;
-    top: 0;
-    width: 10px;
-    display: none;
-    color: #bad2e6;
-}
-
-#sidebar ul li a.remove:hover {
-  color: #fff;   
-}
-
-/* END SIDEBAR STYLES */
-
-
 
 
 /* FORMS STYLES */
@@ -328,12 +316,163 @@ label.focus {
   color: #d1d1d1;   
 }
 
+/* END FORMS */
 
-#session-searches {
+/* ACCOUNT PAGE */
 
+#account .box {
+  float: left;
+  width: 180px;
+  text-align: center;
+  background: #f6f6f6;
+  padding: 50px 20px;
+  position: relative;
+  margin: 0 10px 10px 0;
+}
+
+/* END ACCOUNT PAGE  */
+
+
+
+/* TEST STYLES */
+
+#testlist {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+#testlist li {
+  float: left;
+  width: 225px;
+  height:200px; 
+  border: 1px solid #e1e1e1;
+  background: #f6f6f6;
+  padding: 0px;
+  margin: 0 10px 10px 0;
+  text-align: center;  
+  position: relative;
+}
+
+#testlist li .chars {
+  float: left;
+  height: 40px;
+  padding: 0px 5%;
+  width: 90%;
+  font-size: 45px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+#testlist li .pinyin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 30px;
+  margin: auto;
+  padding: 70px 0 0 ;
+  width: 100%;
+  font-size: 15px;
+}
+
+#testlist li .meaning {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+  height: 100%;
+  width: 100%;
+  display: none;
+}
+
+#testlist li .meaning table td {
+   height: 180px;
+   width: 210px;
+   padding: 10px; 
+   font-size: 12px;
+}
+
+#testlist li:hover .meaning {
+  display: inline-block;
+  cursor: pointer;   
 }
 
 
+.test_item {
+    display: none;
+    padding-top: 80px;
+}
+
+.test_item:first-child {
+    display: block;  
+}
+
+.test_item h3 {
+  font-size: 20px;
+  float: left;
+  text-align: left;
+  width: 100%;
+  margin: 0 0 10px 0;   
+}
+
+.test_item .chars {
+    font-size: 90px; 
+    width: 100%;
+    text-align: center; 
+    margin: 0 0 50px 0; 
+}
+
+.test_item .pinyin {
+  width: 400px;
+  text-align: left;
+}
+
+.test_item .pinyin input[type="text"] {
+    font-size: 15px;
+    width: 100%;   
+}
+
+.test_item .meaning {
+    width: 400px;
+    text-align: left;
+    padding: 0 0 0 30px;   
+}
+
+.test_item .meaning label {
+  float: left;
+  width: 100%; 
+  text-align: center;
+  margin: 0 0 5px 0;
+  line-height: 1em;
+   padding: 10px 0; 
+}
+
+
+.test_item .meaning:not(#foo) > input[type="radio"] {
+    opacity: 0;
+    position: absolute;   
+}
+
+.test_item .meaning:not(#foo) > label:hover {
+    cursor: pointer;
+    background: #f6f6f6;   
+}
+
+.test_item .meaning:not(#foo) > input[type="radio"] + label {
+    background: #f1f1f1;
+}
+
+.test_item .meaning:not(#foo) > input[type="radio"]:checked + label {
+    background: green;
+    color: #fff;
+}
+    
+
+
+
+/* END TEST STYLES */
 
 
 /* toolbar */
@@ -396,222 +535,6 @@ label.focus {
 }
 
 /* userblock stuff */
-
-
-#lookups {
-    height: 100%;
-    padding: 0;
-    position: absolute;
-    right: -215px;
-    width: 215px;
-    z-index: 20;
-}
-
-#lookups input {
- border: 1px solid #ECBDBD;
- padding: 5px;
- width: 100%;
- font-size: 14px;
-}
-
-
-
-#lookups div {
-  width: 100%;  
-  border-width: 0 0 1px 0;
-  color: #fff;
-  border-bottom: 1px solid #e1e1e1;
-  padding: 10px 10px 10px 15px;
-  color: #333;
-  position: relative;
-  opacity: 1;
-  font-size: 11px;
-}
-
-#lookups div:first-child {
-  border-top: 1px solid #e1e1e1;   
-}
-
-#lookups div.selected {
-   opacity: 1;
-   z-index: 3;   
-}
-
-#lookups div span.title, #lookups div span.editable {
-  font-weight: normal;
-  font-size: 12px;
-  margin-right: 10px; 
-  display: none; 
-}
-
-#lookups div .pinyin {
-  text-transform: lowercase;
-  margin-right: 10px;
-}
-
-#lookups div span.editable {
-  color: #333;  
-}
-
-#lookups div:hover {
-  background: #fff;
-  cursor: pointer; 
-  position: relative;
-  left: -10px;
-}
-
-#lookups div a.add, #lookups div a.edit, #lookups div a.more {
-  position: absolute;
-  text-indent: -300em;
-  height: 30px;
-  width: 30px;
-  padding: 0;
-  display: none;
-}
-
-#lookups div a.add {
- top: 10px; 
- left: 0;  
-}
-
-#lookups div a.edit {
- top: 45px; 
- left: 0;  
-}
-
-#lookups div a.more {
-  right: 0;
-  top: 10px;
-  height: 65px;   
-}
-
-#lookups div:hover a {
- display: block;   
-}
-
-/* displays the pop-up boxes in the userblock or tools section */
-
-.extra, #lookups div.extra {
-  position: absolute;
-  border: 1px solid #c1c1c1;
-  display: none;
-  background: #fff;
-  color: #333;
-  padding: 15px 20px;
-  z-index: 20;
-}
-
-#lookups div.extra {
-  left: -330px;
-  width: 250px;
-  height: 200px;
-  top: -35px;   
-}
-
-#head .extra {
-    font-family: Georgia,serif;
-    height: auto;
-    top: 40px;
-    width: 100%;
-}
-
-#head .extra div {
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e6e6e6;
-  margin-bottom: 15px;
-  float: left;
-  width: 48%;
-  margin-right: 2%;   
-}
-
-#head .extra div:last-child {
-   border-bottom: none;
-   margin-bottom: 0;   
-}
-
-#head .extra h4 {
-  margin: 0; 
-}
-
-#head .extra ul {
-    font-size: 20px;
-    list-style-type: none;
-    margin: 10px 0 0;
-    padding: 0;
-}
-
-#head .extra ul li {
-   float: left;
-   background: #FDFDFA;
-   margin: 0 10px 0 0;   
-}
-
-#head .extra a {
-    background: none repeat scroll 0 0 #F6F6F6;
-    border: 1px solid #C1C1C1;
-    color: #333333;
-    padding: 5px;
-    text-decoration: none;
-}
-
-#head .extra #fonts a:hover {
-  color: #333;
-  box-shadow: 0 0px 5px #c1c1c1;
-  border: 1px solid #c1c1c1;
-  background: #fff;
-}
-
-#head .extra #fonts a.selected {
-  color: #E55C12;   
-}
-
-#head .extra #colors a:hover {
-  border: 3px solid #666;
-}
-
-.selected .extra, #lookups .selected div.extra  {
-  display: block;
-  opacity: 1;
-}
-
-#head .extra #colors a {
-  padding: 2px;
-  border: 3px solid #fff;
-  box-shadow: 0 0 1px #999;
-  height: 25px;
-  width: 25px;
-  float: left;   
-}
-
-#crumbs {
-    color: #333;
-    font-size: 15px;
-    font-weight: normal;
-    padding: 0 0 20px;
-    border-bottom: 1px dashed #e1e1e1;
-}
-
-#crumbs .arrow {
-    color: #E55C12;
-    font-size: 13px;
-    margin: 0 10px;
-    display: none;
-}
-
-
-#crumbs a {
-  font-weight: bold;
-  position: relative;
-  background: #999;
-  padding: 7px 10px 5px;
-  border-radius: 8px;
-  color: #fff;
-}
-
-#crumbs span.url {
-  color: #999;
-}
-
 
 
 #colors a.color1 {
@@ -720,25 +643,20 @@ body.color4 #tools {
     padding: 0;
 }
 
-.wrapper, #previous-searches .wrapper {
+.wrapper {
   width: 96%;
-  padding: 10px 2% 10px;
+  padding: 10px 1% 10px;
   float: left;
   border-bottom: 1px solid #e1e1e1;
   position: relative;   
 }
 
-#previous-searches {
-  margin-top: 50px;
-  color: #666; 
-  font-size: 14px;  
-}
-
-#wordlist .wrapper .line, #previous-searches table td {
+#wordlist .wrapper .line {
   float: left;
   width: 100%;
   font-size: 18px;
   color: #E55C12;
+  position: relative;
 }
 
 .wrapper .line span.black {
@@ -807,12 +725,17 @@ body.color4 #tools {
     color: #333333;
     float: left;
     font-size: 30px;
-    height: 36px;
+    height: 30px;
     margin: auto;
     position: absolute;
     top: 0;
     width: 245px;
 }
+
+#wordlist .chars.long {
+   width: 800px;
+   text-align: center;  
+} 
 
 #wordlist .pinyin, #wordlist .meaning {
     float: left;
@@ -825,13 +748,19 @@ body.color4 #tools {
 
 #wordlist .pinyin {
     text-transform: lowercase;
-    left: 290px;
+    left: 230px;
     width: 200px;
+    height: 25px;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    position: absolute;
 }
 
 #wordlist .meaning {
     color: #777777;
     width: 400px;
+    left: 500px;
 }
 
 #wordlist .en .english {
@@ -856,6 +785,112 @@ body.color4 #tools {
   color: #666;
   height: auto;    
 }
+
+/* END WORDLIST STYLES */
+
+/* START TESTLIST STYLES */
+
+#wordlist.test .chars {
+  font-size: 20px;   
+}
+
+#wordlist.test .pinyin, #wordlist.test .meaning {
+  font-size: 13px;
+}
+
+#wordlist.test .chars {
+  color: #c1c1c1;   
+}
+
+#wordlist.test .pinyin {
+  left: 200px;
+  color: #c1c1c1;    
+}
+
+#wordlist.test li {
+  opacity: 0.5;   
+}
+
+#wordlist.test li:first-child, #wordlist.test li:hover {
+  opacity: 1;   
+}
+
+#wordlist.test li:first-child .chars, #wordlist.test li:hover .chars {
+  color: #333;
+  font-size: 28px;   
+}
+
+#wordlist.test li:first-child .chars.long, #wordlist.test li:hover .chars.long {
+  font-size: 20px;
+  color: #999;   
+}
+
+#wordlist.test li:first-child .pinyin, #wordlist.test li:hover .pinyin {
+  color: #2772b2;
+}
+
+#wordlist.test li:first-child .meaning, #wordlist.test li:hover .meaning {
+  color: #555;
+}
+
+#wordlist.test .meaning {
+  left: 400px;
+  width: 350px;
+  color: #c1c1c1;  
+}
+
+#wordlist.test a.action {
+    background: none repeat scroll 0 0 #e1e1e1;
+    border-radius: 15px;
+    bottom: 0;
+    display: block;
+    height: 37px;
+    margin: auto 0;
+    position: absolute;
+    right: 10px;
+    top: 0;
+    width: 37px;
+    z-index: 1000;
+}
+
+
+#wordlist.test a.action:hover {
+  background: #2772b2;   
+}
+
+#wordlist.test a.action.exchange {
+    background: url("/static/images/sprite.png") no-repeat scroll -48px 0 transparent;
+    height: 20px;
+    right: 55px;
+    width: 22px;
+}
+
+#wordlist.test a.action.exchange:hover {
+  background-position: -68px 0;
+}
+
+#wordlist.test a.action.okay {
+  background: url('/static/images/sprite.png') no-repeat scroll 0 -21px transparent;   
+}
+
+#wordlist.test a.action.okay:hover {
+  background-position: -37px -21px;   
+}
+
+#wordlist.test a.action span {
+  position: absolute;
+  top: -6px;
+  left: 3px;
+  font-weight: normal;
+  font-size: 20px;
+  color: #c1c1c1;
+}
+
+#wordlist.test a.action:hover span {
+  color: #fff;   
+}
+
+/* END TESTLIST STYLES */
 
 
 
@@ -1202,13 +1237,13 @@ h3 span.this {
   text-align: center;   
 }
 
-.text p {
+.text p, p {
   margin: 0px 0 20px;   
 }
 
-.text p.big {
+.text p.big, p.big {
    font-size: 24px;
-   line-height: 1.8em;  
+   line-height: 1.8em;
 }
 
 .text ul {
@@ -1318,24 +1353,27 @@ height: auto;
 #single .meaning {
   font-size: 22px;
   color: #666;
-  padding: 0px 10px;
+  padding: 0px 0px;
+  margin: 0 0 20px 0;
 }
 
-.actions {
-  list-style-type: none;
-  padding: 0;
-  margin-bottom: 80px;
-  margin-top: 0;   
+.tabs {
+     
 }
 
-.actions li {
+.tabs .tab {
   float: left;
-  font-size: 13px;
-  margin: 0 30px 0px 0px;   
+  background: #f1f1f1;
+  padding: 5px 10px;
+  border: 1px solid #e1e1e1;
+  margin: 0 3px 0 0; 
+  font-size: 12px;  
 }
 
-.actions li a span.black {
-  color: #000;   
+.tabs .tab.selected {
+  border-bottom: none;
+  background: #fff; 
+  color: #000;  
 }
 
 /* FOR DJANGO-ENDLESS */

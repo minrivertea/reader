@@ -1,12 +1,8 @@
-{% extends "base.html" %}
-
-{% load django_static %}
+{% extends base_template %}
 
 {% block extrajs %}
 <script type="text/javascript">
-$(document).ready( function() {
- clearInput();
-});
+
 </script>
 {% endblock %}
 
@@ -19,5 +15,5 @@ $(document).ready( function() {
 
 
 {% block content %}
-    {% include 'users/user_vocab_item_snippet.html' %}    
+    {% include 'users/wordlist_snippet.html' %}    
 {% endblock %}

@@ -1,0 +1,85 @@
+
+<script type="text/javascript">
+
+    function bindActions() {
+        
+        /// unbind all actions
+        $('#wordlist.test .action').unbind();
+        
+        
+        /// bind specific links
+        $('#wordlist.test .action.okay').bind('click', wordOK);
+        $('#wordlist.test .action.exchange').bind('click', wordExchange);        
+    } ;
+
+    function wordOK() {
+    
+        var thisLink = $(this)
+        $.ajax({
+            url: thisLink.attr('href'),
+            success: function(data) {
+                
+                /// nicely slideup the element and remove from DOM
+                thisLink.parent('li').slideUp(300, function() {
+                    thisLink.parent('li').remove();
+                });
+            },
+        });        
+        return false;
+    } ;
+    
+    function wordExchange() {
+        var thisLink = $(this);
+        $.ajax({
+            url: thisLink.attr('href'),
+            success: function(html) {
+                
+                /// nicely replace the current LI with the new html
+                thisLink.parent('li').fadeOut(200, function() {
+                    thisLink.parent('li').replaceWith(html);
+                    bindActions(); 
+                });
+                
+                
+
+                
+            }, 
+        });
+        
+        return false;    
+    } ;
+
+
+    $(document).ready( function() {
+        
+        bindActions();
+                
+    });
+
+</script>
+
+
+
+{% with strategy.items as words %}
+
+    {% if words %}
+    
+        <div class="centred test">
+    
+            <p class="big">{{ strategy.title }}</p>
+            <p>{{ strategy.description }}</p>
+
+        </div>
+    
+        <ul id="wordlist" class="centred test">
+            {% for w in words %}
+                {% include 'srs/review_list_snippet.html' %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="big centred">{{ strategy.empty_description }}</p>
+    {% endif %}
+
+{% endwith %}
+    
+    

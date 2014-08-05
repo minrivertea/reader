@@ -1,121 +1,116 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-import string, unicodedata
-import redis
-import os
-PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 
-from utils.redis_helper import _get_redis
 
-from urlparse import urlparse
-from bs4 import BeautifulSoup
-from readability.readability import Document
-
-import uuid
-import random
-import re
-import urllib2
-import datetime
-import time
-from HTMLParser import HTMLParser
-
-from django.conf import settings
-from django.shortcuts import render_to_response, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib import auth
-from django.template import RequestContext
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.utils import simplejson
 from django.template.loader import render_to_string
-from django.utils.encoding import smart_str, smart_unicode
+from django.utils.encoding import smart_unicode
+from django.template import RequestContext
+from django.http import HttpResponse
 
-from cjklib import characterlookup
-from cjklib.reading import ReadingFactory
-from cjklib.dictionary import *
+# python
+import time
 
-from utils.helpers import _render, _is_punctuation
-from utils.redis_helper import _add_to_redis, _search_redis
+from cedict.words import ChineseWord
+from utils.helpers import _render
+from strategies import *
+from forms import SubmitAnswerForm
 
-def home(request):
-    wordlist = _collect_vocab(request.user)     
-    words = _cleanup_wordlist(request.user, wordlist['wordlist']).splitlines()
-    already_tested = []
-    ready_to_test = []
-    for x in words:
-        if int(x.split('/')[3]) == 0:
-            ready_to_test.append(x)
-        else:
-            already_tested.append(x)
-            
-    rtt_count = len(ready_to_test)
-    at_count = len(already_tested)
+
+
+def test_home(request):
+    user = request.user
+    to_review = ReviewNew(user.email)    
+    return _render(request, 'srs/test_home.html', locals())
     
-    return _render(request, 'srs/home.html', locals())
+    
+    
+def review_new(request):
+
+    strategy = ReviewNew(request.user.email)
+    
+    return _render(request, 'srs/review_new.html', locals())
 
 
-def _cleanup_wordlist(user, wordlist):
+
+def test(request):
+    
+    # get words ready to test today
+    words = request.user.get_personal_words().get_items(test=True) #, timestamp=time.time())
         
-    new_list = []
-    for x in wordlist.splitlines():
-                
-        key = "*C:%s" % x.split('/')[0]
-                
-        if x.split('/')[0] == '  ': 
-            pass
-        
-        else:
-                        
-            try:
-                _split_unicode_chrs(x.split('/')[0])
-            except:
-            
-                try:
-                    x.split('/')[3]
-                except IndexError:
-                    x = "".join((x, ' / 0'))
-                    
-                try:
-                    x.split('/')[4]
-                except IndexError:
-                    x = "".join((x, ' / 0'))
-                 
-                try:
-                    x.split('/')[5]
-                except:
-                    x = "".join((x, ' / None'))
-                
-                new_list.append(x)
-    
-    
-    final = ""
+    # now we need to decide how to test each item.
+    items = []
     count = 1
-    for x in new_list:
-        if count == 1:
-            final = "".join((final, x))
-        else:
-            final = "".join((final, ' \n', x))
-            
-        count += 1
-     
-    
-    key = "PW:%s" % user.email
-    values = {'wordlist': final,}
-    _add_to_redis(key, values, user)
-    
-    return final
-
-def _collect_vocab(user):
-    
-    # get the whole users' wordlist from redis:
-    userkey = "PW:%s" % user.email
-    r_server = _get_redis()
-    words = r_server.hgetall(userkey)
+    for x in words:
+        html = None        
+        # is this the first time we've tested it?
+        if not x['test_date']:
+            word = ChineseWord(chars=x['chars'])
+            word.id = count
+            for m in word.meanings:
+                m['alternative_meaning'] = ChineseWord()._get_random(number=1, chars=x['chars'])['meaning1']
+                
+            html = render_to_string('srs/tests/first_test.html', {'word': word, 'form': SubmitAnswerForm()}, context_instance=RequestContext(request))
+                     
         
-    # get any vocabulary that hasn't been tested before
+        if x['character_pass'] and x['pinyin_pass'] and x['meaning_pass']:
+            continue
+
+        # if we get here, add it to the items list
+        if html:
+            count += 1
+            items.append(html)
+            
     
-    # get vocab that
+    return _render(request, 'srs/test.html', locals())
+
+
+def submit_answer(request):
+    if request.method == 'POST':
+        form = SubmitAnswerForm(request.POST)
+        if form.is_valid():
+                        
+            word = ChineseWord(chars=form.cleaned_data['characters'])
+            meanings_count = len(word.meanings)
+            
+            pinyin_pass = True
+            meaning_pass = True
+            
+            # create a list of the expected values for a correct answer
+            data = form.cleaned_data
+            possibles = []
+            count = 1
+            while meanings_count != 0:
+                possibles.append(('pinyin_%s' % count))
+                possibles.append(('meaning_%s' % count ))
+                count += 1
+                meanings_count -= 1
+
+
+            # check if the provided answers match the correct answers
+            results = {}
+            results['pinyin_pass'] = False
+            results['meaning_pass'] = False
+            results['character_pass'] = True
+            results['test_date'] = time.time()
+            for x in possibles:
+                if x in data:
+                    if data[x] == data["".join((x, '_answer'))]:
+                        if 'pinyin' in x:
+                            results['pinyin_pass'] = True   
+                        elif 'meaning' in x:
+                            results['meaning_pass'] = True
+            
+            request.user.get_personal_words()._update_word(word.chars, test_results=results)
+            
+                                
+            if request.is_ajax():
+                return HttpResponse('OK')
+        
+        else:
+            print form.errors
+            print "invalid form"
     
-    return words
+    
+    
+    return HttpResponse()

@@ -6,9 +6,10 @@ import os
 PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 
 from django.conf import settings
+from django.template import RequestContext, TemplateDoesNotExist
 from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils import simplejson
 
@@ -20,11 +21,12 @@ from cjklib.reading import *
 #render shortcut
 def _render(request, template, context_dict=None, page=None, **kwargs):
     
+    # usually we'll be returning the page via AJAX
     if request.is_ajax():
+        
                 
         if page:
             template = "".join((template.strip('page.html'), page, '.html'))
-            
         else:
             template = template.replace('.html', "_snippet.html")
         
@@ -34,11 +36,10 @@ def _render(request, template, context_dict=None, page=None, **kwargs):
             context_instance=RequestContext(request),
             **kwargs
         )
-        data = {'html': html, 'url': request.path}
-        #return HttpResponse(simplejson.dumps(data), mimetype="application/json")
         
         return HttpResponse(html)
-
+    
+    
     return render_to_response(
         template, context_dict or {}, context_instance=RequestContext(request),
             **kwargs)  
@@ -219,6 +220,69 @@ def _update_crumbs(request, word=None):
     
     request.session['crumbs'] = new_crumb
     return new_crumb
+
+
+
+def _send_email(recipient, subject_line, template, extra_context=None, sender=None, admin=False):
+     
+    # CREATE THE MESSAGE BODY FROM THE TEMPLATE AND CONTEXT
+    extra_context = extra_context or {}
+    email_signature = render_to_string(
+        'emails/email_signature.txt', 
+        {'site_name': settings.SITE_NAME, 'site_url': settings.SITE_URL,}
+    )
+    html_email_signature = render_to_string(
+        'emails/email_signature.html', 
+        {'site_name': settings.SITE_NAME, 'site_url': settings.SITE_URL,}
+    )
+    context = {
+        'EMAIL_SIGNATURE': email_signature,
+        'HTML_EMAIL_SIGNATURE': html_email_signature,
+        'static_url': settings.STATIC_URL,
+        'SITE_NAME': settings.SITE_NAME,
+        'site_name': settings.SITE_NAME,
+        'SITE_URL': settings.SITE_URL,
+        'site_url': settings.SITE_URL,
+        'SUBJECT_LINE': subject_line,
+        'email_base_template': settings.EMAIL_BASE_HTML_TEMPLATE
+    }
+    
+    context = dict(context.items() + extra_context.items())
+    
+    # MODIFY THE RECIPIENTS IF ITS AN ADMIN EMAIL
+    if admin:
+        recipient = [x[1] for x in settings.NOTIFICATIONS_GROUP]
+    else:
+        recipient = [recipient]
+        
+    # WHO IS SENDING IT?
+    if sender:
+        sender = sender
+    else:
+        sender = settings.SITE_EMAIL
+        
+    # CHECK IF THERE'S AN HTML TEMPLATE?
+    text_content = render_to_string(template, context)
+    html_content = None
+    try:
+        html_template_name = template.replace('.txt', '.html')
+        html_content = render_to_string(html_template_name, context)
+    except TemplateDoesNotExist:
+        pass
+    
+    # HERE IS THE ACTUAL MESSAGE NOW
+    msg = EmailMultiAlternatives(subject_line, text_content, sender, recipient)    
+
+    if html_content:
+        # USING PREMAILER TO PUT STYLES INLINE FOR CRAPPY YAHOO AND AOL WHO STRIP STYLES
+        from premailer import transform
+        html_content = transform(html_content)
+        msg.attach_alternative(html_content, "text/html")
+        # msg.content_subtype = "html" # DONT DO THIS!
+    
+    
+    msg.send()
+    return True
 
 
 
