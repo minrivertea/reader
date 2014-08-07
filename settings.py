@@ -14,7 +14,7 @@ TEMPLATE_DEBUG = DEBUG
 GA_IS_ON = False
 
 ADMINS = (
-    ('Chris', 'chris@minrivertea.com'),
+    ('Chris', 'info@chinesedictionary.io'),
 )
 
 MANAGERS = ADMINS
@@ -31,7 +31,7 @@ DATABASES = {
 }
 
 TIME_ZONE = 'America/Chicago'
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 SITE_ID = 1
 USE_I18N = False
@@ -53,12 +53,6 @@ STATICFILES_DIRS = (
 
 
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -69,18 +63,31 @@ MIDDLEWARE_CLASSES = (
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
+ROOT_URLCONF = 'reader.urls'
+
+
+
+# TEMPLATING
+# ------------------------------------------------------
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
+)
 
 TEMPLATE_CONTEXT_PROCESSORS += (
      'django.core.context_processors.request',
      'context_processors.common',
 )
 
-ROOT_URLCONF = 'reader.urls'
-
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, "templates/")
 )
+
 BASE_TEMPLATE = 'base.html'
+
+
 
 
 INSTALLED_APPS = (

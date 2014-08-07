@@ -1,15 +1,46 @@
 
 <div class="text centred" id="account">
-    <p class="big">Your account ({{ user.email }}) - <span class="small"> <a href="{% url 'auth_logout' %}">Logout</a></span></p>
     
     <div class="box">
-        <a href="{% url 'test_home' %}"><span class="link"></span></a>
-        Tests
-    </div>  
-    
-    <div class="box">
+        <div class="title">Test</div>
+        <div class="inner">
+            {% if request.user.get_test_items %}
+                You have {{ request.user.get_test_items|length }} items ready to test now - <a href="{% url 'test_home' %}">start test</a>
+            {% else %}
+                You don't have anything to test now
+            {% endif %}
+        </div>
+    </div> 
+        
+    <div class="box green">
+        
+        <div class="title">Review</div>
+        <div class="inner"> 
+            {% if request.user.get_review_items %}
+                You have items ready to review now - <a href="{% url 'review_new' %}">start review</a>
+            {% else %}
+                You don't have anything to review now
+            {% endif %}       
+        </div>
+    </div>
+        
+    <div class="box red">
+        <div class="title">Wordlist </div>
+        <div class="inner"><a href="{% url 'view_wordlist' %}">View all the words you've looked up</a></div>
+    </div>
+        
+    <div class="box purple" id="settings">
         <a href=""><span class="link"></span></a>
-        Update your preferences
+        <div class="title">Settings</div>
+        <div class="inner open">
+            <ul>
+                <li>Logged in as {{ user.email }} - <a href="{% url 'auth_logout' %}" class="red">logout</a></li>
+                <li>Joined on {{ user.date_joined }}</li>
+                    
+                <li>Test items limit : {{ user.test_items_limit }} items</li>
+                <li>Interval : {{ user.review_interval }} days</li>
+            </ul>
+        </div>
     </div>    
         
 </div>

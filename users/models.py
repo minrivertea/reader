@@ -102,6 +102,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         wordlist = PersonalWordlist(self.email)                
         return wordlist
     
+    def get_test_items(self):
+        return self.get_personal_words().get_items(test=True, timestamp=time.time())
+    
+    def get_review_items(self):
+        return self.get_personal_words().get_items(review=True, timestamp=time.time())
+    
     def _remove_personal_word(self, word):
         
         # GET THE EXISTING WORDLIST

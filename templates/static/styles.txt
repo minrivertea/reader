@@ -64,8 +64,8 @@ span.link {
     color: #fff;    
 }
 
-p.red {
-  color: red;   
+p.red, a.red, span.red {
+  color: #D30000;   
 }
 
 .small, span.small {
@@ -73,9 +73,9 @@ p.red {
 }
 
 hr {
-  border: 1px solid #e1e1e1;
+  border: 1px dashed #e1e1e1;
   border-width: 1px 0 0 0;
-  margin: 25px 0;
+  margin: 15px 0;
   float: left;
   width: 100%;
 }
@@ -157,6 +157,10 @@ body.sidebar .centred {
     box-shadow: 1px 1px 0 #e1e1e1 inset;
     color: #333;
     text-shadow: 0 1px 0 #fff;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 11px;
+    position: relative;
+    z-index: 1000;
 }
 
 #header a.selected:before {
@@ -262,6 +266,8 @@ body.sidebar .centred {
   color: #e1e1e1;   
 }
 
+
+
 /* END HEADER STYLES */
 
 
@@ -320,15 +326,42 @@ label.focus {
 
 /* ACCOUNT PAGE */
 
+#account {
+  width: 960px; 
+}
+
 #account .box {
   float: left;
-  width: 180px;
-  text-align: center;
-  background: #f6f6f6;
-  padding: 50px 20px;
+  width: 100%;
+  border-bottom: 1px dashed #e1e1e1;
+  height: auto;
+  background: none;
   position: relative;
-  margin: 0 10px 10px 0;
+  margin: 0 0px 10px 0;
+  padding: 10px 15px;
 }
+
+#account .box .title {
+  color: #000;
+  float: left;
+  width: 150px;   
+}
+
+#account .box .inner {
+  color: #666;
+  font-size: 13px;
+  float: left;
+  width: 800px;
+  position: relative;
+  z-index: 1000;   
+}
+
+#account .box#settings ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;   
+}
+
 
 /* END ACCOUNT PAGE  */
 

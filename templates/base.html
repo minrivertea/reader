@@ -42,15 +42,15 @@
         
         <a href="/" id="logo" alt="home link" title="Home - {{ sitename }}" data-ajax><span></span></a>
         
+        {% url 'user' as user_url %}
         {% url 'page' 'about' as about_url %}
             <a id="about_link" href="{{ about_url }}" title="about" class="{% if about_url in request.path %}selected{% endif %}" data-ajax>about</a>
         
         
         {% if user.is_authenticated %}
-            {% url 'user' as user_url %}
             <a id="account_link" href="{{ user_url }}" class="{% if user_url in request.path %}selected{% endif %}">
             your account
-            </a>
+            </a>                        
         {% else %}
             <a id="login_link" href="{% url 'auth_login' %}" data-ajax>login</a> 
             <a id="register_link" href="{% url 'registration_register' %}">register</a>
@@ -67,6 +67,9 @@
       </div>
     </div>
     
+    
+    
+
     <img id="loading" src="{% static 'images/loading.gif' %}"/>
     
     <div id="container"> 
@@ -104,11 +107,13 @@
             }
             
             
+            /// HANDLES THE NAVIGATION WHEN DONE WITH PJAX
             $('#header a').click( function() {
-               $('#header a').removeClass('selected');
-               $(this).addClass('selected'); 
+               $('#header a').removeClass('selected');               
+               $(this).addClass('selected');               
+                
             });
-            
+                        
             
             
             
