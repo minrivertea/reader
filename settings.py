@@ -168,7 +168,7 @@ DEFAULT_REVIEW_TEST_INTERVAL = 3 # days
 # ------------------------------------------------------
 EMAIL_BASE_HTML_TEMPLATE = ''
 SERVER_EMAIL = 'info@chinesedictionary.io' #important for sending error notifications 
-SITE_EMAIL = ''
+SITE_EMAIL = 'info@chinesedictionary.io'
 EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
