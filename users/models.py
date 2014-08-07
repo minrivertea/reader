@@ -301,7 +301,7 @@ class PersonalWordlist(object):
             self._update_list(wordlist)
             
         else:
-            self.add_word(word)                
+            self._add_word(word)                
                     
 
 

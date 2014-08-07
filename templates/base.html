@@ -136,7 +136,7 @@
               
              
                         
-            /// SHOWS THE LOADING SPINNER
+            /// ACTIONS WHEN PJAX SENDS
             $(document).on('pjax:send', function() {
               $('#container').fadeOut(150);
               $('#loading').show();
@@ -144,22 +144,15 @@
             });
             
             
-            // HIDES THE LOADING SPINNER
+            // ACTIONS WHEN PJAX IS FINISHED (REGARDLESS OF OUTCOME)
             $(document).on('pjax:complete', function() {
-              
-              /// HIDE THE LOADING SPINNER
               $('#loading').hide();
-              
-              
-              
-              /// MAKE SURE THE CURSOR IS IN THE SEARCH BOX
               $('input#id_char').select();
-              
             });
             
+            /// ACTIONS AFTER PJAX HAS LOADED THE CONTENT IN THE PAGE
             $(document).on('pjax:success', function() {
-                /// FADE IN THE MAIN CONTENT
-                $('#container').fadeIn(150);
+                $('#container').fadeIn(100);
             });
             
             /// USED FOR THE BACK/FORWARDS CLICKS OR SWIPES
