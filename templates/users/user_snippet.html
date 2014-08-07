@@ -1,7 +1,7 @@
 
 <div class="text centred" id="account">
     
-    <div class="box">
+    <div class="section">
         <div class="title">Test</div>
         <div class="inner">
             {% if request.user.get_test_items %}
@@ -12,7 +12,7 @@
         </div>
     </div> 
         
-    <div class="box green">
+    <div class="section green">
         
         <div class="title">Review</div>
         <div class="inner"> 
@@ -24,12 +24,12 @@
         </div>
     </div>
         
-    <div class="box red">
+    <div class="section red">
         <div class="title">Wordlist </div>
         <div class="inner"><a href="{% url 'view_wordlist' %}">View all the words you've looked up</a></div>
     </div>
         
-    <div class="box purple" id="settings">
+    <div class="section purple" id="settings">
         <a href=""><span class="link"></span></a>
         <div class="title">Settings</div>
         <div class="inner open">

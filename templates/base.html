@@ -85,7 +85,6 @@
             
 
             /// ASSIGN VARIOUS CLASSES BASED ON LOCATION
-
             var noHeaderURLs = [];
             noHeaderURLs.push("{% url 'home' %}");
             
@@ -103,22 +102,17 @@
             	} else {
             	   $('#header').addClass('small_search');
             	}
-            	            	      
             }
             
             
-            /// HANDLES THE NAVIGATION WHEN DONE WITH PJAX
+            
+            /// HANDLES SELECTING NAVIGATION LINKS WHEN DONE WITH PJAX
             $('#header a').click( function() {
                $('#header a').removeClass('selected');               
                $(this).addClass('selected');               
-                
             });
                         
-            
-            
-            
-            
-                 
+                                      
             /// BINDS THE SEARCH FORM TO PJAX        
             $(document).on('submit', '#header form[data-pjax]', function(event) {
                               
@@ -140,7 +134,6 @@
             });
               
               
-              
              
                         
             /// SHOWS THE LOADING SPINNER
@@ -157,12 +150,16 @@
               /// HIDE THE LOADING SPINNER
               $('#loading').hide();
               
-              /// FADE IN THE MAIN CONTENT
-              $('#container').fadeIn(100);
+              
               
               /// MAKE SURE THE CURSOR IS IN THE SEARCH BOX
               $('input#id_char').select();
               
+            });
+            
+            $(document).on('pjax:success', function() {
+                /// FADE IN THE MAIN CONTENT
+                $('#container').fadeIn(150);
             });
             
             /// USED FOR THE BACK/FORWARDS CLICKS OR SWIPES
@@ -173,21 +170,23 @@
             /// BIND VARIOUS LINK TO PJAX
             $(document).pjax('a, a[data-pjax]', '#container');
             
+            
+            /// HANDLES SUBMITTING A TEST QUESTION VIA AJAX
             $('form.test').submit( function() {
-               var thisForm = $(this);
-               
-               $.ajax({
-                 url: thisForm.attr('action'),
-                 data: thisForm.serialize(),
-                 type: 'POST',
-                 success: function(status) {
+                var thisForm = $(this);
+                
+                $.ajax({
+                    url: thisForm.attr('action'),
+                    data: thisForm.serialize(),
+                    type: 'POST',
+                    success: function(status) {
                     thisForm.parent('div.test_item').slideUp(300, function() {
                         thisForm.parent('div.test_item').remove();   
                     });
-                 },
-               });
-               
-               return false;
+                    },
+                });
+                
+                return false;
                 
             });
             

@@ -328,9 +328,10 @@ label.focus {
 
 #account {
   width: 960px; 
+  margin-top: 20px;
 }
 
-#account .box {
+#account .section {
   float: left;
   width: 100%;
   border-bottom: 1px dashed #e1e1e1;
@@ -338,16 +339,18 @@ label.focus {
   background: none;
   position: relative;
   margin: 0 0px 10px 0;
-  padding: 10px 15px;
+  padding: 10px 15px 10px 0;
 }
 
-#account .box .title {
+#account .section .title {
   color: #000;
   float: left;
-  width: 150px;   
+  width: 150px; 
+  margin: 0;
+  font-size: 16px;  
 }
 
-#account .box .inner {
+#account .section .inner {
   color: #666;
   font-size: 13px;
   float: left;
@@ -356,15 +359,122 @@ label.focus {
   z-index: 1000;   
 }
 
-#account .box#settings ul {
+#account .section .inner strong {
+  color: #333;   
+}
+
+#account .section#settings ul {
   list-style-type: none;
   margin: 0;
   padding: 0;   
 }
 
 
+#account .inner .box {
+  float: left;
+  width: 30%;
+  margin: 0px 1.5% 0px;
+  text-align: left;   
+}
+
+#account .inner p.big {
+  font-size: 1.3em;
+  line-height: 1.6em;  
+  color: #333;  
+}
+
+#account .inner div.link {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 1.3em;  
+  margin: 5px 0 25px 0; 
+}
+
+#account .inner div.link a {
+  padding: 5px 10px;
+  border: 1px solid #e1e1e1;   
+}
+
 /* END ACCOUNT PAGE  */
 
+
+/* ABOUT PAGE STYLES */
+
+#about {
+  width: 960px; 
+  text-align: center;
+  margin-top: 20px;
+}
+
+#about .section {
+  float: left;
+  width: 100%;
+  border-bottom: 1px dashed #e1e1e1;
+  height: auto;
+  background: none;
+  position: relative;
+  text-align: center;
+  margin: 0 0px 10px 0;
+  padding: 30px 15px 30px 0;
+}
+
+#about .section .title, #account .section h3 {
+  color: #000;
+  float: left;
+  width: 100%; 
+  margin: 0;
+  font-size: 22px;  
+}
+
+#about .section .inner {
+  color: #666;
+  font-size: 13px;
+  float: left;
+  width: 100%;
+  position: relative;
+  z-index: 1000;   
+}
+
+#about .section .inner strong {
+  color: #333;   
+}
+
+
+
+#about .inner .box {
+  float: left;
+  width: 30%;
+  margin: 0px 1.5% 0px;
+  text-align: left;   
+}
+
+#about .inner .box_3_3 {
+  width: 100%;   
+  margin: 0;
+}
+
+#about .inner p.big {
+  font-size: 1.3em;
+  line-height: 1.6em;  
+  color: #333;  
+}
+
+#about .inner div.link {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 1.5em;  
+  margin: 15px 0 35px 0; 
+}
+
+#about .inner div.link a {
+  padding: 5px 10px;
+  border: 1px solid #e1e1e1;   
+}
+
+
+/* END ABOUT PAGE STYLES */
 
 
 /* TEST STYLES */
@@ -1060,12 +1170,21 @@ body.font4, body.font4 .char, #head ul a.font4, body.font4 #lookups div span.tit
 
 
 h1 {
-    font-size: 34px;
+    font-size: 30px;
     font-weight: normal;
     margin: 0 0 30px;
+    line-height: 1.4em;
 }
 
+h1 span.big {
+  font-size: 44px;   
+}
 
+h2 {
+   font-size: 28px;
+   font-weight: normal; 
+   margin: 0 0 20px 0;  
+}
 
 h3 {
     font-size: 22px;
@@ -1275,7 +1394,7 @@ h3 span.this {
 }
 
 .text p.big, p.big {
-   font-size: 24px;
+   font-size: 1.8em;
    line-height: 1.8em;
 }
 

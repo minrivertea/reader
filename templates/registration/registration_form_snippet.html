@@ -2,7 +2,7 @@
 <div id="login" class="text centred">
 
 {% if user.is_authenticated %}
-<p class="big">You're already signed in - visit your <a href="">account page</a> here</p>
+<p class="big">You're already signed in - visit your <a href="{% url 'user' %}">account page</a> here</p>
 {% else %}
 <p class="big">Create an account to turbo-charge your language learning.</p>
 

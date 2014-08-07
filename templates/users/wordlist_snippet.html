@@ -11,13 +11,26 @@ table td {
 
 <div class="text centred" id="account">
 
+<h2>Your wordlist</h2>
+
 <table cellspacing="0">
         
+    <thead>
+        <tr>
+            <td>Word</td>
+            <td>1st Lookup</td>
+            <td>Next action</td>
+            <td>Last test results</td>
+            <td>Remove</td>
+        </tr>
+    </thead>
+    
     {% for k,v in request.user.get_personal_words.words.items %}
+                
         <tr>
             <td>{{ k }}</td>
             <td>created on {{ v.created|convert_timestamp }}</td>
-            <td>Next {{ v.next_action }} on {{ v.next_action_date|convert_timestamp }}</td>
+            <td>Next <strong>{{ v.next_action }}</strong> on {{ v.next_action_date|convert_timestamp }}</td>
             <td>
                 {% if v.test_date %}
                 Pinyin {% if v.pinyin_pass %} Pass{% else %} Fail{% endif %}<br/>
