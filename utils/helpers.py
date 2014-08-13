@@ -133,7 +133,7 @@ def _get_crumbs(request):
 
 # CHECKS IF THE INCOMING STRING IS PINYIN OR NOT
 def _is_pinyin(x):
-
+    
     for thing in x.split(' '):
         try:
             # CLEAN THE PINYIN INTO NUMBERED PINYIN AND THEN STRIP THE NUMBERS

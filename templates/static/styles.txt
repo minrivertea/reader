@@ -1,12 +1,11 @@
 html {
   border: none;
-  margin: none;
+  margin: 0;
   padding: none;	
 }
 
 body {
-  margin: 0;
-  padding: 0 0 0px 0;
+  margin: 0 auto;
   color: #333;
   font-size: 15px;
   line-height: 2em;
@@ -75,25 +74,25 @@ p.red, a.red, span.red {
 hr {
   border: 1px dashed #e1e1e1;
   border-width: 1px 0 0 0;
-  margin: 15px 0;
+  display: inline-block;
   float: left;
   width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#container {
+
 }
 
 .centred {
-    float: left;
-    left: -480px;
-    margin-left: 50%;
-    position: relative;
-    width: 960px;
+  margin: 0 auto;
+  position: relative;
+  width: 960px;
 }
 
-body.sidebar .centred {
-    float: left;
-    left: -480px;
-    margin-left: 45%;
-    position: relative;
-    width: 960px;    
+.text-left {
+ text-align: center;  
 }
 
 #loading {
@@ -107,15 +106,15 @@ body.sidebar .centred {
 
 #header {
     float: left;
+    width: 100%;
     height: auto;
     margin: 0 0 30px;
     position: relative;
     background: #f9f9f9;
 }
 
-
 #header-inner {
-  padding: 0px 0 0px; 
+  padding: 0px; 
   font-size: 13px;
 }
 
@@ -151,29 +150,24 @@ body.sidebar .centred {
 }
 
 #header a.selected {
-    background: none repeat scroll 0 0 #f1f1f1;
-    border-left: 1px solid #fff;
-    border-right: 1px solid #e1e1e1;
-    box-shadow: 1px 1px 0 #e1e1e1 inset;
-    color: #333;
-    text-shadow: 0 1px 0 #fff;
-    border-bottom: 1px solid #f1f1f1;
-    padding-bottom: 11px;
+    background: #2772b2;
+    color: #fff;
+    padding-bottom: 10px;
     position: relative;
     z-index: 1000;
 }
 
 #header a.selected:before {
-    border-color: #f1f1f1 transparent;
+    border-color: #2772b2 transparent;
     border-style: solid solid none solid;
-    border-width: 15px 15px 0 15px;
+    border-width: 10px 10px 0 10px;
     content: " ";
     display: block;
     height: 0;
     left: 50%;
-    margin-left: -15px;
+    margin-left: -10px;
     position: absolute;
-    bottom: -15px;
+    bottom: -10px;
     width: 0;
     z-index: 10;
 }
@@ -216,6 +210,10 @@ body.sidebar .centred {
     padding: 13px 15px;
     position: relative;
     width: 82%;
+}
+
+#search input#id_char:focus {
+  outline: none;  
 }
 
 #header.small_search #search {
@@ -402,9 +400,9 @@ label.focus {
 /* ABOUT PAGE STYLES */
 
 #about {
-  width: 960px; 
-  text-align: center;
-  margin-top: 20px;
+  float: left;
+  margin-top: 30px;
+  width: 100%;
 }
 
 #about .section {
@@ -440,24 +438,44 @@ label.focus {
   color: #333;   
 }
 
-
-
 #about .inner .box {
   float: left;
   width: 30%;
-  margin: 0px 1.5% 0px;
+  margin: 0px 1.5% 30px;
   text-align: left;   
 }
 
+#about .inner .box_2_3 {
+  width: 63%;
+  margin-left: 1.5%;
+  margin-right: 1.5%;   
+}
+
 #about .inner .box_3_3 {
-  width: 100%;   
-  margin: 0;
+  width: 97%;   
+  margin-left: 1.5%;
+  margin-right: 1.5%;  
 }
 
 #about .inner p.big {
   font-size: 1.3em;
   line-height: 1.6em;  
-  color: #333;  
+  color: #333;
+  width: 80%;
+  margin: 0 auto 30px;  
+}
+
+#about .inner p.big span.sub {
+  font-size: 0.8em;
+  color: #555;   
+}
+
+#about .inner img {
+  margin: 20px 0;   
+}
+
+#about .inner .box div.link {
+  text-align: left;   
 }
 
 #about .inner div.link {
@@ -1181,9 +1199,13 @@ h1 span.big {
 }
 
 h2 {
-   font-size: 28px;
+   font-size: 36px;
    font-weight: normal; 
-   margin: 0 0 20px 0;  
+   margin: 10px 0 30px 0;  
+}
+
+h2 span.big {
+  font-size: 44px;   
 }
 
 h3 {
@@ -1381,12 +1403,7 @@ h3 span.this {
 /* flatpage about us styles */
 
 .text {
-    left: -480px;
-    width: 800px;
-}
-
-.text.center {
-  text-align: center;   
+  width: 800px;
 }
 
 .text p, p {
@@ -1432,15 +1449,10 @@ h3 span.this {
 }
 
 #login {
-  text-align: center;
-  width: 700px;
-  position: absolute;
-  top:0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: auto;
-  height: 450px;
+  text-align:center;
+  margin-top: 30px;
+  float: left;
+  width: 100%;
 }
 
 #login form {

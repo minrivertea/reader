@@ -7,6 +7,7 @@ from django.core.management.base import NoArgsCommand, CommandError
 from datetime import datetime, timedelta
 
 import uuid
+import json
 
 
 # import various bits and pieces
@@ -35,7 +36,14 @@ class Command(NoArgsCommand):
     }
     
     This is all coded into JSON and then dumped as a string into Redis, so that
-    we can easily JSON.loads it on the way out and use it nicely.    
+    we can easily JSON.loads it on the way out and use it nicely.  
+    
+    A pinyin entry has a key like "PY:2W:hao3_ba1" is something like this:
+    
+    {
+       'words': ['好吧', '毫巴',]        
+    }
+      
     """
     
     
@@ -77,37 +85,34 @@ class Command(NoArgsCommand):
                     sourceOptions={'toneMarkType': 'numbers', 'yVowel': 'v',
                     'missingToneMark': 'fifth'})
                 meanings = line[(line.index('/')+1):(line.rindex('/'))]               
-                
-                # clean the characters a bit
                 characters = new[1]
                 
-                # remove ugly commas from characters
+                # REMOVE ALL THE UGLY CHARACTERS
                 if '，' in characters:
                     characters = characters.replace('，', '')
                 
                 
-                py_key = "PY:%sW:%s" % (len(num_pinyin.split(' ')), num_pinyin.replace(' ', '_'))
-                char_key = "ZH:%sC:%s" % ((len((characters))/3), characters) 
+                py_key = settings.PINYIN_WORD_KEY % (len(num_pinyin.split(' ')), num_pinyin.replace(' ', '_'))
+                char_key = settings.CHINESE_WORD_KEY % ((len((characters))/3), characters) 
                 
                 
                 # ADD THE PINYIN ENTRY
+                # --------------------
                 r_server = _get_redis()
-                if r_server.exists(py_key):
-                    object = _search_redis(py_key)
-                    mapping = {
-                        'char_keys': "".join( (object['char_keys'], ',', char_key) ),   
-                    }
-                    r_server.hmset(py_key, mapping)
-                                        
+                if _search_redis(py_key, lookup=False):
+                    values = json.loads(_search_redis(py_key))
+                    values.append(characters)
+                    r_server.set(py_key, json.dumps(values))
                 else:
-                    mapping = {
-                        'char_keys': char_key,
-                        'id': uuid.uuid4().hex,
-                    }
-                    r_server.hmset(py_key, mapping)                    
+                    print py_key
+                    values = [characters,]
+                    r_server.set(py_key, json.dumps(values))                    
     
     
-                # ADD THE CHARACTER ENTRY
+    
+    
+                # ADD THE CHINESE CHARACTER ENTRY
+                # -------------------------------
                 if r_server.exists(char_key):
                      
                     object = _search_redis(char_key)

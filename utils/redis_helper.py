@@ -64,10 +64,14 @@ def _search_redis(key, lookup=True):
     _increment_stats('redis_hits')
     
     if r_server.exists(key):
+    
         if lookup == False:
             return True
         else:
-            return r_server.hgetall(key)
+            try:
+                return r_server.get(key)
+            except:
+                return r_server.hgetall(key)
     
     else:
         return None

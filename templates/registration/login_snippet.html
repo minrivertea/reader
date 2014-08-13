@@ -1,11 +1,13 @@
 
 
-<div id="login" class="text centred">
+<div id="login" class="">
 
 {% if user.is_authenticated %}
 <p class="big">You're already signed in - visit your <a href="">account page</a> here</p>
 {% else %}
-<p class="big">Login to your account</p>
+<h2>Login to your account</h2>
+
+<p>Don't have an account?  <a href="{% url 'registration_register' %}">Click here to create a new one</a></p>
 
 
 {% if form.errors %}
@@ -22,10 +24,11 @@
      <input type="password" name="password" id="id_password" value="" placeholder="Type your password" class="clearMeFocus"/>
      <label for="id_password1">Choose a password</label>
 </p>
-<p class="help small"><a href="{% url 'auth_password_reset' %}">Forgot your password?</a><br/>
-Don't have an account?  <a href="{% url 'registration_register' %}">Click here to create a new one</a></p>
-
 <input type="submit" value="Login" class="button" />
+
+
+<p class="help small"><a href="{% url 'auth_password_reset' %}">Forgot your password?</a></p>
+
 </form>
 
 

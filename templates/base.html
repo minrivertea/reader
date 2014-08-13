@@ -52,8 +52,10 @@
             your account
             </a>                        
         {% else %}
-            <a id="login_link" href="{% url 'auth_login' %}" data-ajax>login</a> 
-            <a id="register_link" href="{% url 'registration_register' %}">register</a>
+            {% url 'auth_login' as login_url %}
+            <a id="login_link" href="{{ login_url }}" class="{% if login_url in request.path %}selected{% endif %}" data-ajax>login</a> 
+            {% url 'registration_register' as register_url %}
+            <a id="register_link" href="{{ register_url }}" class="{% if register_url in request.path %}selected{% endif %}" data-ajax>register</a>
         {% endif %}
         
         
@@ -72,7 +74,7 @@
 
     <img id="loading" src="{% static 'images/loading.gif' %}"/>
     
-    <div id="container"> 
+    <div id="container" class="centred"> 
         {% block content %}{% endblock %}        
     </div>
     
@@ -103,6 +105,8 @@
             	   $('#header').addClass('small_search');
             	}
             }
+            
+            $('input#id_char').pinyin();
             
             
             

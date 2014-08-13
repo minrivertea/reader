@@ -1,15 +1,15 @@
 {% load convert_backslashes %}
 
-
+<div id="about">
 {% if title %}
-<div class="centred">
-<p class="big">{{ title }}</p>
-</div>
+
+<h2>{{ title }}</h2>
+
 {% endif %}
 
 {% if words %}
 
-    <ul id="wordlist" class="centred">
+    <ul id="wordlist" class="">
     
     {% for w in words %}
         <li class="wrapper" id="char{{ w.wordset }}" chars="{{ w.chars }}">
@@ -35,5 +35,7 @@
     {% endfor %}
     </ul>
 {% else %}
-    <p class="centred">Sorry, no results found!</p>
+    <p class="big">Sorry, no results found!</p>
 {% endif %}
+
+</div>

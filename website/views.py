@@ -3,17 +3,10 @@
 
 import string, unicodedata
 import redis
-import os
-PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 
-from urlparse import urlparse
-
-import uuid
-import random
-import re
-import urllib2
 import datetime
 import time
+import json
 
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
@@ -69,45 +62,46 @@ def search(request, search_string=None, title='Search', words=None):
         search_string = search_string.replace('_', ' ')
                
     
+    # HANDLES EMPTY OR NULL SEARCH STRING
     if search_string == None and request.method != 'POST':
         form = SearchForm()
         return _render(request, 'website/search.html', locals())
+          
           
     # CHECK IF IT'S A POST REQUEST OR URL SEARCH
     if search_string == None and request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
-            _increment_stats('searches')
             search_string = form.cleaned_data['char']
 
         else:
-            # NOT A POST AND NO SEARCH STRING - SHOW THEM THE PLAIN JANE SEARCH PAGE
+            # POST AND NO SEARCH STRING - SHOW THEM THE PLAIN JANE SEARCH PAGE
             form = SearchForm()
             return _render(request, 'website/search.html', locals())
         
-    
-
 
 
     # HANDLES AN AMBIGUOUS SEARCH
     if _is_ambiguous(search_string):
         return _problem(request, messages.AMBIGUOUS_WORD)
 
-
-
     # HANDLES A PINYIN SEARCH    
     if _is_pinyin(search_string):
-        
+    
         # CLEAN UP THE INCOMING PINYIN AND MAKE A KEY
-        string = _clean_pinyin(search_string).strip()  
-        key = settings.PINYIN_WORD_KEY % (len(string.split(' ')), string.replace(' ', '_'))       
-        
+        string = _clean_pinyin(search_string).strip()          
+        key = settings.PINYIN_WORD_KEY % (len(string.split(' ')), string.replace(' ', '_'))
+        print key       
+                
         # IF THERE'S NO NUMBERS AT ALL IN THE STRING MAKE A NEW KEY:        
         if filter(lambda x: x not in '12345', string) == string:
-            key = settings.PINYIN_WORD_KEY % (len(string.split(' ')), string.replace(' ', '?_'))
-                                
+            
+            string += '?' # add a wildcard to the end
+            string = string.replace(' ', '?_') # replace spaces with underscores and wildcards
+            key = settings.PINYIN_WORD_KEY % (len(string.split('_')), string)
+            print key
+          
         keys = r_server.scan_iter(key)
-        
         
         # SPECIAL FILTER TO CHECK IF SOMETHING HAS NO RESULTS AND
         # THE USER ENTERED A 'U' INSTEAD OF A 'V' (EG. NV HAI ZI)
@@ -115,16 +109,12 @@ def search(request, search_string=None, title='Search', words=None):
             key = key.replace('u', '?')
             keys = r_server.scan_iter(key)
             
-        words = []
+        words = [] 
         for k in keys:
-            char_keys = _search_redis(k)['char_keys'].split(',')
-            for x in char_keys:
-                word = _search_redis(x)
-                try:
-                    word['chars']
-                    words.append(word)
-                except:
-                    pass
+            objects =  json.loads(_search_redis(k))
+            for o in objects:
+                word = ChineseWord(chars=o)
+                words.append(word)            
             
         return _render(request, 'website/wordlist.html', locals())
     

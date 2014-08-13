@@ -4,9 +4,8 @@
 {% if user.is_authenticated %}
 <p class="big">You're already signed in - visit your <a href="{% url 'user' %}">account page</a> here</p>
 {% else %}
-<p class="big">Create an account to turbo-charge your language learning.</p>
-
-<p><a href="{% url 'django.contrib.auth.views.login' %}">Already have an account? Click here to login</a></p>
+<h2>Create an account</h2>
+<p>Already have an account?  <a href="{% url 'django.contrib.auth.views.login' %}">Click here to login</a></p>
 
 {% if form.errors %}
 <p class="red">{{ form.errors }}</p>
@@ -28,7 +27,7 @@
      <label for="id_password1">Type your password twice</label>
 </p>
 
-<p class="help">We take your privacy seriously. By creating an account you agree to our terms and conditions, which you should read if you're at all concerned.</p>
+<p class="help">We take your privacy seriously. <br/>Creating an account means you agree to our <a href="{% url 'page' 'terms-and-conditions' %}">terms and conditions</a> - you should read them if you're concerned. </p>
 <input type="submit" value="Create account" class="button" />
 </form>
 
