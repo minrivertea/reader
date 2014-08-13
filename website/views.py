@@ -91,7 +91,6 @@ def search(request, search_string=None, title='Search', words=None):
         # CLEAN UP THE INCOMING PINYIN AND MAKE A KEY
         string = _clean_pinyin(search_string).strip()          
         key = settings.PINYIN_WORD_KEY % (len(string.split(' ')), string.replace(' ', '_'))
-        print key       
                 
         # IF THERE'S NO NUMBERS AT ALL IN THE STRING MAKE A NEW KEY:        
         if filter(lambda x: x not in '12345', string) == string:
@@ -99,7 +98,6 @@ def search(request, search_string=None, title='Search', words=None):
             string += '?' # add a wildcard to the end
             string = string.replace(' ', '?_') # replace spaces with underscores and wildcards
             key = settings.PINYIN_WORD_KEY % (len(string.split('_')), string)
-            print key
           
         keys = r_server.scan_iter(key)
         

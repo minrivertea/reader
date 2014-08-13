@@ -87,16 +87,24 @@ class ChineseWord(Word):
         
         r_server = _get_redis()
         key = "ZH:%sC:*" % length
-        matching_keys = r_server.scan_iter(key)
-        random.shuffle(matching_keys,random.random)
+
+        randoms = []
+        loop = 0
+        for x in r_server.scan_iter(key):
+            randoms.append(x)
+            loop += 1
+            if loop > 20:
+                break
+        
+        random.shuffle(randoms,random.random)
                 
         if number == 1:
-            return _search_redis( matching_keys[0] )
+            return _search_redis( randoms[0] )
         else:
             count = 0
             words = []
             while number > 0:
-                words.append(_search_redis( matching_keys[count] ))
+                words.append(_search_redis( randoms[count] ))
                 count += 1
                 number -= 1
             

@@ -5,7 +5,7 @@
         <div class="title">Test</div>
         <div class="inner">
             {% if request.user.get_test_items %}
-                You have {{ request.user.get_test_items|length }} items ready to test now - <a href="{% url 'test_home' %}">start test</a>
+                You have {{ request.user.get_test_items|length }} items ready to test now - <a href="{% url 'test' %}">start test</a>
             {% else %}
                 You don't have anything to test now
             {% endif %}

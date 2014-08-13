@@ -5,6 +5,8 @@
     {{ word.chars }}
 </div>
 
+<hr/>
+
 {% if word.meanings|length > 1 %}
 <p class="help">{{ word.chars }} has {{ word.meanings|length }} pronunciations</p>
 {% endif %}
@@ -28,16 +30,16 @@
     
     
     <td class="meaning">
+        <!-- HIDDEN ANSWER -->
         <input type="hidden" name="meaning_{{ forloop.counter }}_answer" id="id_meaning_{{ forloop.counter }}_answer" value="{{ y.meaning }}" />
         
+                
+        <input name="meaning_{{ forloop.counter }}" checked="" id="id_{{ word.chars }}_meaning_{{ forloop.counter }}_1" value="{{ y.meaning }}" type="radio" />
+        <label for="id_{{ word.chars }}_meaning_{{ forloop.counter }}_1">{{ y.meaning }}</label>
         
-        <input name="meaning_{{ forloop.counter }}" checked="" id="id_meaning_{{ forloop.counter }}_{{ forloop.counter }}" value="{{ y.meaning }}" type="radio" />
         
-        <label for="id_meaning_{{ forloop.counter }}_{{ forloop.counter }}">{{ y.meaning }}</label>
-        
-        
-        <input name="meaning_{{ forloop.counter }}" checked="" id="id_meaning_{{ forloop.counter }}_{{ forloop.counter|add:'1' }}" value="{{ y.alternative_meaning }}" type="radio" />
-        <label for="id_meaning_{{ forloop.counter }}_{{ forloop.counter|add:'1' }}">{{ y.alternative_meaning }}</label>
+        <input name="meaning_{{ forloop.counter }}" checked="" id="id_{{ word.chars }}_meaning_{{ forloop.counter }}_2" value="{{ y.alternative_meaning }}" type="radio" />
+        <label for="id_{{ word.chars }}_meaning_{{ forloop.counter }}_2">{{ y.alternative_meaning }}</label>
         
     </td>
 </tr>

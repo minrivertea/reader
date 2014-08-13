@@ -107,6 +107,7 @@
             }
             
             $('input#id_char').pinyin();
+            $('input.pinyin').pinyin();
             
             
             
@@ -152,6 +153,7 @@
             $(document).on('pjax:complete', function() {
               $('#loading').hide();
               $('input#id_char').select();
+              $('input.pinyin').pinyin();
             });
             
             /// ACTIONS AFTER PJAX HAS LOADED THE CONTENT IN THE PAGE

@@ -91,7 +91,7 @@ hr {
   width: 960px;
 }
 
-.text-left {
+.text-center {
  text-align: center;  
 }
 
@@ -325,8 +325,9 @@ label.focus {
 /* ACCOUNT PAGE */
 
 #account {
-  width: 960px; 
+  width: 100%; 
   margin-top: 20px;
+  float: left;
 }
 
 #account .section {
@@ -563,11 +564,13 @@ label.focus {
 
 .test_item {
     display: none;
+    float: left;
+    width: 100%;
     padding-top: 80px;
 }
 
-.test_item:first-child {
-    display: block;  
+.test_item:last-child {
+    display: inline-block;  
 }
 
 .test_item h3 {

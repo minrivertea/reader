@@ -1,13 +1,7 @@
-{% load staticfiles %}
 
-<script type="text/javascript">
-$('input.pinyin').pinyin();
-</script>
-    
   {% if items %}
   
     {% for x in items %}
-    
         <div class="test_item centred">{{ x|safe }}</div>
         
     {% endfor %}

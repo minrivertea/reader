@@ -104,7 +104,6 @@ class Command(NoArgsCommand):
                     values.append(characters)
                     r_server.set(py_key, json.dumps(values))
                 else:
-                    print py_key
                     values = [characters,]
                     r_server.set(py_key, json.dumps(values))                    
     

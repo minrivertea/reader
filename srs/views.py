@@ -17,12 +17,6 @@ from strategies import *
 from forms import SubmitAnswerForm
 
 
-
-def test_home(request):
-    user = request.user
-    to_review = ReviewNew(user.email)    
-    return _render(request, 'srs/test_home.html', locals())
-    
     
     
 def review_new(request):
@@ -61,6 +55,7 @@ def test(request):
             count += 1
             items.append(html)
             
+    print html
     
     return _render(request, 'srs/test.html', locals())
 
