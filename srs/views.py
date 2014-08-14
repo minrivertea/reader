@@ -54,9 +54,7 @@ def test(request):
         if html:
             count += 1
             items.append(html)
-            
-    print html
-    
+                
     return _render(request, 'srs/test.html', locals())
 
 
@@ -103,6 +101,7 @@ def submit_answer(request):
                 return HttpResponse('OK')
         
         else:
+            # BUG: THIS SHOULD RETURN OR DO SOMETHING
             print form.errors
             print "invalid form"
     
