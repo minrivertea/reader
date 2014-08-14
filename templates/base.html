@@ -189,6 +189,16 @@
                 
             });
             
+            /// TEST STUFF
+            $('.test_item a.next').click( function() {
+                
+                $(this).parent('div.pinyin').slideUp(100);
+                $(this).parent('.pinyin').next('div').show();
+                               
+                return false; 
+            });
+
+            
             /// HELPS AVOID FREQUENT ABORTS CAUSED BY PJAX'S LOW DEFAULT TIMEOUT
             $(document).on('pjax:timeout', function(event) {
               // Prevent default timeout redirection behavior

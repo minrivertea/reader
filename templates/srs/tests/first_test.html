@@ -1,55 +1,64 @@
 
 
-
 <div class="chars">
-    {{ word.chars }}
+    <span>{{ word.chars }}</span>
 </div>
 
-<hr/>
-
 {% if word.meanings|length > 1 %}
-<p class="help">{{ word.chars }} has {{ word.meanings|length }} pronunciations</p>
+<p class="help">{{ word.chars }} has {{ word.meanings|length }} pronunciations/meanings</p>
 {% endif %}
 
-
+<hr/>
 
 <form action="{% url 'submit_answer' %}" method="post" id="item_{{ word.id }}" class="test">
 {% csrf_token %}
 
 <input id="id_characters" type="hidden" name="characters" value="{{ word.chars }}">
 
-<table>
 
+<table class="item" cellspacing="0">
+<thead>
+    <tr>
+        <td>Pinyin pronunciation</td>
+        <td>Choose a meaning</td>
+    </tr>
+</thead>
 {% for y in word.meanings %}
 <tr>
-        
+           
     <td class="pinyin">
+        <span class="number">{{ forloop.counter }}</span>
         <input type="hidden" name="pinyin_{{ forloop.counter }}_answer" value="{{ y.pinyin }}" />
-        <input class="pinyin" name="pinyin_{{forloop.counter }}" id="id_pinyin_{{ forloop.counter }}" type="text" placeholder="Type numbered pinyin here eg. lin3" />  
+        <input class="pinyin" name="pinyin_{{forloop.counter }}" id="id_pinyin_{{ forloop.counter }}" type="text" placeholder="Type pinyin here" />  
     </td>
-    
-    
+      
     <td class="meaning">
+        
         <!-- HIDDEN ANSWER -->
         <input type="hidden" name="meaning_{{ forloop.counter }}_answer" id="id_meaning_{{ forloop.counter }}_answer" value="{{ y.meaning }}" />
+        <!-- END HIDDEN ANSWER -->
         
                 
         <input name="meaning_{{ forloop.counter }}" checked="" id="id_{{ word.chars }}_meaning_{{ forloop.counter }}_1" value="{{ y.meaning }}" type="radio" />
-        <label for="id_{{ word.chars }}_meaning_{{ forloop.counter }}_1">{{ y.meaning }}</label>
+        <label for="id_{{ word.chars }}_meaning_{{ forloop.counter }}_1">
+            {{ y.meaning }}
+        </label>
         
         
         <input name="meaning_{{ forloop.counter }}" checked="" id="id_{{ word.chars }}_meaning_{{ forloop.counter }}_2" value="{{ y.alternative_meaning }}" type="radio" />
-        <label for="id_{{ word.chars }}_meaning_{{ forloop.counter }}_2">{{ y.alternative_meaning }}</label>
+        <label for="id_{{ word.chars }}_meaning_{{ forloop.counter }}_2">
+            {{ y.alternative_meaning }}
+        </label>
         
     </td>
 </tr>
 {% endfor %}
-
-
 </table>
 
-<button type="button" form="">Skip this question</button>
-<button type="submit" form="item_{{ word.id }}">Confirm</button>
+<div class="buttons">
+<button type="button" form="" class="thin">Skip this question</button>
+<button type="submit" form="item_{{ word.id }}" class="large">Confirm</button>
+</div>
 
 </form>
 
