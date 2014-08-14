@@ -6,8 +6,8 @@ from django.conf import settings
 from django.core.management.base import NoArgsCommand, CommandError
 from datetime import datetime, timedelta
 
-import uuid
 import string
+import json
 
 
 
@@ -52,11 +52,8 @@ class Command(NoArgsCommand):
         # NOW LETS START
         item_count = 0
         for line in file:
-            if line.startswith("#"):
-                pass
-            else:
-                
-                
+            if not line.startswith("#"):
+
                 # GATHER ALL THE MAIN VARIABLES
                 new = line.split()
                 characters = new[1]
@@ -66,9 +63,6 @@ class Command(NoArgsCommand):
                     sourceOptions={'toneMarkType': 'numbers', 'yVowel': 'v',
                     'missingToneMark': 'fifth'})
                 meanings = line[(line.index('/')+1):(line.rindex('/'))]               
-                # pinyin_key = "PY:%s" % numbered_pinyin.replace(' ', '_')
-                # character_key = "ZH:%sC:%s" % ((len((new[1]))/3), new[1]) 
-                
                 
                 # CREATE AN INDEX: What we'll do first is try to strip out
                 # as much crap as possible from each definition, and as close as
@@ -113,24 +107,28 @@ class Command(NoArgsCommand):
                     if "..." in ns:
                         ns = ns.replace('...', '')                    
                     
+                    
                     # FOR NOW, JUST ADD ITEMS WITH 2 WORDs
                     if len(ns.split(' ')) <= 3:
+                        
                         key = "EN:%sW:%s" % (len(ns.split(' ')), ns)
                         
-                        
                         if r_server.exists(key):
-                            # TODO - WE NEED TO UPDATE THE EXISTING KEY NOW
-                            pass
+                            values = json.loads(_search_redis(key))
+                            values['characters'].append(characters)
+                            r_server.set(key, json.dumps(values))
+
                         else:
-                            mapping = {
-                                'original': x,
-                                'chinese': characters,
-                                'pinyin': tonal_pinyin,    
+                            
+                            values = {
+                                'english': x,
+                                'characters': [characters,],
                             }
                             
-                            r_server.hmset(key, mapping)
+                            r_server.set(key, json.dumps(values))
                         
                         item_count += 1
+                        print item_count
                                         
                     
                 

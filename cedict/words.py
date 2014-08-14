@@ -14,6 +14,7 @@ import re
 import urllib2
 import datetime
 import time
+import json
 
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
@@ -43,7 +44,21 @@ class Word(object):
     def __init__(self):
         # nothign to see here yet
         pass
+
+
+class EnglishWord(Word):
     
+    def __init__(self, words=None):
+        
+        self.key = settings.ENGLISH_WORD_KEY % (len(words.split('_')), words.replace(' ', '_'))
+        word = _search_redis(self.key)
+        if word:
+            word = json.loads(word)
+            self.english = word['english']
+            self.characters = []
+            for x in word['characters']:
+                self.characters.append(ChineseWord(chars=x))
+        
 
 class ChineseWord(Word):
     
@@ -51,7 +66,7 @@ class ChineseWord(Word):
         
         if chars:
             # derive the key
-            self.key = "ZH:%sC:%s" % (len(chars), chars)
+            self.key = settings.CHINESE_WORD_KEY % (len(chars), chars)
                         
             # get the object back from redis
             x = _search_redis(self.key)

@@ -36,7 +36,7 @@ from fancy_cache import cache_page
 from website.forms import SearchForm
 from website.signals import *
 
-from cedict.words import ChineseWord
+from cedict.words import ChineseWord, EnglishWord
 
 
 from nginx_memcache.decorators import cache_page_nginx
@@ -119,12 +119,12 @@ def search(request, search_string=None, title='Search', words=None):
 
     # IF THE SEARCH IS ENGLISH, RETURN ENGLISH
     if _is_english(search_string):
-        
+
         key = settings.ENGLISH_WORD_KEY % (len(search_string.split(' ')), search_string)
-        words = []
-        words.append(_search_redis(key))
-        
-        return _render(request, 'website/en_wordlist.html', locals())
+        if r_server.exists(key):
+            word = EnglishWord(words=search_string)
+            words = word.characters
+        return _render(request, 'website/wordlist.html', locals())
 
 
     # IF THE SEARCH IS OVER 10 CHARACTERS, RETURN A TEXT
