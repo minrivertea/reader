@@ -60,6 +60,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django_mobile.middleware.MobileDetectionMiddleware',
+    'django_mobile.middleware.SetFlavourMiddleware',
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
@@ -71,6 +73,7 @@ ROOT_URLCONF = 'reader.urls'
 # ------------------------------------------------------
 
 TEMPLATE_LOADERS = (
+    'django_mobile.loader.Loader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
@@ -79,6 +82,7 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS += (
      'django.core.context_processors.request',
      'context_processors.common',
+     'django_mobile.context_processors.flavour',
 )
 
 TEMPLATE_DIRS = (
@@ -86,8 +90,7 @@ TEMPLATE_DIRS = (
 )
 
 BASE_TEMPLATE = 'base.html'
-
-
+BASE_TEMPLATE_MOBILE = 'base_responsive.html'
 
 
 INSTALLED_APPS = (
@@ -98,16 +101,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.staticfiles',
-    # 'django_static',
     # 'debug_toolbar',
-    # 'endless_pagination',
     'registration',
     'website',
     'users',
     'cedict',
     'srs',
     'south',
-    'nginx_memcache',
+    'django_mobile',
+    'nginx_memcache', # do we need this?
 )
 
 

@@ -363,7 +363,24 @@ label.focus {
   float: left;
   width: 150px; 
   margin: 0;
-  font-size: 16px;  
+  font-size: 16px; 
+  position: relative; 
+}
+
+#account .section .title span.notification {
+    background: none repeat scroll 0 0 #d30000;
+    border-radius: 2px;
+    color: #fff;
+    font-family: Arial;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 1em;
+    padding: 3px;
+    position: absolute;
+    right: 20px;
+    text-align: center;
+    top: 7px;
+    min-width: 10px;
 }
 
 #account .section .inner {
