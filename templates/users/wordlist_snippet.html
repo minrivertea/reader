@@ -9,37 +9,32 @@ table td {
 }
 </style>
 
-<div class="pure-u-1 all-pad" id="">
+<div class="pure-u-1" id="">
 
-<h2>Your wordlist</h2>
+<h2 class="pure-g"><span class="pure-u-1 all-pad">Your wordlist</span></h2>
 
-<table cellspacing="0">
-        
-    <thead>
-        <tr>
-            <td>Word</td>
-            <td>1st Lookup</td>
-            <td>Next action</td>
-            <td>Last test results</td>
-            <td>Remove</td>
-        </tr>
-    </thead>
-    
+<ul id="wordlist" class="pure-g">
     {% for k,v in request.user.get_personal_words.words.items %}
-                
-        <tr>
-            <td>{{ k }}</td>
-            <td>created on {{ v.created|convert_timestamp }}</td>
-            <td>Next <strong>{{ v.next_action }}</strong> on {{ v.next_action_date|convert_timestamp }}</td>
-            <td>
-                {% if v.test_date %}
-                Pinyin {% if v.pinyin_pass %} Pass{% else %} Fail{% endif %}<br/>
-                Meaning {% if v.meaning_pass %} Pass{% else %} Fail{% endif %}
-                {% endif %}
-            </td>
-            <td><a class="remove" href="{% url 'personal_word_remove' k %}">x</a></td>            
-        </tr>
+    <li class="wrapper pure-u-1 all-pad">
+        
+        
+        <div class="chars pure-u">{{ k }}</div>
+        <div class="pinyin pure-u l-pad">
+            {{ v.next_action }} on {{ v.next_action_date|convert_timestamp|date:"d M Y" }}
+        </div>
+        <div class="meaning pure-u-1 r-pad">
+            {% if v.test_date %}
+            Pinyin {% if v.pinyin_pass %} Pass{% else %} Fail{% endif %} | 
+            Meaning {% if v.meaning_pass %} Pass{% else %} Fail{% endif %}
+            {% else %}
+            <em>Not reviewed/tested yet</em>
+            {% endif %}
+            | <a class="remove" href="{% url 'personal_word_remove' k %}">remove</a>
+        </div>
+    
+    </li>
     {% endfor %}
-</table>
+</ul>
+
 
 </div>
