@@ -1,18 +1,21 @@
-{% extends "base.html" %}
-{% load i18n %}
+{% extends base_template %}
 
 {% block content %}
 
 {% if account %}
 
-<p>{% trans "Account successfully activated" %}</p>
+<div class="pure-u-1 all-pad">
 
-<p><a href="{% url auth_login %}">{% trans "Log in" %}</a></p>
+<p>Account successfully activated</p>
+
+<p><a href="{% url auth_login %}">Log in now with your email and the password you chose when you registered.</a></p>
 
 {% else %}
 
-<p>{% trans "Account activation failed" %}</p>
+<p>Account activation failed</p>
 
 {% endif %}
+
+</div>
 
 {% endblock %}

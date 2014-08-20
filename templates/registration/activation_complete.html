@@ -1,9 +1,8 @@
-{% extends "base.html" %}
-{% load i18n %}
+{% extends base_template %}
 
 {% block content %}
 
-<div class="text centred">
+<div class="text pure-u-1 all-pad">
 
 <p class="big">Your account has been activated! You can now <a href="{% url 'auth_login' %}">login</a> and start using the site.</p>
 

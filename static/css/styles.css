@@ -335,6 +335,7 @@ form p.help {
   font-size: 0.8em;
   line-height: 1.8em;
   margin: 20px 0;
+  text-align: center;
 }
 
 textarea {
@@ -349,6 +350,8 @@ textarea {
 input, textarea {
     background-color: #fff;
     border: 1px solid #c1c1c1;
+    -webkit-appearance: none;
+    border-radius: 0;
     font-family: Georgia;
     font-size: 13px;
     padding: 10px;
