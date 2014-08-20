@@ -116,8 +116,8 @@ hr {
   display: inline-block;
   float: left;
   width: 100%;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 #container {
@@ -1525,20 +1525,14 @@ h3 span.this {
 /* SINGLE WORD LOOKUP STYLES */
 
 #single {
-  float: left;
-  width: 100%;
+
 }
 
 #single #chars {
-  font-size: 140px;
-  padding: 60px 0 80px;
-  float: left;
-  width: 100%;
-  margin: 0 20px 0 0;   
+  font-size: 4em;
 }
 
 #single #chars a {
-  color: #692c0c;
 }
 
 #single #chars a:hover {
