@@ -9,10 +9,6 @@
 	<meta content="{% block metadescription %}{% endblock %}" name="description" />
 	
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <meta name="generator" content="Django - http://www.djangoproject.com" />
-	<meta name="DC.format" content="text/html" />
-	<meta name="DC.type" content="Django Site" />
-	<meta name="robots" content="ALL" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
@@ -20,23 +16,20 @@
 	
 	
 	
-    <!-- CSS STYLES -->
+    <!-- STYLES -->
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
+    
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     
 	<link rel='shortcut icon' href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
-	<!-- END CSS STYLES -->
+	<!-- / STYLES -->
 	
 	
-	<!-- JAVASCRIPT INCLUDES -->
-	<script type="text/javascript">
-	   {% include 'static/jquery-1.8.2.min.js' %}
-	</script>
-	
-	<script type="text/javascript">
-	   {% include 'static/jquery.pjax.js' %}
-	</script>
+	<!-- JAVASCRIPT -->
+	<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.pjax.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/mobile/slideoutMenu.js' %}"></script>
 	
 	{% block extracss %}{% endblock %}
 
@@ -45,24 +38,57 @@
 
 <body class="font1 pure-g">
 
+
+    <nav id="menu" style="display: none;" class="pure-u-1">
+        <ul class="pure-g">    
+            <li class="pure-u-1"><a href="/" class="pure-u-1 all-pad" alt="home link" title="Home - {{ sitename }}" data-ajax>Home</a></li>
+        
+        {% url 'user' as user_url %}
+        {% url 'page' 'about' as about_url %}
+            <li class="pure-u-1"><a href="{{ about_url }}" title="about" class="pure-u-1 all-pad {% if about_url in request.path %}selected{% endif %}" data-ajax>About</a></li>
+        
+        
+        {% if user.is_authenticated %}
+            <li class="pure-u-1"><a href="{{ user_url }}" class="pure-u-1 all-pad {% if user_url in request.path %}selected{% endif %}">
+            Your account
+            </a></li>
+        {% else %}
+            {% url 'auth_login' as login_url %}
+            <li class="pure-u-1"><a id="login_link" href="{{ login_url }}" class="pure-u-1 all-pad {% if login_url in request.path %}selected{% endif %}" data-ajax>Login</a> </li>
+            {% url 'registration_register' as register_url %}
+            <li class="pure-u-1"><a id="register_link" href="{{ register_url }}" class="pure-u-1 all-pad {% if register_url in request.path %}selected{% endif %}" data-ajax>Register</a></li>
+        {% endif %}
+        </ul>
+    
+    </nav>
+
     <div id="header" class="pure-u-1">
     
-        <form id="search" data-pjax action="{% url 'search' %}" method="post">
+        <div class="pure-g">
+        
+        <div class="pure-u-4-24 all-pad" id="menu">
+            <button class="menu-trigger"></button>
+        </div>
+        
+        <form id="search" data-pjax action="{% url 'search' %}" method="post" class="pure-u-20-24">
                                 
             {% csrf_token %}
-            <div id="form-inner" class="pure-u-1">
+            <div id="form-inner" class="pure-g">
                 <label for="id_char"></label>
-                <input id="id_char" class="pure-u-1 l-box" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search" >
-                <button type="submit" value="Go" id="submit" class="pure-u-2-24 l-box">Search</button>
+                <input id="id_char" class="pure-u-22-24 all-pad" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search" >
+                <button type="submit" value="Go" id="submit" class="pure-u-2-24 all-pad">Search</button>
             </div>
         </form>
+        
+        
+        </div>
     
     </div>
     
 
     <img id="loading" src="{% static 'images/loading.gif' %}"/>
     
-    <div id="container" class="centred"> 
+    <div id="container" class="pure-g"> 
         {% block content %}{% endblock %}        
     </div>
     
@@ -73,6 +99,12 @@
 
 		$(document).ready( function() {
             
+            
+            /// SLIDEOUT MENU ON MOBILE
+            var jPM = $.jPanelMenu({
+                duration: 150,    
+            });
+            jPM.on();
 
             /// ASSIGN VARIOUS CLASSES BASED ON LOCATION
             var noHeaderURLs = [];

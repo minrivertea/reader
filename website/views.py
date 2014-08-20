@@ -149,7 +149,6 @@ def search(request, search_string=None, title='Search', words=None):
             )
     
     
-     
     # if there's only 1 word, take us straight to the single word definition
     if len(words) == 1:
         word = words[0]
@@ -161,22 +160,20 @@ def search(request, search_string=None, title='Search', words=None):
 
 
 def search_contains(request, word):
-
-    words = ChineseWord()._contains(word)
-    
+    words = ChineseWord()._contains(word)    
     return _render(request, 'website/wordlist.html', locals())
 
 
 def search_starts_with(request, word):
-    
     words = ChineseWord()._starts_with(word)
-    
     return _render(request, 'website/wordlist.html', locals())     
+    
     
     
 @cache_page_nginx        
 def home(request):
     return _render(request, 'website/home.html', locals())
+
 
 
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'

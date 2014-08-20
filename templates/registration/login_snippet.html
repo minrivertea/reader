@@ -1,33 +1,32 @@
 
 
-<div id="login" class="">
+<div id="login" class="pure-u-1 all-pad text-center">
 
 {% if user.is_authenticated %}
 <p class="big">You're already signed in - visit your <a href="">account page</a> here</p>
 {% else %}
 <h2>Login to your account</h2>
 
-<p>Don't have an account?  <a href="{% url 'registration_register' %}">Click here to create a new one</a></p>
+<p>Don't have an account?  <br/><a href="{% url 'registration_register' %}">Click here to create a new one</a></p>
 
 
 {% if form.errors %}
 <p class="red">Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-<form method="post" action="{% url 'auth_login' %}">
-{% csrf_token %}
-<p>
-     <input type="text" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="clearMeFocus"/>
-     <label for="id_email">Your email address</label>
-</p>
-<p>
-     <input type="password" name="password" id="id_password" value="" placeholder="Type your password" class="clearMeFocus"/>
-     <label for="id_password1">Choose a password</label>
-</p>
-<input type="submit" value="Login" class="button" />
+<form method="post" action="{% url 'auth_login' %}" class="pure-u-1 text-center">
+    {% csrf_token %}
+    <p>
+         <input type="text" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="all-pad"/>
+         <label for="id_email">Your email address</label>
+    </p>
+    <p>
+         <input type="password" name="password" id="id_password" value="" placeholder="Type your password" class="pure-u-1 all-pad"/>
+         <label for="id_password1">Choose a password</label>
+    </p>
+    <input type="submit" value="Login" class="button" />
 
-
-<p class="help small"><a href="{% url 'auth_password_reset' %}">Forgot your password?</a></p>
+    <p class="help small"><a href="{% url 'auth_password_reset' %}">Forgot your password?</a></p>
 
 </form>
 

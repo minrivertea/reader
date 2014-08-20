@@ -1,14 +1,14 @@
 
-<div class="text" id="account">
+<div class="pure-u-1 all-pad" id="account">
     
-    <div class="section">
-        <div class="title">
+    <div class="section pure-g">
+        <div class="title pure-u-2-5">
             Test
             {% if request.user.get_test_items %}
                 <span class="notification">{{ request.user.get_test_items|length }}</span>
             {% endif %}
         </div>
-        <div class="inner">
+        <div class="inner pure-u-3-5">
             {% if request.user.get_test_items %}
                 You have {{ request.user.get_test_items|length }} items ready to test now - <a href="{% url 'test' %}">start test</a>
             {% else %}
@@ -17,15 +17,15 @@
         </div>
     </div> 
         
-    <div class="section green">
+    <div class="section pure-g">
         
-        <div class="title">
+        <div class="title pure-u-2-5">
             Review
             {% if request.user.get_review_items %}
                 <span class="notification">{{ request.user.get_review_items|length }}</span>
             {% endif %}
         </div>
-        <div class="inner"> 
+        <div class="inner pure-u-3-5"> 
             {% if request.user.get_review_items %}
                 You have items ready to review now - <a href="{% url 'review_new' %}">start review</a>
             {% else %}
@@ -34,15 +34,14 @@
         </div>
     </div>
         
-    <div class="section red">
-        <div class="title">Wordlist </div>
-        <div class="inner"><a href="{% url 'view_wordlist' %}">View all the words you've looked up</a></div>
+    <div class="section pure-g">
+        <div class="title pure-u-2-5">Wordlist </div>
+        <div class="inner pure-u-3-5"><a href="{% url 'view_wordlist' %}">View all the words you've looked up</a></div>
     </div>
         
-    <div class="section purple" id="settings">
-        <a href=""><span class="link"></span></a>
-        <div class="title">Settings</div>
-        <div class="inner open">
+    <div class="section pure-g" id="settings">
+        <div class="title pure-u-2-5">Settings</div>
+        <div class="inner pure-u-3-5">
             <ul>
                 <li>Logged in as {{ user.email }} - <a href="{% url 'auth_logout' %}" class="red">logout</a></li>
                 <li>Joined on {{ user.date_joined }}</li>

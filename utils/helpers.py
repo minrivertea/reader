@@ -24,7 +24,6 @@ def _render(request, template, context_dict=None, page=None, **kwargs):
     # usually we'll be returning the page via AJAX
     if request.is_ajax():
         
-                
         if page:
             template = "".join((template.strip('page.html'), page, '.html'))
         else:
@@ -38,7 +37,6 @@ def _render(request, template, context_dict=None, page=None, **kwargs):
         )
         
         return HttpResponse(html)
-    
     
     return render_to_response(
         template, context_dict or {}, context_instance=RequestContext(request),

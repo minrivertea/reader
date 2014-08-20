@@ -1,7 +1,0 @@
-{% load convert_timestamp %}
-
-<ul>
-    {% for k,v in request.user.get_personal_words.words.items %}
-        <li><a href="{% url 'single_word' k %}">{{ k }} <span class="small">{{ v.last_search|convert_timestamp|timesince }}</span></a> <a class="remove" href="{% url 'personal_word_remove' k %}">x</a></li>
-    {% endfor %}
-</ul>
