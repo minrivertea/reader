@@ -31,28 +31,22 @@
     </div>
 
 <hr/>
-    
-    <div class="tabs">
-        
-        <a class="tab selected" href="{% url 'search_starts_with' word.chars %}" data-pjax>
-             Starts with <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
-        </a>
-        
-        <a class="tab" href="{% url 'search_contains' word.chars %}" data-pjax>
-            Contains <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
-        </a>
-        
-        <a class="tab" href="" data-pjax>
-            Examples 
-      </div>
-        
-    </div>
+ 
+<div class="buttons">
 
-    <div class="panel">
+    <button href="{% url 'search_starts_with' word.chars %}" data-pjax>Starts with <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span></button>
     
-        
+    <button href="{% url 'search_contains' word.chars %}" data-pjax>
+        Contains <span class="black">{% for x in chars %}{{ x }}{% endfor %}</span>
+    </button>
+            
+    <button href="" data-pjax>
+        Examples 
+    </button>
+
+</div>
     
-    </div>
+
 </div>
 
 

@@ -1524,6 +1524,10 @@ h3 span.this {
 
 /* SINGLE WORD LOOKUP STYLES */
 
+#word .buttons button {
+  font-size: 0.8em;   
+}
+
 #single {
 
 }
