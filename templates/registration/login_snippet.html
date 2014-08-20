@@ -3,7 +3,7 @@
 <div id="login" class="pure-u-1 all-pad text-center">
 
 {% if user.is_authenticated %}
-<p class="big">You're already signed in - visit your <a href="">account page</a> here</p>
+<p class="big">You're already signed in - visit your <a href="{% url 'user' %}">account page</a> here</p>
 {% else %}
 <h2>Login to your account</h2>
 
@@ -17,7 +17,7 @@
 <form method="post" action="{% url 'auth_login' %}" class="pure-u-1 text-center">
     {% csrf_token %}
     <p>
-         <input type="text" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="all-pad"/>
+         <input type="email" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="all-pad"/>
          <label for="id_email">Your email address</label>
     </p>
     <p>

@@ -75,7 +75,7 @@
             {% csrf_token %}
             <div id="form-inner" class="pure-g">
                 <label for="id_char"></label>
-                <input id="id_char" class="pure-u-22-24 all-pad" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search" >
+                <input id="id_char" class="pure-u-20-24 all-pad" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search for a Chinese word" >
                 <button type="submit" value="Go" id="submit" class="pure-u-2-24 all-pad">Search</button>
             </div>
         </form>
@@ -178,6 +178,7 @@
             /// ACTIONS AFTER PJAX HAS LOADED THE CONTENT IN THE PAGE
             $(document).on('pjax:success', function() {
                 $('#container').fadeIn(100);
+                jPM.close();
             });
             
             /// USED FOR THE BACK/FORWARDS CLICKS OR SWIPES

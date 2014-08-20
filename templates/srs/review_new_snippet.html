@@ -13,19 +13,18 @@
     } ;
 
     function wordOK() {
-    
-        var thisLink = $(this)
-        $.ajax({
-            url: thisLink.attr('href'),
-            success: function(data) {
-                
-                /// nicely slideup the element and remove from DOM
-                thisLink.parent('li').slideUp(300, function() {
-                    thisLink.parent('li').remove();
-                });
-            },
-        });        
-        return false;
+            var thisLink = $(this)
+            $.ajax({
+                url: thisLink.attr('href'),
+                success: function(data) {
+                    
+                    /// nicely slideup the element and remove from DOM
+                    thisLink.parent('li').slideUp(300, function() {
+                        thisLink.parent('li').remove();
+                    });
+                },
+            });        
+            return false;
     } ;
     
     function wordExchange() {
@@ -64,14 +63,13 @@
 
     {% if words %}
     
-        <div class="centred test">
+        <div class="pure-u-1 all-pad test">
     
-            <p class="big">{{ strategy.title }}</p>
-            <p>{{ strategy.description }}</p>
+            {{ strategy.description }}
 
         </div>
     
-        <ul id="wordlist" class="centred test">
+        <ul id="wordlist" class="pure-g test">
             {% for w in words %}
                 {% include 'srs/review_list_snippet.html' %}
             {% endfor %}

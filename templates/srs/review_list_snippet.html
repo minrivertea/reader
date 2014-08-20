@@ -1,27 +1,23 @@
 {% load convert_backslashes %}    
    
 {% if w %}     
-<li class="wrapper" id="char{{ w.wordset }}" chars="{{ w.chars }}">
+{% for x in w.meanings %}
+<li class="wrapper pure-u-1 all-pad" id="char{{ w.wordset }}" chars="{{ w.chars }}">
     
     <a data-pjax href="{% url 'single_word' w.chars %}">
-    
     
     <a class="action exchange" title="Exchange word" href="{% url 'personal_word_review_exchange_word' w %}"><span></span></a>
     <a class="action okay" title="Done" href="{% url 'personal_word_reviewed' w %}"><span></span></a>
     
-    
-    <div class="chars">{{ w.chars }}</div>
-    {% for x in w.meanings %}
-        <div class="line">
-            
-            <div class="pinyin">{{ x.pinyin }}</div>
-            <div class="meaning">{{ x.meaning|safe }}</div>
-        </div>
-    {% endfor %}
-    
+    <div class="pure-g">
+        <div class="chars pure-u">{{ w.chars }}</div>
+        <div class="pinyin pure-u l-pad">{{ x.pinyin }}</div>
+        <div class="meaning pure-u-1">{{ x.meaning|safe }}</div>
+    </div>    
     
     </a>
 </li>
+{% endfor %}
 {% else %}
 <li class="wrapper">
     <div class="chars long">No more items available to test!</div>

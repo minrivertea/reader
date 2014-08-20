@@ -20,8 +20,7 @@ class BaseStrategy(object):
 class ReviewNew(BaseStrategy):
     """ Show recent words added to personal dictionary """
     
-    title = "Read and review these words"
-    description = "This is the first step of the memory process - read and review these words again, looking over the characters, pronunciations and meanings. Spend a 3-4 minutes maximum, read them out aloud if it's convenient, and don't try to test yourself yet."
+    description = "Read and review these words again, looking over the characters, sounds and meanings. Spend a 3-4 minutes maximum and read them out aloud if it's convenient. Don't try to test yourself yet!"
     empty_description = "You've got no items left to review right now"
     
     def items(self, exclusions=[]):

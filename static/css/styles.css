@@ -144,22 +144,22 @@ hr {
 
 
 ::-webkit-input-placeholder { /* WebKit browsers */
-  font-size: 13px;
+  font-size: 0.9em;
   color: #c1c1c1;
 }
 
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-  font-size: 13px;
+  font-size: 0.9em;
   color: #c1c1c1;
   opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-  font-size: 13px;
+  font-size: 0.9em;
   color: #c1c1c1;
   opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10+ */
-  font-size: 13px;
+  font-size: 0.9em;
   color: #c1c1c1;
 }
 
@@ -266,7 +266,9 @@ hr {
 
 #search input#id_char {
     background: none repeat scroll 0 0 transparent;
-    border: medium none;
+    border: none;
+    border-left: 1px solid #f1f1f1;
+    border-right: 1px solid #f1f1f1;
     color: #999;
     border-radius: 0;
     color: #333333;
@@ -910,7 +912,7 @@ body.color4 #tools {
 }
 
 #wordlist li {
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px dashed #e1e1e1;
   position: relative;
   color: #E55C12; 
   font-size: 1.1em;  
@@ -974,11 +976,13 @@ body.color4 #tools {
 
 #wordlist .pinyin {
   text-transform: lowercase;
+  top: 3px;
 }
 
 #wordlist .meaning {
   color: #777777;
   font-size: 0.8em;
+  padding-top: 0.5em;
 }
 
 #wordlist .en .english {
@@ -1008,12 +1012,8 @@ body.color4 #tools {
 
 /* START TESTLIST STYLES */
 
-#wordlist.test .chars {
-  font-size: 20px;   
-}
-
-#wordlist.test .pinyin, #wordlist.test .meaning {
-  font-size: 13px;
+#wordlist.test li:first-child {
+  border-top: 1px dashed #e1e1e1;   
 }
 
 #wordlist.test .chars {
@@ -1021,8 +1021,7 @@ body.color4 #tools {
 }
 
 #wordlist.test .pinyin {
-  left: 200px;
-  color: #c1c1c1;    
+  color: #c1c1c1; 
 }
 
 #wordlist.test li {
@@ -1035,27 +1034,13 @@ body.color4 #tools {
 
 #wordlist.test li:first-child .chars, #wordlist.test li:hover .chars {
   color: #333;
-  font-size: 28px;   
-}
-
-#wordlist.test li:first-child .chars.long, #wordlist.test li:hover .chars.long {
-  font-size: 20px;
-  color: #999;   
 }
 
 #wordlist.test li:first-child .pinyin, #wordlist.test li:hover .pinyin {
   color: #2772b2;
 }
 
-#wordlist.test li:first-child .meaning, #wordlist.test li:hover .meaning {
-  color: #555;
-}
 
-#wordlist.test .meaning {
-  left: 400px;
-  width: 350px;
-  color: #c1c1c1;  
-}
 
 #wordlist.test a.action {
     background: none repeat scroll 0 0 #e1e1e1;
@@ -1267,11 +1252,6 @@ h3 {
     margin: 10px 0;
 }
 
-h3#examples:hover, h3#similar:hover {
-  cursor: pointer;
-  opacity: 0.8;   
-}
-
 h3 span.arrow {
   font-size: 16px;
   margin: 0 10px;
@@ -1283,174 +1263,7 @@ h3 span.this {
   font-size: 14px;
 }
 
-#head {
-    float: left;
-    left: 200px;
-    position: absolute;
-    top: 150px;
-}
 
-#url {
-  color: #999;
-  font-style: italic;
-  margin-top: 5px;
-  margin-bottom: 20px;   
-}
-
-#appearance {
-  position: relative;   
-}
-
-#original-page, #appearance .button, #group .button, #pinyin .button {
-    background: none repeat scroll 0 0 #f6f6f6;
-    color: #E55C12;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 9px 10px 5px 10px;
-    text-decoration: none;
-    text-shadow: none;
-    position: relative;
-    border: 1px solid #D1D1D1;
-    text-transform: uppercase;
-    margin: 0 0px 0 8px;
-    float: left;
-    box-shadow: none;
-    width: auto;
-}
-
-#appearance.selected .button {
-  background: #fff;   
-  position: relative;
-  top: -5px;
-  padding-top: 14px;
-}
-
-#original-page:hover, #appearance .button:hover, #group .button:hover, #pinyin .button:hover {
-  cursor: pointer;
-  color: #c44500;  
-}
-
-#original-page:before {
-    border-color: transparent #F6F6F6;
-    border-style: solid solid solid none;
-    border-width: 15px 15px 15px 0;
-    content: " ";
-    display: block;
-    height: 0;
-    left: -15px;
-    position: absolute;
-    top: -1px;
-    width: 0;
-    z-index: 10;
-}
-
-#original-page:after {
-    border-color: transparent #c1c1c1;
-    border-style: solid solid solid none;
-    border-width: 16px 16px 16px 0;
-    content: " ";
-    display: block;
-    height: 0;
-    left: -16px;
-    position: absolute;
-    top: -2px;
-    width: 0;
-    z-index: 9;
-}
-
-#appearance.selected .extra:before {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    background: none repeat scroll 0 0 #FFFFFF;
-    border-color: #C1C1C1;
-    border-image: none;
-    border-style: solid;
-    border-width: 0 1px;
-    content: " ";
-    display: block;
-    height: 11px;
-    left: 148px;
-    position: absolute;
-    top: -11px;
-    width: 70px;
-    z-index: 10;
-}
-
-/* editable styles */
-
-#editable div {
-  position: absolute;
-  width: 300px;
-  height: auto;
-  box-shadow: 0 1px 20px #999;
-  background: #fff;
-  z-index: 100;
-  padding: 15px; 
-  border: 1px solid #a1a1a1;  
-}
-
-#editable div:before {
-    border-color: #fff transparent;
-    border-style: none solid solid solid;
-    border-width: 0 15px 15px 15px;
-    content: " ";
-    display: block;
-    height: 0;
-    left: 120px;
-    position: absolute;
-    top: -15px;
-    width: 0;
-    z-index: 11;     
-}
-
-#editable div:after {
-    border-color: #a1a1a1 transparent;
-    border-style: none solid solid solid;
-    border-width: 0px 15px 15px 15px;
-    content: " ";
-    display: block;
-    height: 0;
-    left: 120px;
-    position: absolute;
-    top: -16px;
-    width: 0;
-    z-index: 10;     
-}
-
-#editable div .chars, #editable div .pinyin {
-  font-size: 24px;
-  margin: 0px 0 5px 0;
-  float: left;
-  width: 100%;
-}
-
-#editable div .pinyin {
-  font-size: 16px;  
-  text-transform: lowercase;
-}
-
-#editable div input[type=text] {
-  width: 93%;
-  border: 1px solid #c1c1c1;
-  padding: 10px;
-  font-size: 20px;
-  margin-bottom: 10px;
-  color: #333;   
-}
-
-#editable div input[type=submit] {
-    float: right;
-    font-size: 14px;
-    padding: 8px 25px;
-    width: auto;
-}
-
-#editable div label {
-  left: 13px;
-  font-size: 18px;   
-}
 
 
 /* flatpage about us styles */
@@ -1465,7 +1278,7 @@ h3 span.this {
 
 .text p.big, p.big {
    font-size: 1.8em;
-   line-height: 1.8em;
+   line-height: 1.2em;
 }
 
 .text ul {
