@@ -1272,6 +1272,10 @@ h3 span.this {
 
 /* flatpage about us styles */
 
+.text {
+  line-height: 1.6em;   
+}
+
 .text p, p {
   margin: 10px 0;   
 }
