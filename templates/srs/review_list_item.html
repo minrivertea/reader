@@ -1,0 +1,27 @@
+   
+{% if w %}     
+    {% for x in w.meanings %}
+    <li class="wrapper pure-u-1 all-pad">
+
+        <a data-pjax href="{% url 'single_word' w.chars %}">
+        
+        <a class="action okay" title="Done" href="{% url 'personal_word_reviewed' w %}"><span></span></a>
+        
+        <div class="pure-g">
+            <div class="chars pure-u">{{ w.chars }}</div>
+            <div class="pinyin pure-u l-pad">{{ x.pinyin }}</div>
+            <div class="meaning pure-u-1">{{ x.meaning|safe }}</div>
+        </div>    
+        
+        </a>
+    </li>
+    {% endfor %}
+{% else %}
+<li class="wrapper">
+    <div class="chars long">No more items available to review!</div>
+    <div class="line">&nbsp;<div>
+</li>
+{% endif %}
+
+
+
