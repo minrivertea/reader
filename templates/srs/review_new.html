@@ -40,8 +40,6 @@
                 });
                 
                 
-
-                
             }, 
         });
         
@@ -50,9 +48,7 @@
 
 
     $(document).ready( function() {
-        
-        bindActions();
-                
+        bindActions();                
     });
 
 </script>
@@ -62,7 +58,7 @@
     
         <ul id="wordlist" class="pure-g test">
             {% for w in items %}
-                {% include 'srs/review_list_snippet.html' %}
+                {% include 'srs/review_list_item.html' %}
             {% endfor %}
         </ul>
         

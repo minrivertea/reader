@@ -12,12 +12,9 @@ urlpatterns = patterns('',
     url(r'^search/(?P<word>[\w-]+)/contains/$', views.search_contains, name="search_contains"),
     url(r'^search/(?P<search_string>[\w-]+)/$', views.search, name="search_with_string"),
     url(r'^search/$', views.search, name="search"),
-    
-    url(r'^get-personal-words/$', views.get_personal_words, name="get_personal_words"),
-    
+        
     
     # DICTIONARY URLS
-    url(r'^words/$', views.words, name="words"),
     url(r'^words/(?P<chars>[\w-]+)/$', single_word, name="single_word"),
         
     

@@ -37,14 +37,6 @@ from nginx_memcache.decorators import cache_page_nginx
 
 
 
-def _problem(request, problem=None):    
-    if request.is_ajax():
-        html = render_to_string('website/problem_snippet.html', locals())
-        url = '/problem/'
-        return HttpResponse(html)
-    return _render(request, 'website/problem.html', locals())
-
-
 @cache_page_nginx
 def search(request, search_string=None, title='Search', words=None):
     
@@ -176,32 +168,4 @@ def page(request, slug):
     return _render(request, template, locals())
 
 
-    
-def user(request):
-    user = request.user
-    return _render(request, 'website/user.html', locals())
-
-
-
-
-# TODO - THIS SHOULD RETURN SOME KIND OF GENERIC WORDS VIEW
-def words(request):
-    return _render(request, 'website/wordlist.html', locals())
-
  
-def get_personal_words(request):
-    
-    try:
-        account = request.user.get_profile()
-    except:
-        return HttpResponse()
-    
-    
-    words = account.get_personal_words()
-    
-    return _render(request, 'website/wordlist.html', locals())
-    
-    
-    
-
-    
