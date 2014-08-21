@@ -107,7 +107,7 @@ p.red, a.red, span.red {
 }
 
 .small, span.small {
-  font-size: 0.7em;   
+  font-size: 0.8em;   
 }
 
 hr {
@@ -133,6 +133,10 @@ hr {
 
 .text-center {
  text-align: center;  
+}
+
+.text-left {
+  text-align: left;   
 }
 
 #loading {
