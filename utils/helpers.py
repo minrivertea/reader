@@ -11,7 +11,6 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.utils import simplejson
 
 from cedict.pinyin import PINYIN_WORDS, AMBIGUOUS_WORDS
 
@@ -21,22 +20,17 @@ from cjklib.reading import *
 #render shortcut
 def _render(request, template, context_dict=None, page=None, **kwargs):
     
-    # usually we'll be returning the page via AJAX
+    # HANDLE THE REQUEST WITH AJAX
     if request.is_ajax():
-        
-        if page:
-            template = "".join((template.strip('page.html'), page, '.html'))
-        else:
-            template = template.replace('.html', "_snippet.html")
-        
-        html = render_to_string(
-            template, 
-            context_dict or {}, 
-            context_instance=RequestContext(request),
-            **kwargs
-        )
+       
+        html = render_to_string(template, context_dict or {}, 
+            context_instance=RequestContext(request), **kwargs)
         
         return HttpResponse(html)
+        
+    else:
+        context_dict['snippet'] = template
+        template = 'generic_parent.html'
     
     return render_to_response(
         template, context_dict or {}, context_instance=RequestContext(request),

@@ -1,19 +1,52 @@
-{% extends base_template %}
+{% load link_chars %}
 
-{% block extrajs %}
-<script type="text/javascript">
-</script>
-{% endblock %}
+<div id="word" class="pure-u-1 all-pad">
+    
+    <div id="single">
+        
+        <div id="chars">
+            {% for x in word.chars %}
+                <a href="{% url 'single_word' x %}" data-pjax class="single">
+                    <span class="chars">{{ x }}</span>
+                </a>
+            {% endfor %}
+        </div>
+        
+        <hr/>
+        
+        
+        {% for m in word.meanings %}
+            <div class="pinyin">
+                {{ m.pinyin }}
+            </div>
+            
+            <hr/>
+            
+            <div class="meaning">
+                {{ m.meaning|link_chars|safe }}
+            </div>
+        
+        {% endfor %}
+
+    </div>
+
+<hr/>
+ 
+<div class="buttons">
+
+    <button href="{% url 'search_starts_with' word.chars %}" data-pjax>
+        Starts with</button>
+    
+    <button href="{% url 'search_contains' word.chars %}" data-pjax>
+        Contains</button>
+            
+    <button href="" data-pjax>
+        Examples</button>
+
+</div>
+    
+
+</div>
 
 
-{% block extracss %}
-<style type="text/css">
 
-
-</style>
-{% endblock %}
-
-
-{% block content %}
-    {% include 'cedict/single_snippet.html' %}    
-{% endblock %}

@@ -1,24 +1,15 @@
-{% extends "base.html" %}
 
-{% load django_static %}
+<div id="crumbs" class="pure-u-1 all-pad">
+    <span class="arrow">&#9658;</span>
+    <a href="{{ url }}">{{ title|capfirst }}</a>
+    {% if obj.title %}&nbsp;&nbsp;\&nbsp;&nbsp;{{ obj.title }} <a class="url" href="{{ obj.url }}">({{ url }})</a>{% endif %}
+</div>
 
-{% block extrajs %}
-<script type="text/javascript">
-
-</script>
-{% endblock %}
-
-
-{% block extracss %}
-<style type="text/css">
-
-</style>
-{% endblock %}
+<div id="head" class=""><div id="appearance" class="set"><span class="button">Fonts</span><div class="extra"><div><h4>Change font</h4><ul id="fonts"><li><a href="#" class="font1 selected" onclick="changeFont(&apos;font1&apos;, false);" title="KaiTi">汉字</a></li><li><a href="#" class="font2" onclick="changeFont(&apos;font2&apos;);" title="SongTi">汉字</a></li><li><a href="#" class="font3" onclick="changeFont(&apos;font3&apos;);" title="FangSong">汉字</a></li><li><a href="#" class="font4" onclick="changeFont(&apos;font4&apos;);" title="HeiTi">汉字</a></li></ul></div><div><h4>Theme</h4><ul id="colors"><li><a href="#" onclick="changeColor(&apos;color1&apos;);" class="color1" title="Red"></a></li><li><a href="#" onclick="changeColor(&apos;color2&apos;);" class="color2" title="blue"></a></li><li><a href="#" onclick="changeColor(&apos;color3&apos;);" class="color3" title="green"></a></li><li><a href="#" onclick="changeColor(&apos;color4&apos;);" class="color4" title="black"></a></li></ul></div></div></div><div id="group" class="set"><span class="button" class="">Group Words</span></div><div id="pinyin" class="set"><span class="button" class="selected">Pinyin</span></div></div>
 
 
-{% block content %}
-
-
-    {% include 'website/text_snippet.html' %}
-
-{% endblock %}
+<div id="article" class="pure-u-1 easy">
+    <div id="lookups"></div>
+    <h1>{{ obj.title }}</h1>
+    {% include list_template %}
+</div>

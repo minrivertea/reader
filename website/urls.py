@@ -6,7 +6,6 @@ urlpatterns = patterns('',
     
     # BASE URLS
     url(r'^$', views.home, name="home"),
-    url(r'^articles/$', views.articles, name="articles"),
     
     # SEARCH URLS
     url(r'^search/(?P<word>[\w-]+)/startswith/$', views.search_starts_with, name="search_starts_with"),
@@ -20,9 +19,6 @@ urlpatterns = patterns('',
     # DICTIONARY URLS
     url(r'^words/$', views.words, name="words"),
     url(r'^words/(?P<chars>[\w-]+)/$', single_word, name="single_word"),
-    
-    # UTILS URLS
-    url(r'^stats/$', views.stats, name="stats"),
-    
+        
     
 )

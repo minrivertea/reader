@@ -1,20 +1,39 @@
-{% extends base_template %}
 
-{% block pagetitle %}Register{% endblock %}
+<div id="login" class="text-center pure-u-1 all-pad">
 
-{% block extrajs %}
-<script type="text/javascript">
+{% if user.is_authenticated %}
+<p class="big">You're already signed in - visit your <a href="{% url 'user' %}">account page</a> here</p>
+{% else %}
+<h2>Create an account</h2>
+<p>Already have an account?  <a href="{% url 'django.contrib.auth.views.login' %}">Click here to login</a></p>
 
-</script>
-{% endblock %}
+{% if form.errors %}
+<p class="red">{{ form.errors }}</p>
+{% endif %}
+
+<form method="post" action=".">
+{% csrf_token %}
+<p>
+     <input type="email" name="email" id="id_email" placeholder="Enter your email address" class="all-pad"/>
+     <label for="id_email">Your email address</label>
+</p>
+<p>
+     <input type="password" name="password1" id="id_password1" placeholder="Type your password once" class="all-pad"/>
+     <label for="id_password1">Choose a password</label>
+</p>
+
+<p>
+     <input type="password" name="password2" id="id_password2" placeholder="Type your password again" class="all-pad"/>
+     <label for="id_password1">Type your password twice</label>
+</p>
+
+<p class="help">We take your privacy seriously. <br/>Creating an account means you agree to our <a href="{% url 'page' 'terms-and-conditions' %}">terms and conditions</a> - you should read them if you're concerned. </p>
+
+<input type="submit" value="Create account" class="button" />
+</form>
 
 
-{% block extracss %}
+{% endif %}
 
-{% endblock %}
+</div>
 
-{% block content %}
-
-{% include 'registration/registration_form_snippet.html' %}
-
-{% endblock %}

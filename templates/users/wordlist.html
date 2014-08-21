@@ -1,19 +1,32 @@
-{% extends base_template %}
-
-{% block extrajs %}
-<script type="text/javascript">
-
-</script>
-{% endblock %}
+{% load convert_timestamp %}
 
 
-{% block extracss %}
-<style type="text/css">
+<div class="pure-u-1" id="">
 
-</style>
-{% endblock %}
+<h2 class="pure-g"><span class="pure-u-1 all-pad">Your wordlist</span></h2>
+
+<ul id="wordlist" class="pure-g">
+    {% for k,v in request.user.get_personal_words.words.items %}
+    <li class="wrapper pure-u-1 all-pad">
+        
+        
+        <div class="chars pure-u">{{ k }}</div>
+        <div class="pinyin pure-u l-pad">
+            {{ v.next_action }} on {{ v.next_action_date|convert_timestamp|date:"d M Y" }}
+        </div>
+        <div class="meaning pure-u-1 r-pad">
+            {% if v.test_date %}
+            Pinyin {% if v.pinyin_pass %} Pass{% else %} Fail{% endif %} | 
+            Meaning {% if v.meaning_pass %} Pass{% else %} Fail{% endif %}
+            {% else %}
+            <em>Not reviewed/tested yet</em>
+            {% endif %}
+            | <a class="remove" href="{% url 'personal_word_remove' k %}">remove</a>
+        </div>
+    
+    </li>
+    {% endfor %}
+</ul>
 
 
-{% block content %}
-    {% include 'users/wordlist_snippet.html' %}    
-{% endblock %}
+</div>

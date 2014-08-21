@@ -26,16 +26,10 @@ from utils.redis_helper import _get_redis, _search_redis, _add_to_redis
 import utils.messages as messages
 
 
+# APP
 from creader.views import _group_words
-
-from cjklib import characterlookup
-from cjklib.dictionary import *
-from cjklib.reading import ReadingFactory
-from fancy_cache import cache_page
-
 from website.forms import SearchForm
 from website.signals import *
-
 from cedict.words import ChineseWord, EnglishWord
 
 
@@ -47,7 +41,6 @@ def _problem(request, problem=None):
     if request.is_ajax():
         html = render_to_string('website/problem_snippet.html', locals())
         url = '/problem/'
-        #return HttpResponse(simplejson.dumps({'html':html, 'url':url}), mimetype="application/json")
         return HttpResponse(html)
     return _render(request, 'website/problem.html', locals())
 
@@ -179,10 +172,8 @@ def home(request):
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
 @cache_page_nginx
 def page(request, slug):
-    template = 'website/pages/page.html'
-    snippet = 'website/pages/%s.html' % slug
-    
-    return _render(request, template, locals(), page=slug)
+    template = 'website/pages/%s.html' % slug
+    return _render(request, template, locals())
 
 
     
@@ -191,20 +182,6 @@ def user(request):
     return _render(request, 'website/user.html', locals())
 
 
-
-# TODO - THIS SHOULD RETURN A GENERIC, NON-USER-SPECIFIC ARTICLE VIEW
-def articles(request):
-    return _render(request, 'website/articles.html', locals())
-
-
-# DISPLAYS SITE STATISTICS
-def stats(request):
-    
-    # TODO - do monthly filtering, backwards and forwards, comparisons etc.
-    key = "stats:%s:%s" % (datetime.date.today().year, datetime.date.today().month)
-    stats = _search_redis(key)
-    
-    return _render(request, 'website/stats.html', locals())    
 
 
 # TODO - THIS SHOULD RETURN SOME KIND OF GENERIC WORDS VIEW
@@ -220,10 +197,7 @@ def get_personal_words(request):
         return HttpResponse()
     
     
-    # TODO - add pagination with django-endless maybe
     words = account.get_personal_words()
-    if request.is_ajax():
-        return HttpResponse(simplejson.dumps(words), mimetype="application/json")
     
     return _render(request, 'website/wordlist.html', locals())
     
