@@ -2,7 +2,6 @@
 # -*- coding: utf8 -*-
 
 
-
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_unicode
 from django.template import RequestContext
@@ -13,7 +12,6 @@ import time
 
 from cedict.words import ChineseWord
 from utils.helpers import _render
-from strategies import *
 from forms import SubmitAnswerForm
 
 
@@ -21,23 +19,27 @@ from forms import SubmitAnswerForm
     
 def review_new(request):
 
-    strategy = ReviewNew(request.user.email)
-    
+    words = request.user.get_personal_words().get_items(review=True, timestamp=time.time())
+    items = []
+    for x in words:
+        items.append(ChineseWord(chars=x['chars']))
+        
     return _render(request, 'srs/review_new.html', locals())
 
 
 
 def test(request):
     
-    # get words ready to test today
-    words = request.user.get_personal_words().get_items(test=True) #, timestamp=time.time())
+    # COLLECT THE WORDS
+    words = request.user.get_personal_words().get_items(test=True, timestamp=time.time())
         
-    # now we need to decide how to test each item.
+    # DECIDE HOW TO TEST THE ITEMS
     items = []
     count = 1
     for x in words:
-        html = None        
-        # is this the first time we've tested it?
+        html = None      
+          
+        # IS THIS THE FIRST TEST
         if not x['test_date']:
             word = ChineseWord(chars=x['chars'])
             word.id = count
@@ -45,10 +47,7 @@ def test(request):
                 m['alternative_meaning'] = ChineseWord()._get_random(number=1, chars=x['chars'])['meaning1']
                 
             html = render_to_string('srs/tests/first_test.html', {'word': word, 'form': SubmitAnswerForm()}, context_instance=RequestContext(request))
-                     
         
-        if x['character_pass'] and x['pinyin_pass'] and x['meaning_pass']:
-            continue
 
         # if we get here, add it to the items list
         if html:
@@ -59,10 +58,11 @@ def test(request):
 
 
 def submit_answer(request):
+    
     if request.method == 'POST':
         form = SubmitAnswerForm(request.POST)
         if form.is_valid():
-                        
+            
             word = ChineseWord(chars=form.cleaned_data['characters'])
             meanings_count = len(word.meanings)
             

@@ -58,26 +58,19 @@
 </script>
 
 
-
-{% with strategy.items as words %}
-
-    {% if words %}
-    
-        <div class="pure-u-1 all-pad test">
-    
-            {{ strategy.description }}
-
-        </div>
+    {% if words %}        
     
         <ul id="wordlist" class="pure-g test">
-            {% for w in words %}
+            {% for w in items %}
                 {% include 'srs/review_list_snippet.html' %}
             {% endfor %}
         </ul>
+        
     {% else %}
-        <p class="big centred">{{ strategy.empty_description }}</p>
+    
+        <p class="">You don't have any words to review now.</p>
+        
     {% endif %}
 
-{% endwith %}
     
     

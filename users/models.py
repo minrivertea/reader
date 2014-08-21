@@ -11,7 +11,7 @@ from django.core.mail import send_mail
 
 from django.shortcuts import get_object_or_404
 
-import datetime
+from datetime import datetime, timedelta
 import time
 import unicodedata
 import json
@@ -189,8 +189,8 @@ class PersonalWordlist(object):
                 
         if word in wl:
             values = wl[word]
-            now = datetime.datetime.now()
-            gap = time.time() - time.mktime((now - datetime.timedelta(hours=2)).timetuple())
+            now = datetime.now()
+            gap = time.time() - time.mktime((now - timedelta(hours=2)).timetuple())
             this_gap = time.time() - values['search_date']
             if this_gap > gap:
                 values['last_search'] = time.time() # now
@@ -221,7 +221,7 @@ class PersonalWordlist(object):
             
             # define here what and when the next action should come
             values['next_action'] = 'review'
-            one_day_later = datetime.datetime.now() + datetime.timedelta(days=1)
+            one_day_later = datetime.now() + timedelta(days=1)
             values['next_action_date'] = time.mktime( ( one_day_later ).timetuple() )
             
             wl[word] = values          
@@ -253,28 +253,28 @@ class PersonalWordlist(object):
                 wordlist[word]['view_count'] += 1
             
             
-            # update the number of times the word has been reviewed
+            # UPDATE REVIEWED INFORMATION
             if reviewed:
                 
                 wordlist[word]['review_count'] += 1
                 wordlist[word]['review_date'] = time.time()
                 wordlist[word]['next_action'] = 'test'
                 
-                three_days_later = datetime.datetime.now() + datetime.timedelta(days=3)
+                three_days_later = datetime.now() + timedelta(days=3)                
                 wordlist[word]['next_action_date'] = time.mktime( ( three_days_later ).timetuple() )
-            
-            
+                            
+                                        
             # UPDATE THE WORD BASED ON A TEST THEY JUST COMPLETED
             if test_results:
                 
                 # get the last test/review date:
-                if wordlist[word]['test_date'] == '':
-                    last_action_date = wordlist[word]['review_date']
+                if wordlist[word]['test_date'] == '': 
+                    lad = wordlist[word]['review_date'] # last_action_date
                 else:
                     if wordlist[word]['review_date'] > wordlist[word]['test_date']:
-                        last_action_date = wordlist[word]['review_date']
+                        lad = wordlist[word]['review_date']
                     else:
-                        last_action_date = wordlist[word]['test_date']
+                        lad = wordlist[word]['test_date']
                 
                 
                 passed = True
@@ -284,17 +284,23 @@ class PersonalWordlist(object):
                         passed = False
                 
                 if passed:
-                    wordlist[word]['next_action'] = 'test'
                     
-                    today = (datetime.datetime.fromtimestamp(int(time.time())))
-                    last_date = (datetime.datetime.fromtimestamp(int(last_action_date)))
-                    new_gap = datetime.timedelta(seconds=(today-last_date).total_seconds() * 2.6)
-                    new_date = datetime.datetime.now() + new_gap
-                    wordlist[word]['next_action_date'] = time.mktime( ( new_date ).timetuple())
+                    ld = (datetime.fromtimestamp(float(lad))) # last date
+                    ti = timedelta(seconds=(datetime.now()-ld).total_seconds()) # this interval
+                    
+                    if ti < timedelta(days=1):
+                        ti = timedelta(days=1)
+                    
+                    ni = ti.total_seconds() * 2.6
+                    nd = datetime.now() + timedelta(seconds=ni)
+
+                    wordlist[word]['next_action'] = 'test'
+                    wordlist[word]['next_action_date'] = time.mktime( ( nd ).timetuple())
+                    
                 
                 else:
                     wordlist[word]['next_action'] = 'review'
-                    tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+                    tomorrow = datetime.now() + timedelta(days=1)
                     wordlist[word]['next_action_date'] = time.mktime((tomorrow).timetuple())
                 
             

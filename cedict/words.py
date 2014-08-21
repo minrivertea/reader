@@ -5,23 +5,11 @@ import string, unicodedata
 import redis
 import os
 PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
-
-from urlparse import urlparse
-
-import uuid
 import random
-import re
-import urllib2
-import datetime
-import time
 import json
 
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib import auth
-from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils import simplejson
