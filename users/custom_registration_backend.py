@@ -4,15 +4,12 @@ from django.contrib.sites.models import Site
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-
 from registration import signals
 from registration.models import RegistrationProfile, RegistrationManager
 from registration.views import RegistrationView 
 from registration.forms import RegistrationForm
 
-
 from users.models import User
-
 
 class CustomRegistrationForm(forms.Form):
 
@@ -56,11 +53,11 @@ class CustomRegistrationView(RegistrationView):
     """
     A registration backend which follows a simple workflow:
 
-    1. User signs up, inactive account is created.
+    1. User signs up, inactive account is created and user logged in.
 
-    2. Email is sent to user with activation link.
+    2. Email is sent to user with activation link to be clicked at their leisure.
 
-    3. User clicks activation link, account is now active.
+    3. User clicks activation link later, account is activated and confirmed.
 
     """
     
@@ -74,6 +71,13 @@ class CustomRegistrationView(RegistrationView):
         username = email
         new_user = RegistrationProfile.objects.create_inactive_user(username, email,
                                                                     password, site)
+        
+        
+        from django.contrib.auth import login, authenticate
+        
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        
         signals.user_registered.send(sender=self.__class__,
                                      user=new_user,
                                      request=request)

@@ -1,8 +1,11 @@
 {% extends base_template %}
 
 {% block content %}
-<div class="text pure-u-1 all-pad">
+<div class="text-center pure-u-1 all-pad">
 
-<p class="big">Registration (almost) complete! We've sent you an email with an activation link in it - please check your email inbox and click the link to confirm your account.</p>
+<p class="big">Registration complete!</p>
+
+<p>You're logged in and ready to go - <a href="{% url 'user' %}">visit your account page here</a>. We've also sent you an activation email. Please check your email inbox and click the link to confirm your account.</p>
+
 </div>
 {% endblock %}

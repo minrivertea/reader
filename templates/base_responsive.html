@@ -14,8 +14,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 
 
-	<title>{% block pagetitle %}{% if flavour == 'mobile' %}(mobile) {% endif %}Chinese Dictionary and Learning Tools{% endblock %} | {{ site_name }}</title>	
-	
+	<title>{{ sitename }}</title>	
 	
 	
     <!-- STYLES -->
@@ -32,31 +31,38 @@
 	<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery.pjax.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/mobile/slideoutMenu.js' %}"></script>
-	
 	{% block extracss %}{% endblock %}
 
 </head>
 
 
-<body class="font1 pure-g">
 
+
+<body class="pure-g">
+
+    <img id="loading" src="{% static 'images/loading.gif' %}"/>
 
     <nav id="menu" style="display: none;" class="pure-u-1">
-        <ul class="pure-g">    
-            <li class="pure-u-1"><a href="/" class="pure-u-1 all-pad" alt="home link" title="Home - {{ sitename }}" data-ajax>Home</a></li>
+        
+        <ul class="pure-u-1">    
+            <li class="pure-g">
+                <a href="/" class="pure-u-1 all-pad" alt="home link" title="Home - {{ sitename }}" data-ajax>
+                Home</a>
+            </li>
         
         {% url 'user' as user_url %}
         {% url 'page' 'about' as about_url %}
-            <li class="pure-u-1"><a href="{{ about_url }}" title="about" class="pure-u-1 all-pad {% if about_url in request.path %}selected{% endif %}" data-ajax>About</a></li>
+            <li class="pure-g">
+                <a href="{{ about_url }}" title="about" class="pure-u-1 all-pad {% if about_url in request.path %}selected{% endif %}" data-ajax>About</a></li>
         
         
         {% if user.is_authenticated %}
-            <li class="pure-u-1"><a href="{{ user_url }}" class="pure-u-1 all-pad {% if user_url in request.path %}selected{% endif %}">
+            <li class="pure-g"><a href="{{ user_url }}" class="pure-u-1 all-pad {% if user_url in request.path %}selected{% endif %}">
             Your account
             </a></li>
         {% else %}
             {% url 'auth_login' as login_url %}
-            <li class="pure-u-1"><a id="login_link" href="{{ login_url }}" class="pure-u-1 all-pad {% if login_url in request.path %}selected{% endif %}" data-ajax>Login</a> </li>
+            <li class="pure-g"><a id="login_link" href="{{ login_url }}" class="pure-u-1 all-pad {% if login_url in request.path %}selected{% endif %}" data-ajax>Login</a> </li>
             {% url 'registration_register' as register_url %}
             <li class="pure-u-1"><a id="register_link" href="{{ register_url }}" class="pure-u-1 all-pad {% if register_url in request.path %}selected{% endif %}" data-ajax>Register</a></li>
         {% endif %}
@@ -86,10 +92,7 @@
         </div>
     
     </div>
-    
-
-    <img id="loading" src="{% static 'images/loading.gif' %}"/>
-    
+        
     <div id="container" class="pure-g"> 
         {% block content %}{% endblock %}        
     </div>

@@ -199,7 +199,7 @@ hr {
 
 #jPanelMenu-menu ul li a {
   border-bottom: 1px solid #f1f1f1;
-  font-size: 0.8em;
+  padding-left: 2em;
 }
 
 
@@ -1274,10 +1274,6 @@ h3 span.this {
 
 
 /* flatpage about us styles */
-
-.text {
-  width: 800px;
-}
 
 .text p, p {
   margin: 0px 0 20px;   
