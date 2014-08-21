@@ -1235,12 +1235,12 @@ body.font4, body.font4 .char, #head ul a.font4, body.font4 #lookups div span.tit
 h1 {
     font-size: 1.8em;
     font-weight: normal;
-    margin: 0 0 30px;
+    margin: 0 0 0.6em;
     line-height: 1.4em;
 }
 
 h1 span.big {
-  font-size: 44px;   
+  font-size: 1.3em;   
 }
 
 h2 {
