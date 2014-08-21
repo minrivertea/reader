@@ -2,9 +2,9 @@
 
 <div class="text text-center pure-u-1 all-pad">
 
-<h1>A Chinese dictionary that turbo-charges your vocabulary learning.</h1>
+<h1>Turbo-charge your vocabulary learning.</h1>
 
-<p>Integrated dictionary and spaced repetition tools that speed up your Chinese learning.</p>
+<p>Integrated dictionary and spaced repetition tools that speed up your Chinese vocab learning.</p>
 
 <p><a href="#how_it_works">How it works</a> | <a href="">FAQs</a> | <a href="{% url 'registration_register' %}">Register</a></p>
 
@@ -12,64 +12,36 @@
 
 <div class="section pure-u-1 text-left" id="get_started">
     <h2>Get Started</h2>
-    <p>This dictionary is completely free to use.</p>
-    <p class="small">Type a Chinese, English or <em>pinyin</em> word into the search box above and hit 'Enter' to start. When you're ready, signup for an account and you'll start getting optimised notifications that proactively help you learn Chinese vocabulary.</p>        
+    <p class="big">This dictionary is completely free to use.</p>
+    <p><strong>1.</strong> Type Chinese, English or <em>pinyin</em> into the search box above and you'll get back comprehensive dictionary results - just like any other dictionary.</p>
+    <p><strong>2.</strong> <a href="{% url 'registration_register' %}">Register for an account</a>, and we'll remember the words you search. Pretty soon you'll start getting timed, optimised notifications that proactively help you learn Chinese vocabulary.</p>        
 </div>
 
 <hr/>
 
 <div class="section pure-u-1 text-left" id="how_it_works">
     <h2>How it works</h2>
-        <p>
-            1. <br/>You search for words and get answers
-            <br/>
-            <span class="sub">
-                Lookup words using English, Chinese or <em>pinyin</em> and you'll get character definitions, word examples, pronunciation guides and more, just like you'd expect from a standard Chinese dictionary.
-            </span>
         
-        </p>
-        <p>
-            2. <br/>We schedule reviews and tests
-            <br/>
-            <span class="sub">
-                We build up your personal wordlist, and based on spaced repetition algorithms and adjusting for your individual abilities, we schedule reviews and tests at exactly the right time so you do as little study as possible, but also remember as much as possible.
-            </span>
-        </p>
-        <p>
-            3. <br/>You get notified when you need to test something.
-            <br/>
-            <span class="sub">
-                Whenever you need to review or test a vocabulary item, we email you. You click on a link, take a very, very short test and then that's it. You spend the minimum amount of time learning, and absolutely zero time writing flashcards, scheduling your learning, copying from notebooks... 
-            </span>    
-        </p>
+        <p class="big">Helping lazy people learn fast.</p>
         
-
-        <img src="{% static 'images/learning-curve-graph.png' %}"/>
+        <p>Too often, I lookup a word, then forget it a day later. When I want to use it again, it's gone, and I kick myself for not studying hard enough.</p>
         
-        <p>Your memory is like a rubber-band - pull it too much and it will snap.<br/> Pull it too little and it will never stretch.</p>
-                
-        <div class="box">
-        <p>Effective memorisation is a simple technique, but we typically pick up terrible habits at school - cramming for tests, huge piles of flashcards or thick books, several hour study sessions...</p>
-        </div>
+        <p>If that's you too, this is your dictionary.</p>
         
-        <div class="box">
-        <p>In reality, memorisation requires that you repeatedly learn and then recall (remember) something at exactly the right time for it to bury itself deeper and deeper in your memory. </p>
-        </div>
+        <p>Using spaced repetition techniques, we remember the words you search for and schedule optimised vocabulary reviews and tests.</p>
         
-        <div class="box">
-        <p>This dictionary can helps you by automatically planning when and what you should study, so that you learn  vocab efficiently and don't waste precious time and effort.</p>
-        </div>
-                
+        <p>For example:</p>
         
-        
-        {% comment %}
-        <div class="link">
-            <a href="">Read more about spaced repetition</a>
-        </div>
-        {% endcomment %}
-        
+        <ol>
+        <li>You search for a word.</li>
+        <li>Tomorrow, we'll send you a review request, where you get another chance to view the characters, pronunciation and meaning.</li>
+        <li>Maybe three days later you get a test request - here we'll see if you can remember the pronunciation and meaning.</li>
+        </ol>
       
-    </div>
+        <p>If you pass the test, the next test is scheduled for a bit further away - say 5 days. The more you pass, the larger the test interval becomes. If you fail the test, we schedule another review immediately and reset the test interval.</p>
+        
+        <p>You save time by only testing words that you struggle with. You never have to waste time preparing long vocabulary lists and remembering when to test each item. Plus, it's vocabulary <em>you've looked up</em>, meaning it's relevant to your life and study. </p>
+      
 </div>
 
 <hr/>

@@ -462,62 +462,22 @@ label.focus {
 
 /* ABOUT PAGE STYLES */
 
-#about {
-  margin-top: 0px;
-}
 
-#about .section {
+.text .section {
   position: relative;
 }
 
-#about .section .title, #account .section h3 {
-  color: #000;
-}
-
-#about .section .inner {
-  color: #666;
-  font-size: 13px;
-  float: left;
-  width: 100%;
-  position: relative;
-  z-index: 1000;   
-}
-
-#about .section .inner strong {
-  color: #333;   
-}
-
-#about .inner .box {
-  float: left;
-  width: 30%;
-  margin: 0px 1.5% 30px;
-  text-align: left;   
-}
-
-#about .inner .box_2_3 {
-  width: 63%;
-  margin-left: 1.5%;
-  margin-right: 1.5%;   
-}
-
-#about .inner .box_3_3 {
-  width: 97%;   
-  margin-left: 1.5%;
-  margin-right: 1.5%;  
-}
-
-#about .inner p.big {
-  font-size: 1.3em;
-  line-height: 1.6em;  
+.text .section p.big {
   color: #333;
-  width: 80%;
-  margin: 0 auto 30px;  
+  font-size: 1em;   
 }
 
-#about .inner p.big span.sub {
+.text .section p {
+  color: #666;
   font-size: 0.8em;
-  color: #555;   
 }
+
+
 
 #about .inner img {
   margin: 20px 0;   
@@ -1243,7 +1203,7 @@ h1 span.big {
 h2 {
    font-size: 1.4em;
    font-weight: normal; 
-   margin: 0 0 0.4em;  
+   margin: 0.2em 0 0.6em;  
 }
 
 h2 span.big {
@@ -1269,7 +1229,6 @@ h3 span.this {
 
 
 
-
 /* flatpage about us styles */
 
 .text {
@@ -1277,16 +1236,23 @@ h3 span.this {
 }
 
 .text p, p {
-  margin: 10px 0;   
+  margin: 0px 0 15px;   
 }
 
 .text p.big, p.big {
    font-size: 1.8em;
-   line-height: 1.2em;
 }
 
-.text ul {
+.text h3 {
+  font-size: 1em;
+  margin: 1em 0 0em;
+  color: #000;   
+}
+
+.text ul, .text ol {
   margin-bottom: 20px;
+  font-size: 0.8em;
+  color: #666;
 }
 
 .text .explain {
