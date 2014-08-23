@@ -171,8 +171,7 @@ hr {
 
 #header {
     margin: 0 0 0px;
-    position: fixed;
-    z-index: 2000;
+    position: relative;
     background: #f9f9f9;
 }
 
