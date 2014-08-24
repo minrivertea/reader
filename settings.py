@@ -4,20 +4,15 @@
 # Django settings for reader project.
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
-
 import os
 PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
 
 
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
-GA_IS_ON = False
-
-ADMINS = (
-    ('Chris', 'info@chinesedictionary.io'),
-)
-
-MANAGERS = ADMINS
+DEBUG =                 False
+TEMPLATE_DEBUG =        DEBUG
+GA_IS_ON =              False
+ADMINS =                (('Chris', 'info@chinesedictionary.io'),)
+MANAGERS =              ADMINS
 
 DATABASES = {
     'default': {
@@ -42,21 +37,15 @@ SECRET_KEY = ''
 # STATIC FILES
 # ------------------------------------------------------
 
-MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
-MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_PATH, 'static')
-ADMIN_MEDIA_PREFIX = '/media/'
-STATICFILES_DIRS = (
-    #os.path.join(PROJECT_PATH, "static"),
-)
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
-)
-
+MEDIA_ROOT =                os.path.join(PROJECT_PATH, 'media')
+MEDIA_URL =                 '/media/'
+STATIC_URL =                '/static/'
+STATIC_ROOT =               os.path.join(PROJECT_PATH, 'static')
+ADMIN_MEDIA_PREFIX =        '/media/'
+STATICFILES_DIRS =          ()
+STATICFILES_FINDERS =       ('django.contrib.staticfiles.finders.FileSystemFinder',
+                            'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+                            'compressor.finders.CompressorFinder',)
 
 
 MIDDLEWARE_CLASSES = (
