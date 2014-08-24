@@ -13,7 +13,7 @@ TEMPLATE_DEBUG =        DEBUG
 GA_IS_ON =              False
 ADMINS =                (('Chris', 'info@chinesedictionary.io'),)
 MANAGERS =              ADMINS
-ALLOWED_HOSTS =         ['www.chinesedictionary.io', 'chinesedictionary.io',]                                   
+ALLOWED_HOSTS =         ['www.chinesedictionary.io', 'chinesedictionary.io', 'reader.westiseast.co.uk']                                   
 
 
 DATABASES = {
