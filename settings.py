@@ -45,10 +45,10 @@ SECRET_KEY = ''
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(PROJECT_PATH, 'static')
 ADMIN_MEDIA_PREFIX = '/media/'
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_PATH, "static"),
+    #os.path.join(PROJECT_PATH, "static"),
 )
 
 STATICFILES_FINDERS = (
