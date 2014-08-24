@@ -55,13 +55,11 @@ class ChineseWord(Word):
         if chars:
             self.key = settings.CHINESE_WORD_KEY % (len(chars), chars)     
             
-            try:            
-                x = json.loads(_search_redis(self.key))
-                self.chars = chars
-                self.length = len(chars)
-                self.meanings = x['meanings']
-            except TypeError:
-                pass
+            x = json.loads(_search_redis(self.key))
+            self.chars = chars
+            self.length = len(chars)
+            self.meanings = x['meanings']
+
                 
 
 
