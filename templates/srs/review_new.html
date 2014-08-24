@@ -6,9 +6,9 @@
         /// unbind all actions
         $('#wordlist.test .action').unbind();
         
-        
         /// bind specific links
         $('#wordlist.test .action.okay').bind('click', wordOK);
+        
         $('#wordlist.test .action.exchange').bind('click', wordExchange);        
     } ;
 
@@ -54,7 +54,7 @@
 </script>
 
 
-    {% if words %}        
+    {% if items %}        
     
         <ul id="wordlist" class="pure-g test">
             {% for w in items %}
@@ -64,7 +64,7 @@
         
     {% else %}
     
-        <p class="pure-u-1">You don't have any words to review now.</p>
+        <p class="pure-u-1 all-pad text-center">You don't have any words to review now.</p>
         
     {% endif %}
 

@@ -51,6 +51,11 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, "static"),
 )
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 
 
@@ -109,6 +114,7 @@ INSTALLED_APPS = (
     'srs',
     'south',
     'django_mobile',
+    'compressor',
     'nginx_memcache', # do we need this?
 )
 
@@ -156,6 +162,7 @@ LOGIN_REDIRECT_URL = '/user/'
 CHINESE_WORD_KEY = "ZH:%sC:%s" # eg. ZH:2C:好吧 (the middle '2C' means how many characters)
 PINYIN_WORD_KEY = "PY:%sW:%s"
 ENGLISH_WORD_KEY = "EN:%sW:%s"
+MEASURE_WORD_KEY = "MW:%s" # eg. MW:个
 
 
 

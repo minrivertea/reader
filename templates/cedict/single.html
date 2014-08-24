@@ -14,16 +14,26 @@
         
         <hr/>
         
-        
         {% for m in word.meanings %}
             <div class="pinyin">
-                {{ m.pinyin }}
+                <em>{{ m.pinyin }}</em>
             </div>
-            
+           
             <hr/>
-            
+                        
             <div class="meaning">
                 {{ m.meaning|link_chars|safe }}
+            
+            {% if m.measure_words %}
+            <ul class="example pure-g">
+                <li class="pure-u-1 all-pad">Measure words: <br/>
+                {% for x in m.measure_words %}
+                    一<strong>{{ x }}</strong>{{ word.chars }} {% if not forloop.last %}/{% endif %} 
+                {% endfor %}
+                </li>
+            </ul>
+            {% endif %}
+            
             </div>
         
         {% endfor %}

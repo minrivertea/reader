@@ -19,10 +19,13 @@ from forms import SubmitAnswerForm
     
 def review_new(request):
 
-    words = request.user.get_personal_words().get_items(review=True, timestamp=time.time())
+    words = request.user.get_review_items()
     items = []
     for x in words:
-        items.append(ChineseWord(chars=x['chars']))
+        thing = {}
+        thing['word'] = ChineseWord(chars=x['chars'])
+        thing['personal'] = x
+        items.append(thing)
         
     return _render(request, 'srs/review_new.html', locals())
 
@@ -31,23 +34,25 @@ def review_new(request):
 def test(request):
     
     # COLLECT THE WORDS
-    words = request.user.get_personal_words().get_items(test=True, timestamp=time.time())
+    words = request.user.get_test_items()
         
     # DECIDE HOW TO TEST THE ITEMS
     items = []
     count = 1
     for x in words:
-        html = None      
-          
+                  
         # IS THIS THE FIRST TEST
-        if not x['test_date']:
-            word = ChineseWord(chars=x['chars'])
-            word.id = count
-            for m in word.meanings:
-                m['alternative_meaning'] = ChineseWord()._get_random(number=1, chars=x['chars'])['meaning1']
-                
-            html = render_to_string('srs/tests/first_test.html', {'word': word, 'form': SubmitAnswerForm()}, context_instance=RequestContext(request))
+        word = ChineseWord(chars=x['chars'])
+        word.id = count
+        for m in word.meanings:
+            
+            chinese_word = ChineseWord()._get_random(number=1, chars=x['chars'])['meanings'][0]['meaning']
+            
+            m['alternative_meaning'] = chinese_word
+            
+        html = render_to_string('srs/tests/first_test.html', {'word': word, 'form': SubmitAnswerForm()}, context_instance=RequestContext(request))
         
+                    
 
         # if we get here, add it to the items list
         if html:

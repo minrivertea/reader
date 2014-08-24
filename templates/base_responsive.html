@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load staticfiles compress %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,21 +18,16 @@
 	
 	
     <!-- STYLES -->
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
-    
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'css/pure-grids-combo.0.5.0.css' %}">    
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    
+    {% endcompress %}
+    {% block extracss %}{% endblock %}
 	<link rel='shortcut icon' href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
 	<!-- / STYLES -->
 	
 	
-	<!-- JAVASCRIPT -->
-	<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/jquery.pjax.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/mobile/slideoutMenu.js' %}"></script>
-	{% block extracss %}{% endblock %}
-
+	
 </head>
 
 
@@ -78,12 +73,12 @@
             <button class="menu-trigger"></button>
         </div>
         
-        <form id="search" data-pjax action="{% url 'search' %}" method="post" class="pure-u-20-24">
+        <form id="search" data-pjax action="{% url 'search' %}" method="post" class="pure-u-16-24">
                                 
             {% csrf_token %}
             <div id="form-inner" class="pure-g">
                 <label for="id_char"></label>
-                <input id="id_char" class="pure-u-20-24 all-pad" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search for a Chinese word" >
+                <input type="search" id="id_char" class="pure-u-1 all-pad" title="Search for a Chinese word" name="char" placeholder="Search for a Chinese word" >
                 <button type="submit" value="Go" id="submit" class="pure-u-2-24 all-pad">Search</button>
             </div>
         </form>
@@ -99,8 +94,15 @@
     
     
   
-    <script type="text/javascript" src="{% static 'js/jquery-pinyin-converter.js' %}"></script>
+    <!-- JAVASCRIPT -->
+	{% compress js %}
+	<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.pjax.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/mobile/slideoutMenu.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-pinyin-converter.js' %}"></script>
+    
 	<script type="text/javascript">
+
 
 		$(document).ready( function() {
             
@@ -162,16 +164,13 @@
 
             });
               
-              
-             
-                        
+                                      
             /// ACTIONS WHEN PJAX SENDS
             $(document).on('pjax:send', function() {
               $('#container').fadeOut(150);
               $('#loading').show();
               checkHeader();
             });
-            
             
             // ACTIONS WHEN PJAX IS FINISHED (REGARDLESS OF OUTCOME)
             $(document).on('pjax:complete', function() {
@@ -194,7 +193,13 @@
             /// BIND VARIOUS LINK TO PJAX
             $(document).pjax('a, a[data-pjax]', '#container');
             
+            /// HELPS AVOID FREQUENT ABORTS CAUSED BY PJAX'S LOW DEFAULT TIMEOUT
+            $(document).on('pjax:timeout', function(event) {
+              // Prevent default timeout redirection behavior
+              event.preventDefault()
+            })
             
+                        
             /// HANDLES SUBMITTING A TEST QUESTION VIA AJAX
             $('form.test').submit( function() {
                 var thisForm = $(this);
@@ -204,15 +209,25 @@
                     data: thisForm.serialize(),
                     type: 'POST',
                     success: function(status) {
-                    thisForm.parent('div.test_item').slideUp(300, function() {
-                        thisForm.parent('div.test_item').remove();   
-                    });
+                        thisForm.parents('div.test_item').slideUp(300, function() {
+                            thisForm.parents('div.test_item').remove();   
+                        });
                     },
                 });
                 
                 return false;
                 
             });
+            
+            $('.test a.skip').click( function() {
+                
+                var thisItem = $(this).parents('div.test_item');
+                thisItem.slideUp(300, function() {
+                    thisItem.remove();   
+                });
+                return false; 
+            });
+
             
             /// TEST STUFF
             $('.test_item a.next').click( function() {
@@ -224,17 +239,15 @@
             });
 
             
-            /// HELPS AVOID FREQUENT ABORTS CAUSED BY PJAX'S LOW DEFAULT TIMEOUT
-            $(document).on('pjax:timeout', function(event) {
-              // Prevent default timeout redirection behavior
-              event.preventDefault()
-            })
+            
 
             checkHeader();
                       
 		});
 		
 	</script>
+	{% endcompress %}
+	
     {% block extrajs %}{% endblock %}	
 
 </body>

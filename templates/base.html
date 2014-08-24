@@ -169,6 +169,13 @@
             $(document).pjax('a, a[data-pjax]', '#container');
             
             
+            function slideUpTestItem(e,item) {
+                item.slideUp(300, function() {
+                    item.remove();   
+                });  
+                return false; 
+            };
+            
             /// HANDLES SUBMITTING A TEST QUESTION VIA AJAX
             $('form.test').submit( function() {
                 var thisForm = $(this);
@@ -178,9 +185,7 @@
                     data: thisForm.serialize(),
                     type: 'POST',
                     success: function(status) {
-                    thisForm.parent('div.test_item').slideUp(300, function() {
-                        thisForm.parent('div.test_item').remove();   
-                    });
+                        slideUpTestItem(thisForm.parent('div.test_item'));
                     },
                 });
                 
@@ -188,6 +193,8 @@
                 
             });
             
+            $('.test_item a.skip').click( slideUpTestItem( $(this).parent('div.test_item') ) ); 
+                   
             /// TEST STUFF
             $('.test_item a.next').click( function() {
                 

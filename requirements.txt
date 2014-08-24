@@ -6,3 +6,5 @@ django-registration
 readability-lxml
 django-fancy-cache
 South
+django_mobile
+django_compressor

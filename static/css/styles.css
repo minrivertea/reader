@@ -21,6 +21,14 @@ html, button, input, select, textarea,
   padding-right: 1em;   
 }
 
+.t-pad {
+  padding-bottom: 1em;    
+}
+
+.b-pad {
+  padding-bottom: 1em;    
+}
+
 html {
   border: none;
   margin: 0;
@@ -148,22 +156,22 @@ hr {
 
 
 ::-webkit-input-placeholder { /* WebKit browsers */
-  font-size: 0.9em;
+  font-size: 0.8em;
   color: #c1c1c1;
 }
 
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-  font-size: 0.9em;
+  font-size: 0.8em;
   color: #c1c1c1;
   opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-  font-size: 0.9em;
+  font-size: 0.8em;
   color: #c1c1c1;
   opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10+ */
-  font-size: 0.9em;
+  font-size: 0.8em;
   color: #c1c1c1;
 }
 
@@ -263,6 +271,9 @@ hr {
     padding: 16px 10px;
     width: 10%;
 }
+
+
+
 
 #search input#id_char:focus {
   outline: none;  
@@ -988,6 +999,12 @@ body.color4 #tools {
   color: #c1c1c1; 
 }
 
+#wordlist.test .note {
+  font-size: 0.6em;
+  color: #D30000;
+  position: relative;
+}
+
 #wordlist.test li {
   opacity: 0.5;   
 }
@@ -1328,53 +1345,25 @@ h3 span.this {
   cursor: pointer;   
 }
 
-#single .line {
-  width: 100%;
-  float: left;
-  margin: 0 0 15px 0;   
-}
-
 #single .pinyin {
-   font-size: 22px;
-   padding: 0px 20px 0px 0px;
+   font-size: 1.4em;
 }
 
 #single .meaning {
-  font-size: 22px;
+  font-size: 1.4em;
   color: #666;
-  padding: 0px 0px;
-  margin: 0 0 20px 0;
 }
 
-.tabs {
-     
+#single .meaning .example {
+  list-style-type: none;
+  margin: 1em;
+  padding: 0;
+  background: #ebf3f9;
+  color: #1f4a6f;
+  font-size: 0.8em;
 }
 
-.tabs .tab {
-  float: left;
-  background: #f1f1f1;
-  padding: 5px 10px;
-  border: 1px solid #e1e1e1;
-  margin: 0 3px 0 0; 
-  font-size: 12px;  
-}
 
-.tabs .tab.selected {
-  border-bottom: none;
-  background: #fff; 
-  color: #000;  
-}
-
-/* FOR DJANGO-ENDLESS */
-
-.endless_container {
-    float: left;
-    font-size: 30px;
-    font-weight: bold;
-    padding: 100px 0 300px;
-    text-shadow: 1px 1px 0 #FFFFFF;
-    width: 100%;
-}
 
 
 

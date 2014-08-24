@@ -1,13 +1,15 @@
 
   {% if items %}
   
+    <div class="pure-u-1 all-pad text-center">You've finished your test items for today. Pat yourself on the back!</div>
     {% for x in items %}
-        <div class="test_item pure-u-1">{{ x|safe }}</div>
+        <div class="test_item pure-u-1 all-pad">{{ x|safe }}</div>
         
     {% endfor %}
     
+    
   {% else %}
-    <p class="pure-u-1 text-center">You've got no items to test right now</p>
+    <p class="pure-u-1 text-center all-pad">You've got no items to test right now</p>
   {% endif %}
     
     

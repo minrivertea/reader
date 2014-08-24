@@ -53,30 +53,16 @@ class ChineseWord(Word):
     def __init__(self, chars=None):
         
         if chars:
-            # derive the key
-            self.key = settings.CHINESE_WORD_KEY % (len(chars), chars)
-                        
-            # get the object back from redis
-            x = _search_redis(self.key)
-
-            # fill in some values
-            self.chars = chars
-            self.length = len(chars)
-            self.meanings = []
+            self.key = settings.CHINESE_WORD_KEY % (len(chars), chars)     
             
-            # this next bit is a cluge, because the pronunciation/meanings are 
-            # still hardcoded in the redis entries like this. Need to update the 
-            # build_dictionary function 
-            if 'pinyin1' in x:
-                self.meanings.append({'pinyin': x['pinyin1'], 'meaning': x['meaning1']})
-            if 'pinyin2' in x:
-                self.meanings.append({'pinyin': x['pinyin2'], 'meaning': x['meaning2']})
-            if 'pinyin3' in x:
-                self.meanings.append({'pinyin': x['pinyin3'], 'meaning': x['meaning3']})
-            if 'pinyin4' in x:
-                self.meanings.append({'pinyin': x['pinyin4'], 'meaning': x['meaning4']})
-            if 'pinyin5' in x:
-                self.meanings.append({'pinyin': x['pinyin5'], 'meaning': x['meaning5']})
+            try:            
+                x = json.loads(_search_redis(self.key))
+                self.chars = chars
+                self.length = len(chars)
+                self.meanings = x['meanings']
+            except TypeError:
+                pass
+                
 
 
     def __unicode__(self):
@@ -89,25 +75,25 @@ class ChineseWord(Word):
             length = len(chars)
         
         r_server = _get_redis()
-        key = "ZH:%sC:*" % length
+        pattern = "ZH:%sC:*" % length
 
         randoms = []
         loop = 0
-        for x in r_server.scan_iter(key):
+        for x in r_server.scan_iter(pattern):
             randoms.append(x)
             loop += 1
             if loop > 20:
                 break
-        
         random.shuffle(randoms,random.random)
-                
+        
+               
         if number == 1:
-            return _search_redis( randoms[0] )
+            return json.loads(_search_redis( randoms[0] ))
         else:
             count = 0
             words = []
             while number > 0:
-                words.append(_search_redis( randoms[count] ))
+                words.append(json.loads(_search_redis( randoms[count] )))
                 count += 1
                 number -= 1
             

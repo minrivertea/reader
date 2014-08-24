@@ -1,16 +1,37 @@
    
 {% if w %}     
-    {% for x in w.meanings %}
+    {% for x in w.word.meanings %}
     <li class="wrapper pure-u-1 all-pad">
-
-        <a data-pjax href="{% url 'single_word' w.chars %}">
         
-        <a class="action okay" title="Done" href="{% url 'personal_word_reviewed' w %}"><span></span></a>
+        <a data-pjax href="{% url 'single_word' w.word.chars %}">
+        
+        <a class="action okay" title="Done" href="{% url 'personal_word_reviewed' w.word %}"><span></span></a>
         
         <div class="pure-g">
-            <div class="chars pure-u">{{ w.chars }}</div>
-            <div class="pinyin pure-u l-pad">{{ x.pinyin }}</div>
-            <div class="meaning pure-u-1">{{ x.meaning|safe }}</div>
+            
+            {% if not w.personal.meaning_pass or not w.personal.pinyin_pass %}
+            <div class="note pure-u-1 b-pad">
+                Pay special attention to the 
+                {% if not w.personal.pinyin_pass %}<em>pinyin</em>{% endif %}{% if not w.personal.pinyin_pass and not w.personal.meaning_pass %} and {% endif %}{% if not w.personal.meaning_pass %}meaning{% endif %}!
+            </div>
+            {% endif %}
+            
+            <div class="chars pure-u">{{ w.word.chars }}</div>
+            
+            {% if not w.personal.pinyin_pass %}
+                <div class="pinyin pure-u l-pad">{{ x.pinyin }}</div>
+            {% endif %}
+
+            {% if not w.personal.meaning_pass %}
+                <div class="meaning pure-u-1">{{ x.meaning|safe }}</div>
+            {% endif %}
+            
+            
+            
+            
+            
+            
+        
         </div>    
         
         </a>

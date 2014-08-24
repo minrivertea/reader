@@ -156,9 +156,8 @@ class PersonalWordlist(object):
         r_server.set(self.key, json.dumps(wordlist))
     
     
-    def get_items(self, review=False, test=False, timestamp=None):
+    def get_items(self, review=False, test=False, timestamp=None, action=None):
                 
-        action = None
         if review:
             action = 'review'
         if test:
@@ -172,7 +171,7 @@ class PersonalWordlist(object):
                 if v['next_action'] != action:
                     continue
                 
-            if timestamp:
+            if timestamp:                
                 if v['next_action_date'] > timestamp:
                     continue
 

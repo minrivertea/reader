@@ -8,6 +8,9 @@ from datetime import datetime, timedelta
 
 import uuid
 import json
+import re
+from django.utils.encoding import smart_str, smart_unicode
+
 
 
 # import various bits and pieces
@@ -28,7 +31,8 @@ class Command(NoArgsCommand):
     {
         'chars': '好吧',        
         'trad_chars': '好吧',
-        'hsk_level': '', # leave empty for the moment
+        'hsk_level': '', # future
+        'measure_word': '个' # eg. if it's a noun with a measure word
         'meanings': [
             {'pinyin': 'hao ba', 'meaning': 'okay, yes', 'weight':'1'},
             {'pinyin': 'hao ba', 'meaning': 'I suppose so', 'weight':'2'}            
@@ -77,6 +81,9 @@ class Command(NoArgsCommand):
                 pass
             else:
                 
+                # OPEN REDIS CONNECTION NOW
+                r_server = _get_redis()
+                
                 # GATHER ALL THE MAIN VARIABLES
                 new = line.split()
                 num_pinyin = line[(line.index('[')+1):(line.index(']'))]
@@ -92,20 +99,62 @@ class Command(NoArgsCommand):
                     characters = characters.replace('，', '')
                 
                 
+                # GET AND CLEAN THE MEASURE WORD
+                mws = None
+                if "CL:" in meanings:
+                    new_meanings = meanings.split('/')
+                    for idx, val in enumerate(new_meanings):
+                        if "CL:" in val:
+                            mws = []
+                            for x in val.replace('CL:', '').split(','):
+                                
+                                x = x[:(x.index('['))]
+                                if '|' in x:
+                                    x = x[(x.index('|')+1):]
+                                    
+                                    
+                                # ADD THE MEAASURE WORDS ENTRY
+                                # ----------------------------
+                                mws_key = settings.MEASURE_WORD_KEY % x   
+                                if r_server.exists(mws_key):
+                                    values = json.loads(_search_redis(mws_key))
+                                    values['chars'].append(characters)
+                                else:
+                                    values = {'chars': [characters,]}
+                                r_server.set(mws_key, json.dumps(values))                                
+                                    
+                                mws.append(x)
+                            
+                            
+                            
+                            new_meanings.pop(idx)
+                    meanings = "/".join(new_meanings)
+                
+
+                    
+                    
+                    
+                
                 py_key = settings.PINYIN_WORD_KEY % (len(num_pinyin.split(' ')), num_pinyin.replace(' ', '_'))
                 char_key = settings.CHINESE_WORD_KEY % ((len((characters))/3), characters) 
+                
+                # CREATE THE PRONUNCIATION/MEANING PAIR
+                pair = {}
+                pair['pinyin'] = tonal_pinyin
+                pair['meaning'] = meanings
+                pair['measure_words'] = mws
                 
                 
                 # ADD THE PINYIN ENTRY
                 # --------------------
-                r_server = _get_redis()
+                
                 if _search_redis(py_key, lookup=False):
                     values = json.loads(_search_redis(py_key))
                     values.append(characters)
-                    r_server.set(py_key, json.dumps(values))
                 else:
                     values = [characters,]
-                    r_server.set(py_key, json.dumps(values))                    
+                
+                r_server.set(py_key, json.dumps(values))                    
     
     
     
@@ -113,35 +162,19 @@ class Command(NoArgsCommand):
                 # ADD THE CHINESE CHARACTER ENTRY
                 # -------------------------------
                 if r_server.exists(char_key):
-                     
-                    object = _search_redis(char_key)
-                    try:
-                        val = "meaning%s" % (int(object['count']) + 1)
-                        object[val]
-                    except KeyError:
-                        count = (int(object['count']) + 1)
-                        new1 = "meaning%s" % count
-                        new2 = "pinyin%s" % count
-                        
-                        mapping = {
-                            new1: meanings,
-                            new2: tonal_pinyin, 
-                            'count': count,
-                        }
-                        r_server.hmset(char_key, mapping)
-                            
+                    values = json.loads(_search_redis(char_key))
+                    values['meanings'].append(pair)
                 else:
-                    mapping = {
-                        'chars': characters,
-                        'pinyin1': tonal_pinyin, 
-                        'meaning1': meanings,
-                        'count': 1,
+                    values = {
+                        'characters': characters,
+                        'meanings': [pair,],
                     }
                     
-                    r_server.hmset(char_key, mapping)
+                r_server.set(char_key, json.dumps(values))
                 
                 item_count += 1
                 print item_count
+                
                                
         
         print "%s Chinese items added" % item_count          
