@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-
-{% load django_static %}
+{% extends base_template %}
 
 
 {% block pagetitle %}404 - Page Not Found{% endblock %}
@@ -13,8 +11,8 @@
 
 
 {% block content %}
-<div id="container">
-		<p class="introduction">We can't find the page you're looking for! Perhaps it was mistyped, has moved, or doesn't exist anymore. <a href="http://kandongle.me">Go back to the homepage</a> and try again!</p>
+<div class="centred pure-u-1 all-pad">
+		<p class="introduction">We can't find the page you're looking for! Perhaps it was mistyped, has moved, or doesn't exist anymore. <a href="{{ siteurl }}">Go back to the homepage</a> and try again!</p>
 </div>
 
 
