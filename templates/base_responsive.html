@@ -18,7 +18,7 @@
 	
 	
     <!-- STYLES -->
-    {% compress css %}
+    {% compress css inline %}
     <link rel="stylesheet" href="{% static 'css/pure-grids-combo.0.5.0.css' %}">    
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     {% endcompress %}
@@ -95,7 +95,7 @@
     
   
     <!-- JAVASCRIPT -->
-	{% compress js %}
+	{% compress js inline %}
 	<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery.pjax.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/mobile/slideoutMenu.js' %}"></script>
