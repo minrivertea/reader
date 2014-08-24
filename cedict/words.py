@@ -56,11 +56,10 @@ class ChineseWord(Word):
             self.key = settings.CHINESE_WORD_KEY % (len(chars), chars)     
             
             x = json.loads(_search_redis(self.key))
-            self.chars = chars
+            print x
+            self.chars = x['characters']
             self.length = len(chars)
             self.meanings = x['meanings']
-
-                
 
 
     def __unicode__(self):
