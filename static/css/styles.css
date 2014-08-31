@@ -57,9 +57,7 @@ a:hover, a:active {
   color: #fff;   
   border: none;
   font-family: Georgia, sans-serif;
-  padding: 5px 10px;
   text-decoration: none;
-  font-size: 15px;
   text-shadow: none;
   box-shadow: none;
 }
@@ -70,13 +68,11 @@ a:hover, a:active {
 }
 
 .button.large, button.large, a.button.large, input.button.large {
-  font-size: 20px;
-  padding: 10px 15px;   
+  font-size: 1.4em;
 }
 
 .button.thin, button.thin, a.button.thin, input.button.thin {
   border: 1px solid #e1e1e1;
-  padding: 5px;
   background: none;
   color: #2772b2;   
 }
@@ -86,14 +82,13 @@ a:hover, a:active {
   border-color: #c1c1c1;   
 }
 
-span.orange, span.pinyin {
-  color: #2772b2;     
+.button.red, button.red, a.button.red, input.button.red {
+  background: #D30000;
+  color: #fff;
 }
 
-
-a.button {
-  float: left;
-  width: auto;   
+span.orange, span.pinyin {
+  color: #2772b2;     
 }
 
 span.link {
@@ -126,7 +121,6 @@ hr {
   border: 1px dashed #e1e1e1;
   border-width: 1px 0 0 0;
   display: inline-block;
-  float: left;
   width: 100%;
   margin-top: 1em;
   margin-bottom: 1em;
@@ -160,22 +154,22 @@ hr {
 
 
 ::-webkit-input-placeholder { /* WebKit browsers */
-  font-size: 0.8em;
+  font-size: 14px;
   color: #c1c1c1;
 }
 
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-  font-size: 0.8em;
+  font-size: 14px;
   color: #c1c1c1;
   opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-  font-size: 0.8em;
+  font-size: 14px;
   color: #c1c1c1;
   opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10+ */
-  font-size: 0.8em;
+  font-size: 14px;
   color: #c1c1c1;
 }
 
@@ -276,13 +270,6 @@ hr {
     width: 10%;
 }
 
-
-
-
-#search input#id_char:focus {
-  outline: none;  
-}
-
 #search input#id_char {
     background: none repeat scroll 0 0 transparent;
     border: none;
@@ -298,7 +285,8 @@ hr {
 }
 
 #search input#id_char:focus {
-  color: #222;   
+  color: #222; 
+  outline: none; 
 }
 
 #search label[for="id_char"] {
@@ -587,9 +575,6 @@ label.focus {
 
 .test_item {
     display: none;
-    float: left;
-    width: 100%;
-    padding-top: 50px;
 }
 
 .test_item:last-child {
@@ -605,10 +590,11 @@ label.focus {
 }
 
 .test_item .chars {
-    width: 100%;
     font-size: 90px;
     text-align: center; 
-    margin: 0 0 50px 0; 
+    margin: 0 0 10px 0;
+    padding-bottom: 10px; 
+    border-bottom: 1px dashed #e1e1e1;
 }
 
 .test_item p.help {
@@ -622,50 +608,21 @@ label.focus {
 
 .test_item .item {
   position: relative;
-  width: 100%;
-  float: left; 
 }
 
-.test_item .item thead td {
-  padding: 0;
-  margin: 0;
-  border-bottom: 5px solid transparent;
-  text-align: center;   
+.test_item .pinyin {
+  background: #f9f9f9;   
 }
-
-.test_item .item td {
-  border-bottom: 10px solid #fff;
-  padding: 10px 0;
-}
-
-.test_item .item span.number {
-  position: absolute;
-  left: 0;
-  top: 0px;
-  color: #999;
-  height: auto;
-  width: 30px;
-  text-align: center;
-}
-
-
-.test_item .item td.pinyin {
-  height: 100%;
-  min-width:200px;
-  background: #f9f9f9;
-  position: relative;
-}
-
 
 .test_item .pinyin input[type="text"] {
-  font-size: 24px;
-  width: 95%;
+  background: #f9f9f9;
+  font-size: 1.4em;
   border: none;
   background: transparent;
-  margin: 0;  
-  text-align: center; 
-  height: 100%;
+  line-height: 1.4em;
 }
+
+.test_item .pinyin ::
 
 
 .test_item div.item > div:last-child td {
@@ -679,22 +636,15 @@ label.focus {
 
 .test_item .item .meaning {
   height: 100%;
-  padding: 0;
-  min-width:600px;
   border-left: 10px solid transparent;
 }
 
 .test_item .meaning label {
-  width: 90%; 
-  text-align: left;
   position: relative;
-  margin: 0;
-  padding: 10px 4% 10px 6%;
   position: relative;
-  font-size: 14px; 
-  float: left;
-  height: 50%;
+  font-size: 0.8em; 
   color: #c1c1c1;
+  padding-left: 13%;
 }
 
 
@@ -735,13 +685,6 @@ label.focus {
   border-radius: 5px;
   z-index: 10;
 }
-
-
-.test_item .buttons {
-  float: right;   
-}    
-
-
 
 /* END TEST STYLES */
 

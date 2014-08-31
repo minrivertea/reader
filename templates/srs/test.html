@@ -1,7 +1,9 @@
 
   {% if items %}
   
-    <div class="pure-u-1 all-pad text-center">You've finished your test items for today. Pat yourself on the back!</div>
+        <div class="test_item pure-u-1 all-pad text-center">
+            You've finished your test items for today. Pat yourself on the back!
+        </div>
     {% for x in items %}
         <div class="test_item pure-u-1 all-pad">{{ x|safe }}</div>
         
