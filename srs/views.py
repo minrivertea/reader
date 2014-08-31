@@ -67,39 +67,32 @@ def submit_answer(request):
     if request.method == 'POST':
         form = SubmitAnswerForm(request.POST)
         if form.is_valid():
-            
-            word = ChineseWord(chars=form.cleaned_data['characters'])
-            meanings_count = len(word.meanings)
-            
-            pinyin_pass = True
-            meaning_pass = True
-            
-            # create a list of the expected values for a correct answer
+                       
+            # setup some variables
             data = form.cleaned_data
-            possibles = []
-            count = 1
-            while meanings_count != 0:
-                possibles.append(('pinyin_%s' % count))
-                possibles.append(('meaning_%s' % count ))
-                count += 1
-                meanings_count -= 1
-
-
-            # check if the provided answers match the correct answers
             results = {}
-            results['pinyin_pass'] = False
-            results['meaning_pass'] = False
             results['character_pass'] = True
-            results['test_date'] = time.time()
-            for x in possibles:
-                if x in data:
-                    if data[x] == data["".join((x, '_answer'))]:
-                        if 'pinyin' in x:
-                            results['pinyin_pass'] = True   
-                        elif 'meaning' in x:
-                            results['meaning_pass'] = True
+            testing = ['pinyin', 'meaning']
             
-            request.user.get_personal_words()._update_word(word.chars, test_results=results)
+            # let's see if they got it right!
+            for y in testing:
+                count = 1
+                key = '%s_pass' % y
+                while data[('%s_%s_answer' % (y, count))]:
+                    request.user.no_answered += 1
+                    if data[('%s_%s' % (y, count))] == data[('%s_%s_answer' % (y, count))]:
+                        results[key] = True
+                        request.user.no_correct += 1
+                    else:
+                        results[key] = False
+                        request.user.no_wrong += 1
+                    count += 1
+
+            request.user.save()
+            # update the users wordlist
+            request.user.get_personal_words()._update_word(data['characters'], test_results=results)
+            
+            
             
                                 
             if request.is_ajax():

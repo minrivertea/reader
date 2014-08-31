@@ -56,7 +56,6 @@ class ChineseWord(Word):
             self.key = settings.CHINESE_WORD_KEY % (len(chars), chars)     
             
             x = json.loads(_search_redis(self.key))
-            print x
             self.chars = x['characters']
             self.length = len(chars)
             self.meanings = x['meanings']

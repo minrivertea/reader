@@ -118,6 +118,10 @@ p.red, a.red, span.red {
   font-size: 0.8em;   
 }
 
+.grey, span.grey {
+  color: #999;   
+}
+
 hr {
   border: 1px dashed #e1e1e1;
   border-width: 1px 0 0 0;

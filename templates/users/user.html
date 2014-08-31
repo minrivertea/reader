@@ -40,10 +40,10 @@
     </div>
         
     <div class="section pure-g" id="settings">
-        <div class="title pure-u-2-5">Settings</div>
+        <div class="title pure-u-2-5">Settings<br/><span class="small grey">{{ user.email }}</span></div>
         <div class="inner pure-u-3-5">
             <ul>
-                <li>Logged in as {{ user.email }}</li>
+                <li>Test success rate: {{ user.get_success_percent }}% ({{ user.no_wrong }} wrong out of {{ user.no_answered }} words tested)</li>
                 <li>Joined on {{ user.date_joined }}</li>
                     
                 <li>Test items limit : {{ user.test_items_limit }} items</li>

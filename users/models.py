@@ -73,7 +73,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     # preferences
     test_items_limit = models.IntegerField(default=5)
     review_interval = models.IntegerField(default=1) # days between search and 1st review
-
+    
+    # test related stats tracking
+    no_answered = models.IntegerField(default=0, blank=True, null=True)
+    no_correct = models.IntegerField(default=0, blank=True, null=True)
+    no_wrong = models.IntegerField(default=0, blank=True, null=True)
+    
 
     USERNAME_FIELD = 'email'
 
@@ -108,6 +113,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_review_items(self):
         return self.get_personal_words().get_items(review=True, timestamp=time.time())
     
+    def get_success_percent(self):
+        return ( ( self.no_correct / self.no_answered) * 100 )
+    
     def _remove_personal_word(self, word):
         
         # GET THE EXISTING WORDLIST
@@ -116,6 +124,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         
         # RETURN THE UPDATED WORDLIST
         return wordlist
+    
+    def _increment_stats(self, add=None, minus=None):
+        "Increment the test stats for the user"
+        if add:
+            self.no_correct += 1
+        if minus:
+            self.no_wrong += 1
+        self.no_answered += 1
+        
 
 
 
@@ -209,14 +226,18 @@ class PersonalWordlist(object):
             
             values['review_date'] = None
             values['review_count'] = 0
-            
-            values['priority'] = 1 # this is how 'valuable' this word is
-            
+                        
             # assume this word hasn't been tested and not passed anything
             values['test_date'] = ''
+            values['test_count'] = 0
+            values['test_pass'] = 0
+            
             values['character_pass'] = False
+            values['character_pass_count'] = 0
             values['pinyin_pass'] = False
+            values['pinyin_pass_count'] = 0
             values['meaning_pass'] = False
+            values['meaning_pass_count'] = 0
             
             # define here what and when the next action should come
             values['next_action'] = 'review'
@@ -258,13 +279,14 @@ class PersonalWordlist(object):
                 wordlist[word]['review_count'] += 1
                 wordlist[word]['review_date'] = time.time()
                 wordlist[word]['next_action'] = 'test'
-                
                 three_days_later = datetime.now() + timedelta(days=3)                
-                wordlist[word]['next_action_date'] = time.mktime( ( three_days_later ).timetuple() )
+                wordlist[word]['next_action_date'] = time.mktime(( three_days_later ).timetuple())
                             
                                         
             # UPDATE THE WORD BASED ON A TEST THEY JUST COMPLETED
             if test_results:
+                
+                now = time.time()
                 
                 # get the last test/review date:
                 if wordlist[word]['test_date'] == '': 
@@ -275,35 +297,47 @@ class PersonalWordlist(object):
                     else:
                         lad = wordlist[word]['test_date']
                 
-                
                 passed = True
+                wordlist[word]['test_date'] = time.time()
+                
                 for k,v in test_results.iteritems():
+                    print "%s:  %s" % (k, v)
                     wordlist[word][k] = v
+                    try:
+                        wordlist[word][('%s_count' % k)] = int(wordlist[word][('%s_count' % k)]) + 1
+                    except:
+                        wordlist[word][('%s_count' % k)] = 1
+                    
                     if v == False:
                         passed = False
-                
-                if passed:
                     
+                
+                    
+                if passed == False:
+                    
+                    # test failed, setup a review
+                    tomorrow = datetime.now() + timedelta(days=1)
+                    wordlist[word]['next_action'] = 'review'
+                    wordlist[word]['next_action_date'] = time.mktime((tomorrow).timetuple())
+                    
+                else:                
+                    print "updating test date"
+                    print "NOW: %s" % datetime.fromtimestamp(float(lad))
+                    # test passed, setup a new test at a later date
                     ld = (datetime.fromtimestamp(float(lad))) # last date
                     ti = timedelta(seconds=(datetime.now()-ld).total_seconds()) # this interval
-                    
                     if ti < timedelta(days=1):
                         ti = timedelta(days=1)
-                    
                     ni = ti.total_seconds() * 2.6
                     nd = datetime.now() + timedelta(seconds=ni)
 
                     wordlist[word]['next_action'] = 'test'
                     wordlist[word]['next_action_date'] = time.mktime( ( nd ).timetuple())
                     
-                
-                else:
-                    wordlist[word]['next_action'] = 'review'
-                    tomorrow = datetime.now() + timedelta(days=1)
-                    wordlist[word]['next_action_date'] = time.mktime((tomorrow).timetuple())
-                
-            
-            self._update_list(wordlist)
+                    print "NEXT: %s" % nd
+                                        
+                                                
+            # self._update_list(wordlist)
             
         else:
             self._add_word(word)                

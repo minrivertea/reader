@@ -25,7 +25,5 @@ class SubmitAnswerForm(forms.Form):
     pinyin_4_answer = forms.CharField(required=False)
     pinyin_4 = forms.CharField(required=False)
     
-    
-   
-    
+        
 
