@@ -170,6 +170,7 @@
               $('#container').fadeOut(150);
               $('#loading').show();
               checkHeader();
+              jPM.close();
             });
             
             // ACTIONS WHEN PJAX IS FINISHED (REGARDLESS OF OUTCOME)
@@ -182,7 +183,6 @@
             /// ACTIONS AFTER PJAX HAS LOADED THE CONTENT IN THE PAGE
             $(document).on('pjax:success', function() {
                 $('#container').fadeIn(100);
-                jPM.close();
             });
             
             /// USED FOR THE BACK/FORWARDS CLICKS OR SWIPES
