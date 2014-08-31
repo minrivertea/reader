@@ -118,22 +118,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             return ( ( self.no_correct / self.no_answered) * 100 )
         return None
     
-    def _remove_personal_word(self, word):
-        
-        # GET THE EXISTING WORDLIST
-        wordlist = PersonalWordlist(self.email)
-        wordlist.remove_word(word) 
-        
-        # RETURN THE UPDATED WORDLIST
+    def _remove_personal_word(self, word):        
+        wordlist = PersonalWordlist(self.email).remove_word(word) 
         return wordlist
-    
-    def _increment_stats(self, add=None, minus=None):
-        "Increment the test stats for the user"
-        if add:
-            self.no_correct += 1
-        if minus:
-            self.no_wrong += 1
-        self.no_answered += 1
         
 
 
@@ -167,10 +154,9 @@ class PersonalWordlist(object):
         """ Returns the length of the wordlist (ie. how many personal words)"""
         return len(self.words)
         
-                                
+    # this should be used with extreme caution!                             
     def _update_list(self, wordlist):
         """ Take a dictionary of words and update the whole list"""
-        
         r_server = _get_redis() 
         r_server.set(self.key, json.dumps(wordlist))
     
@@ -211,9 +197,10 @@ class PersonalWordlist(object):
             gap = time.time() - time.mktime((now - timedelta(hours=2)).timetuple())
             this_gap = time.time() - values['search_date']
             if this_gap > gap:
-                values['last_search'] = time.time() # now
+                values['search_date'] = now
                 values['search_count'] += 1
                 wl[word] = values
+      
             
         else:
             # we're creating a new word here, so this is the 
@@ -230,10 +217,9 @@ class PersonalWordlist(object):
             values['review_count'] = 0
                         
             # assume this word hasn't been tested and not passed anything
-            values['test_date'] = ''
+            values['test_date'] = None
             values['test_count'] = 0
             values['test_pass'] = 0
-            
             values['character_pass'] = False
             values['character_pass_count'] = 0
             values['pinyin_pass'] = False
@@ -241,10 +227,9 @@ class PersonalWordlist(object):
             values['meaning_pass'] = False
             values['meaning_pass_count'] = 0
             
-            # define here what and when the next action should come
+            # schedule a review 1 day later
             values['next_action'] = 'review'
-            one_day_later = datetime.now() + timedelta(days=1)
-            values['next_action_date'] = time.mktime( ( one_day_later ).timetuple() )
+            values['next_action_date'] = time.mktime( ( datetime.now() + timedelta(days=1) ).timetuple() )
             
             wl[word] = values          
         
@@ -269,77 +254,73 @@ class PersonalWordlist(object):
         word = smart_unicode(word)
         
         if word in wordlist:
-        
+            
+            w = wordlist[word]
+                
             # update the number of times the word has been viewed
             if view_count:
-                wordlist[word]['view_count'] += 1
+                w['view_count'] += 1
             
             
             # UPDATE REVIEWED INFORMATION
             if reviewed:
-                
-                wordlist[word]['review_count'] += 1
-                wordlist[word]['review_date'] = time.time()
-                wordlist[word]['next_action'] = 'test'
-                three_days_later = datetime.now() + timedelta(days=3)                
-                wordlist[word]['next_action_date'] = time.mktime(( three_days_later ).timetuple())
+                w['review_count'] += 1
+                w['review_date'] = time.time()
+                w['next_action'] = 'test'
+                w['next_action_date'] = time.mktime((datetime.now()+timedelta(days=3)).timetuple())
                             
-                                        
+
             # UPDATE THE WORD BASED ON A TEST THEY JUST COMPLETED
             if test_results:
-                
-                now = time.time()
-                
-                # get the last test/review date:
-                if wordlist[word]['test_date'] == '': 
-                    lad = wordlist[word]['review_date'] # last_action_date
+                       
+                               
+                # DETERMINE WHAT WAS THE MOST RECENT ACTION (TEST OR REVIEW?)
+                if w['test_date'] == '' or w['test_date'] == None: 
+                    lad = w['review_date'] # last_action_date
+                elif w['review_date'] > w['test_date']:
+                    lad = w['review_date']
                 else:
-                    if wordlist[word]['review_date'] > wordlist[word]['test_date']:
-                        lad = wordlist[word]['review_date']
-                    else:
-                        lad = wordlist[word]['test_date']
+                    lad = w['test_date']
                 
+                
+                # MARK THE PINYIN/MEANING PASS ITEMS ACCORDINGLY
                 passed = True
-                wordlist[word]['test_date'] = time.time()
-                
                 for k,v in test_results.iteritems():
-                    print "%s:  %s" % (k, v)
-                    wordlist[word][k] = v
-                    try:
-                        wordlist[word][('%s_count' % k)] = int(wordlist[word][('%s_count' % k)]) + 1
-                    except:
-                        wordlist[word][('%s_count' % k)] = 1
+                    w[k] = v
+                     
+                    # UPDATE THE COUNT FOR EACH ITEM EG. pinyin_pass_count                   
+                    count = w.setdefault(('%s_count' % k), 0)
+                    w[('%s_count' % k)] += count + 1
                     
                     if v == False:
                         passed = False
                     
-                
                     
                 if passed == False:
-                    
-                    # test failed, setup a review
+                    # FAILED TEST, SETUP A NEW REVIEW TOMORROW
                     tomorrow = datetime.now() + timedelta(days=1)
-                    wordlist[word]['next_action'] = 'review'
-                    wordlist[word]['next_action_date'] = time.mktime((tomorrow).timetuple())
+                    w['next_action'] = 'review'
+                    w['next_action_date'] = time.mktime((tomorrow).timetuple())
+                    
                     
                 else:                
-                    print "updating test date"
-                    print "NOW: %s" % datetime.fromtimestamp(float(lad))
-                    # test passed, setup a new test at a later date
-                    ld = (datetime.fromtimestamp(float(lad))) # last date
-                    ti = timedelta(seconds=(datetime.now()-ld).total_seconds()) # this interval
-                    if ti < timedelta(days=1):
-                        ti = timedelta(days=1)
-                    ni = ti.total_seconds() * 2.6
-                    nd = datetime.now() + timedelta(seconds=ni)
+                    # PASSED TEST, SETUP A NEW TEST LATER
+                    # Next test date = Today + ( (Suggested Test Date - Review date ) * Coefficient )
+                    ld = datetime.fromtimestamp(float(lad))
+                    sd = datetime.fromtimestamp(w['next_action_date'])
+                    gap = (sd - ld).total_seconds() * 2.6
+                    nd = datetime.now() + timedelta(days=timedelta(seconds=gap).days)
 
-                    wordlist[word]['next_action'] = 'test'
-                    wordlist[word]['next_action_date'] = time.mktime( ( nd ).timetuple())
-                    
-                    print "NEXT: %s" % nd
-                                        
+                    w['next_action'] = 'test'
+                    w['next_action_date'] = time.mktime((nd).timetuple())
+                    w['test_pass'] = int(w.get('test_pass', 0)) + 1                    
+                      
+                
+                w['test_count'] = int(w.get('test_count', 0)) + 1    
+                w['test_date'] = time.time()  
+                
                                                 
-            # self._update_list(wordlist)
+            self._update_list(wordlist)
             
         else:
             self._add_word(word)                
