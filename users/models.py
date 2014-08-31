@@ -114,7 +114,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.get_personal_words().get_items(review=True, timestamp=time.time())
     
     def get_success_percent(self):
-        return ( ( self.no_correct / self.no_answered) * 100 )
+        if self.no_correct and self.no_answered:
+            return ( ( self.no_correct / self.no_answered) * 100 )
+        return None
     
     def _remove_personal_word(self, word):
         
