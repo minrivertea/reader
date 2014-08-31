@@ -43,7 +43,7 @@
         <div class="title pure-u-2-5">Settings</div>
         <div class="inner pure-u-3-5">
             <ul>
-                <li>Test success rate: {{ user.get_success_percent }}% ({{ user.no_wrong }} wrong out of {{ user.no_answered }} words tested)</li>
+                <li>Test success rate: {{ user.get_success_percent|floatformat:"-1" }}% ({{ user.no_wrong }} wrong out of {{ user.no_answered }} words tested)</li>
                 <li>{{ user.email }}</li>
                 <li>Joined on {{ user.date_joined }}</li>
                     

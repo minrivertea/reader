@@ -88,12 +88,10 @@ def submit_answer(request):
                         request.user.no_wrong += 1
                     count += 1
 
+            # update the user information
             request.user.save()
-            # update the users wordlist
             request.user.get_personal_words()._update_word(data['characters'], test_results=results)
-            
-            
-            
+                        
                                 
             if request.is_ajax():
                 return HttpResponse('OK')

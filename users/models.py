@@ -115,7 +115,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def get_success_percent(self):
         if self.no_correct and self.no_answered:
-            return ( ( self.no_correct / self.no_answered) * 100 )
+            return ( ( float(self.no_correct) / float(self.no_answered) ) * 100 )
         return None
     
     def _remove_personal_word(self, word):        
@@ -319,7 +319,6 @@ class PersonalWordlist(object):
                 w['test_count'] = int(w.get('test_count', 0)) + 1    
                 w['test_date'] = time.time()  
                 
-                                                
             self._update_list(wordlist)
             
         else:
