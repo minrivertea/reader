@@ -42,16 +42,16 @@
 
 <hr/>
  
-<div class="buttons">
+<div class="buttons pure-g">
 
-    <button href="{% url 'search_starts_with' word.chars %}" data-pjax>
-        Starts with</button>
+    <a href="{% url 'search_starts_with' word.chars %}" data-pjax class="small pure-u-1-3 all-pad button text-center">
+        Starts with</a>
     
-    <button href="{% url 'search_contains' word.chars %}" data-pjax>
-        Contains</button>
+    <a href="{% url 'search_contains' word.chars %}" data-pjax class="small pure-u-1-3 all-pad button text-center">
+        Contains</a>
             
-    <button href="" data-pjax>
-        Examples</button>
+    <a href="" data-pjax class="small all-pad button pure-u-1-3 text-center">
+        Examples</a>
 
 </div>
     
