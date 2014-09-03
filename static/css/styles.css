@@ -835,10 +835,10 @@ body.color4 #tools {
   position: relative;
   color: #E55C12; 
   position: relative;
+  min-width: 100%;
 }
 
 #wordlist li:first-child {
-  border-top: 1px dashed #e1e1e1;   
 }
 
 
