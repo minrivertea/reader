@@ -175,13 +175,14 @@
             
             // ACTIONS WHEN PJAX IS FINISHED (REGARDLESS OF OUTCOME)
             $(document).on('pjax:complete', function() {
-              $('#loading').hide();
+              
               $('input#id_char').select();
               $('input.pinyin').pinyin();
             });
             
             /// ACTIONS AFTER PJAX HAS LOADED THE CONTENT IN THE PAGE
             $(document).on('pjax:success', function() {
+                $('#loading').hide();
                 $('#container').fadeIn(100);
             });
             
