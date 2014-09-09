@@ -5,7 +5,7 @@
 </div>
 
 {% if word.meanings|length > 1 %}
-<p class="help">{{ word.chars }} has {{ word.meanings|length }} pronunciations/meanings</p>
+<p class="help pure-u-1 text-center">{{ word.chars }} has {{ word.meanings|length }} pronunciations/meanings</p>
 {% endif %}
 
 
@@ -40,6 +40,9 @@
         </label>
         
 </div>
+{% if not forloop.last %}
+<hr/>
+{% endif %}
 {% endfor %}
 
 <hr/>

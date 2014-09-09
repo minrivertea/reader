@@ -599,12 +599,8 @@ label.focus {
 }
 
 .test_item p.help {
-  float: left;
-  width: 100%;
-  font-size: 11px;
+  font-size: 0.7em;
   color: #999;
-  margin: 0; 
-  text-align: center;  
 }
 
 .test_item .item {
