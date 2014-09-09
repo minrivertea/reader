@@ -197,7 +197,7 @@ class PersonalWordlist(object):
             gap = time.time() - time.mktime((now - timedelta(hours=2)).timetuple())
             this_gap = time.time() - values['search_date']
             if this_gap > gap:
-                values['search_date'] = now
+                values['search_date'] = time.time()
                 values['search_count'] += 1
                 wl[word] = values
       

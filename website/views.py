@@ -119,9 +119,9 @@ def search(request, search_string=None, title='Search', words=None):
     
     
     if not words:
-        things = _split_unicode_chrs(search_string)
-        words = _group_words(things)        
-    
+        things = _split_unicode_chrs(search_string)        
+        words = _group_words(things)   
+
         
     # IF THE USER WAS LOGGED IN, RECORD IT IN THEIR 'SAVED WORDS'
     if request.user.is_authenticated():

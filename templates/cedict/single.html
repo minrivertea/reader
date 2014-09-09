@@ -1,4 +1,4 @@
-{% load link_chars %}
+{% load link_chars convert_backslashes %}
 
 <div id="word" class="pure-u-1 all-pad">
     
@@ -22,7 +22,7 @@
             <hr/>
                         
             <div class="meaning">
-                {{ m.meaning|link_chars|safe }}
+                {{ m.meaning|convert_backslashes|link_chars|safe }}
             
             {% if m.measure_words %}
             <ul class="example pure-g">
@@ -34,13 +34,23 @@
             </ul>
             {% endif %}
             
-            </div>
-        
+            </div> 
+            
+            {% if not forloop.last %}
+            <hr/>           
+            {% endif %}
         {% endfor %}
-
     </div>
 
 <hr/>
+
+{% if word.starts_with %}
+<ul id="wordlist">
+{% for x in word.starts_with %}
+    <li class="wrapper"></li>
+{% endfor %}
+</ul>
+{% endif %}
  
 <div class="buttons pure-g">
 

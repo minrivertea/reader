@@ -56,10 +56,15 @@ class ChineseWord(Word):
             self.key = settings.CHINESE_WORD_KEY % (len(chars), chars)     
             
             x = json.loads(_search_redis(self.key))
-            self.chars = x['characters']
+            self.chars = x['chars']
             self.length = len(chars)
             self.meanings = x['meanings']
-
+            try:
+                self.starts_with = x['startswith']
+            except:
+                pass
+    def save():
+        pass
 
     def __unicode__(self):
         return self.chars
@@ -97,7 +102,7 @@ class ChineseWord(Word):
         
         return
     
-    def _contains(self, chars):
+    def _contains(self, chars=None):
         """ Returns any words containing this word """
         
         r_server = _get_redis()
@@ -114,17 +119,20 @@ class ChineseWord(Word):
             new_word = ChineseWord(smart_unicode(chars))
             words.append(new_word)
             
-        words =  sorted(words, reverse=False, key=lambda thing: thing.length)
+        words = sorted(words, reverse=False, key=lambda thing: thing.length)
         
         return words
         
     
-    def _starts_with(self, chars):
+    def _starts_with(self, chars=None):
         """
         Returns all words starting with these ones
         """
         
         r_server = _get_redis()
+        if not chars:
+            chars = self.chars
+        
         key = "ZH:*C:%s*" % chars
         keys = r_server.scan_iter(key)
 

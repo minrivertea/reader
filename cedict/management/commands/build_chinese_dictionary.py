@@ -29,13 +29,19 @@ class Command(NoArgsCommand):
     to a value like this:
     
     {
-        'chars': '好吧',        
-        'trad_chars': '好吧',
+        'chars': '好',        
+        'trad_chars': '好',
         'hsk_level': '', # future
         'measure_word': '个' # eg. if it's a noun with a measure word
         'meanings': [
-            {'pinyin': 'hao ba', 'meaning': 'okay, yes', 'weight':'1'},
-            {'pinyin': 'hao ba', 'meaning': 'I suppose so', 'weight':'2'}            
+            {'pinyin': 'hao', 'meaning': 'okay, yes', 'weight':'1'},
+            {'pinyin': 'hao', 'meaning': 'I suppose so', 'weight':'2'}            
+        ]
+        'startswith': [
+            '好吧', '好汉', '好的'...
+        ]
+        'contains': [
+            
         ]
     }
     
@@ -166,7 +172,7 @@ class Command(NoArgsCommand):
                     values['meanings'].append(pair)
                 else:
                     values = {
-                        'characters': characters,
+                        'chars': characters,
                         'meanings': [pair,],
                     }
                     

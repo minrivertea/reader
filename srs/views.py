@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import smart_unicode
 from django.template import RequestContext
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 # python
 import time
@@ -16,7 +17,7 @@ from forms import SubmitAnswerForm
 
 
     
-    
+@login_required   
 def review_new(request):
 
     words = request.user.get_review_items()
@@ -30,7 +31,7 @@ def review_new(request):
     return _render(request, 'srs/review_new.html', locals())
 
 
-
+@login_required
 def test(request):
     
     # COLLECT THE WORDS
@@ -62,6 +63,7 @@ def test(request):
     return _render(request, 'srs/test.html', locals())
 
 
+@login_required
 def submit_answer(request):
     
     if request.method == 'POST':
