@@ -59,10 +59,10 @@ class ChineseWord(Word):
             self.chars = x['chars']
             self.length = len(chars)
             self.meanings = x['meanings']
-            try:
-                self.starts_with = x['startswith']
-            except:
-                pass
+            self.starts_with = x.get('starts_with')
+            self.contains = x.get('contains')
+            
+
     def save():
         pass
 

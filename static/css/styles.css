@@ -22,7 +22,7 @@ html, button, input, select, textarea,
 }
 
 .t-pad {
-  padding-bottom: 1em;    
+  padding-top: 1em;    
 }
 
 .b-pad {
@@ -841,6 +841,14 @@ body.color4 #tools {
 #wordlist li:first-child {
 }
 
+#wordlist li.head {
+  font-size: 0.7em;
+  text-transform: uppercase;
+  background: #2772b2;
+  color: #fff;
+  border-bottom: none;   
+}
+
 
 .wrapper .line span.black {
   color: #333;   
@@ -1295,9 +1303,8 @@ h3 span.this {
 
 #single .meaning .example {
   list-style-type: none;
-  margin: 1em;
-  padding: 0;
   background: #ebf3f9;
+  padding: 0;
   color: #1f4a6f;
   font-size: 0.8em;
 }

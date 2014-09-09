@@ -45,26 +45,31 @@
 <hr/>
 
 {% if word.starts_with %}
-<ul id="wordlist">
-{% for x in word.starts_with %}
-    <li class="wrapper"></li>
-{% endfor %}
-</ul>
+<ul id="wordlist" class="pure-u-1">
+    <li class="head pure-u-1 all-pad">Words starting with {{ word.chars }}</li>
+    {% for x in word.starts_with %}
+        
+        <li class="wrapper pure-u-1 t-pad b-pad">
+            <a data-pjax href="{% url 'single_word' x %}" class="pure-g">
+                <div class="chars pure-u">{{ x }}</div>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
 {% endif %}
- 
-<div class="buttons pure-g">
 
-    <a href="{% url 'search_starts_with' word.chars %}" data-pjax class="small pure-u-1-3 all-pad button text-center">
-        Starts with</a>
-    
-    <a href="{% url 'search_contains' word.chars %}" data-pjax class="small pure-u-1-3 all-pad button text-center">
-        Contains</a>
-            
-    <a href="" data-pjax class="small all-pad button pure-u-1-3 text-center">
-        Examples</a>
-
-</div>
-    
+{% if word.contains %}
+<ul id="wordlist" class="pure-u-1">
+    <li class="head pure-u-1 all-pad">Words containing {{ word.chars }}</li>
+    {% for x in word.contains %}
+        <li class="wrapper pure-u-1 t-pad b-pad">
+            <a data-pjax href="{% url 'single_word' x %}" class="pure-g">
+                <div class="chars pure-u">{{ x }}</div>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}    
 
 </div>
 
