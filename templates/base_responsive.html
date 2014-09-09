@@ -26,8 +26,7 @@
 	<link rel='shortcut icon' href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
 	<!-- / STYLES -->
 	
-	
-	
+
 </head>
 
 
@@ -69,19 +68,33 @@
     
         <div class="pure-g">
         
-        <div class="pure-u-4-24 all-pad text-center" id="menu">
-            <button class="menu-trigger"></button>
-        </div>
-        
-        <form id="search" data-pjax action="{% url 'search' %}" method="post" class="pure-u-16-24">
-                                
-            {% csrf_token %}
-            <div id="form-inner" class="pure-g">
-                <label for="id_char"></label>
-                <input type="search" id="id_char" class="pure-u-1 all-pad" title="Search for a Chinese word" name="char" placeholder="Search for a Chinese word" >
-                <button type="submit" value="Go" id="submit" class="pure-u-2-24 all-pad">Search</button>
+            <!-- LEFT MENU ICON -->
+            <div class="pure-u-4-24 all-pad text-center" id="menu">
+                <button class="menu-trigger"></button>
             </div>
-        </form>
+            <!-- END -->
+        
+        
+            <!-- MAIN SEARCH BOX -->
+            <form id="search" data-pjax action="{% url 'search' %}" method="post" class="pure-u-16-24">
+                                    
+                {% csrf_token %}
+                <div id="form-inner" class="pure-g">
+                    <label for="id_char"></label>
+                    <input type="search" id="id_char" class="pure-u-1 all-pad" title="Search for a Chinese word" name="char" placeholder="Search for a Chinese word" >
+                    <button type="submit" value="Go" id="submit" class="pure-u-2-24 all-pad">Search</button>
+                </div>
+            </form>
+            <!-- END -->
+            
+            
+            <!-- RIGHT FLEXIBLE ICON -->
+            <div class="pure-u-4-24 all-pad text-center" id="">
+                {% if request.path == '' %}
+                    <button class="help"></button>
+                {% endif %}
+            </div>
+            <!-- END -->
         
         
         </div>

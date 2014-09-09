@@ -2,12 +2,12 @@
 
 <div class="text text-center pure-u-1 all-pad">
 
-<h1>A big thank you!</h1>
+<h1>Thanks Beta Tester!</h1>
 
-<p>Thanks for helping beta-test this tool - here's some basic information about the test and how to use the tool.</p>
+<p>Thanks for helping us test this tool. Here's a little introduction to this whole thing (2 minutes tops).</p>
 
 {% if not request.user.is_authenticated %}
-<p>Read the info below (2 minutes) and make sure you <a href="{% url 'registration_register' %}">sign up</a></p>
+<p>Remember to <a href="{% url 'registration_register' %}">sign up</a> when you're done!</p>
 {% endif %}
 
 <hr/>
@@ -15,8 +15,8 @@
 <div class="section pure-u-1 text-left" id="get_started">
     <p class="big">This is a Chinese-English dictionary that helps you learn vocabulary faster and with less effort.</p>
     <p><strong>1. </strong>You use it like any other dictionary - search for words using Chinese, pinyin or English.</p>
-    <p><strong>2. </strong>The tool remembers the words you've searched for, and sends you emails when you need to test/review them.</p>
-    <p><strong>3. </strong>We use <a href="{% url 'page' 'spaced-repetition' %}">Spaced Repetition</a> techniques to make sure the memorisation process is optimised.</p>
+    <p><strong>2. </strong>The tool remembers the words you've searched for, and sends you emails when you need to test/review something.</p>
+    <p><strong>3. </strong>Using <a href="{% url 'page' 'spaced-repetition' %}">Spaced Repetition</a> techniques, we optimise and automate your learning so you put in minimum effort with maximum results.</p>
             
 </div>
 

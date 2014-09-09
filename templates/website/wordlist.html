@@ -2,6 +2,10 @@
 
     <ul id="wordlist" class="pure-u-1">
     
+    {% if not request.user.is_authenticated %}
+    <li class="head all-pad">Learn these word faster - <a href="{% url 'auth_login' %}">Login</a> or <a href="{% url 'registration_register' %}">register</a></li>
+    {% endif %}
+    
     {% for w in words %}
     
         {% for x in w.meanings %}

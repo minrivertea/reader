@@ -1,6 +1,15 @@
 {% load link_chars convert_backslashes %}
 
+{% if not request.user.is_authenticated %}
+    <ul id="wordlist" class="pure-u-1">
+    <li class="head all-pad">Learn this word faster - <a href="{% url 'auth_login' %}">Login</a> or <a href="{% url 'registration_register' %}">register</a></li>
+    </ul>
+    {% endif %}
+
 <div id="word" class="pure-u-1 all-pad">
+    
+    
+    
     
     <div id="single">
         

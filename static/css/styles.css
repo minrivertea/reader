@@ -845,6 +845,11 @@ body.color4 #tools {
   border-bottom: none;   
 }
 
+#wordlist li.head a {
+  color: #fff;
+  text-decoration: underline;   
+}
+
 
 .wrapper .line span.black {
   color: #333;   
