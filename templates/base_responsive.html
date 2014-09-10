@@ -89,16 +89,26 @@
             
             
             <!-- RIGHT FLEXIBLE ICON -->
-            <div class="pure-u-4-24 all-pad text-center" id="">
-                {% if request.path == '' %}
-                    <button class="help"></button>
-                {% endif %}
+            {% url 'test' as test_url %}
+            {% if request.path == test_url %}
+            <div class="pure-u-4-24 all-pad text-center" id="ricon">
+                <button rel="help">?</button>
             </div>
+            {% endif %}
             <!-- END -->
         
         
         </div>
     
+    </div>
+    
+    <div id="overlays" class="pure-g all-pad">
+        <div id="help" class="pure-u-1">
+            
+            <p><strong>How do I type pinyin tones?</strong><br/>
+            Type numbered Pinyin (eg. "hao3") and it will automatically convert to tonal pinyin (eg. "hǎo").</p>
+            
+        </div>
     </div>
         
     <div id="container" class="pure-g"> 
@@ -125,6 +135,13 @@
                 duration: 150,    
             });
             jPM.on();
+            
+            
+            /// TRIGGERS FLEXIBLE RIGHT-ICON IN HEADER
+            $('#header #ricon button').click( function() {
+                $('#overlays').toggle();
+                $(this).parent('div').toggleClass('selected');   
+            });
 
             /// ASSIGN VARIOUS CLASSES BASED ON LOCATION
             var noHeaderURLs = [];

@@ -114,6 +114,14 @@ p.red, a.red, span.red {
   font-size: 0.8em;   
 }
 
+.x-small, span.x-small {
+  font-size: 0.6em;   
+}
+
+.xx-small, span.xx-small {
+  font-size: 0.3em;   
+}
+
 .grey, span.grey {
   color: #999;   
 }
@@ -197,7 +205,32 @@ hr {
     right: 5px;
     top: 0px;
     width: 21px;
+    border: none;
 }
+
+#header #ricon.selected {
+  border-bottom: 1px solid #f9f9f9;
+  z-index: 21; 
+  position: relative;  
+}
+
+#header #ricon.selected button {
+  color: #333;
+}
+
+#header #ricon button {
+  display: inline-block;
+  text-align: center;
+  padding: 0;
+  background: none;
+  border: none;
+  color: #c1c1c1;
+  font-family: Helvetica, sans-serif;
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+
 
 #jPanelMenu-menu {
   border-right: 1px solid #e1e1e1;   
@@ -247,6 +280,7 @@ hr {
 
 #search {
     position: relative;
+    border-right: 1px solid #f1f1f1;
 }
 
 #search button {
@@ -275,13 +309,12 @@ hr {
     background: none repeat scroll 0 0 transparent;
     border: none;
     border-left: 1px solid #f1f1f1;
-    border-right: 1px solid #f1f1f1;
     color: #999;
     border-radius: 0;
     color: #333333;
     overflow: hidden;
-    font-size: 1.1em;
     line-height: 1.2em;
+    font-size: 1.1em;
     position: relative;
 }
 
@@ -303,30 +336,31 @@ hr {
     display: none;
 }
 
-/*
-.home #search #form-inner {
-  position: absolute;
-  top: 300px; 
-  width: 850px;
-}
-
-.home #search input#id_char {
-    background: none repeat scroll 0 0 #FFFFFF;
-    border: 1px solid #e1e1e1;
-    padding-left: 1em;
-}
-
-.home #search label {
-  display: none;   
-}
-
-*/
-
-
-
 
 /* END HEADER STYLES */
 
+
+/* RIGHT ICON OVERLAYS */
+
+
+
+#overlays {
+  background: #f9f9f9;
+  color: #333;
+  display: none; 
+  line-height: 1.3em; 
+  border-top: 1px solid #f1f1f1;
+  position: relative;
+  top: -1px;
+  z-index: 20; 
+}
+
+#overlays > div {
+  display: ;
+  font-size: 0.8em;   
+}
+
+/* END RIGHT ICON OVERLAYS */
 
 /* FORMS STYLES */
 
@@ -591,11 +625,8 @@ label.focus {
 }
 
 .test_item .chars {
-    font-size: 90px;
-    text-align: center; 
-    margin: 0 0 10px 0;
-    padding-bottom: 10px; 
-    border-bottom: 1px dashed #e1e1e1;
+    font-size: 5em;
+    margin: 20px 0 0px 0;
 }
 
 .test_item p.help {
