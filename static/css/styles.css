@@ -372,11 +372,9 @@ form {
   margin: 10px 0 10px;
 }
 
-form p.help {
+form p.help, p.help {
   color: #777777;
   font-size: 0.8em;
-  line-height: 1.8em;
-  margin: 20px 0;
   text-align: center;
 }
 
@@ -1288,17 +1286,10 @@ h3 span.this {
 }
 
 #login form input {
-  width: 90%;
 }
 
 #login form input[type="submit"] {
-  float: none;
-  border: none;
-  height: auto;
-  padding: 10px 20px;
-  font-size: 13px;
-  margin: 0; 
-  position: static;
+
 }
 
 /* SINGLE WORD LOOKUP STYLES */

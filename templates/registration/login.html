@@ -7,7 +7,7 @@
 {% else %}
 <h2>Login to your account</h2>
 
-<p>Don't have an account?  <br/><a href="{% url 'registration_register' %}">Click here to create a new one</a></p>
+<p class="help pure-u-1">Don't have an account? <br/> <a href="{% url 'registration_register' %}">Click here to create a new one</a></p>
 
 
 {% if form.errors %}
@@ -16,17 +16,20 @@
 
 <form method="post" action="{% url 'auth_login' %}" class="pure-u-1 text-center">
     {% csrf_token %}
-    <p>
-         <input type="email" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="all-pad"/>
+    <p class="pure-g">
+         <input type="email" name="email" id="id_email" value="" title="" placeholder="Enter your email address" class="all-pad pure-u-1"/>
          <label for="id_email">Your email address</label>
     </p>
-    <p>
+    <p class="pure-g">
          <input type="password" name="password" id="id_password" value="" placeholder="Type your password" class="pure-u-1 all-pad"/>
          <label for="id_password1">Choose a password</label>
     </p>
-    <input type="submit" value="Login" class="button" />
-
-    <p class="help small"><a href="{% url 'auth_password_reset' %}">Forgot your password?</a></p>
+    
+    <p class="pure-g">
+    <input type="submit" value="Login" class="button all-pad text-center pure-u-1" />
+    </p>
+    
+    <p class="help pure-u-1"><a href="{% url 'auth_password_reset' %}">Forgot your password?</a></p>
 
 </form>
 
