@@ -1,11 +1,11 @@
-You've got words you need to review/test: 
+You've got some words that need to be reviewed today: 
 
 {% if review_url %}
-Click this link to start reviewing your words:
+Click here to start reviewing your vocab:
 {{ site_url }}{{ review_url }}
 {% endif %}
 
 {% if test_url %}
-Click this link to start testing your words:
+Click this link to start today's test:
 {{ site_url }}{{ test_url }}
 {% endif %}
