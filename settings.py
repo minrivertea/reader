@@ -27,14 +27,13 @@ DATABASES = {
     }
 }
 
-TIME_ZONE = 'America/Chicago'
-LANGUAGE_CODE = 'en-gb'
+TIME_ZONE =             'America/Chicago'
+LANGUAGE_CODE =         'en-gb'
+SITE_ID =               1
+USE_I18N =              False
+USE_L10N =              False
+SECRET_KEY =            ''
 
-SITE_ID = 1
-USE_I18N = False
-USE_L10N = False
-
-SECRET_KEY = ''
 
 # STATIC FILES
 # ------------------------------------------------------
@@ -113,17 +112,19 @@ INSTALLED_APPS = (
 
 
 
-#random stuff
+# RANDOM STUFF
+# ------------------------------------------------------
+
 SITE_URL = 'http://chinesedictionary.io'
 SITE_NAME = 'chinesedictionary.io'
 ACCOUNT_ACTIVATION_DAYS = 7
-
-
 DICT_FILE_LOCATION = os.path.join(PROJECT_PATH, 'files/cedict_1_0_ts_utf-8_mdbg.txt')
 ENGLISH_WORD_LIST = os.path.join(PROJECT_PATH, 'files/en_wordlist.txt')
 
 
 # CACHE SETTINGS
+# ------------------------------------------------------
+
 CACHE_NGINX = True
 CACHE_NGINX_TIME = 3600 * 24  # 1 day, in seconds
 CACHE_NGINX_ALIAS = 'default'
@@ -144,6 +145,7 @@ AUTHENTICATION_BACKENDS = (
 )
 AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = '/user/'
+LOGIN_URL = 'auth_login' # this is a named URL not an actual URL
 
 
 
