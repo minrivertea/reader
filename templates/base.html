@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load staticfiles compress %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,10 +15,12 @@
 	<meta name="robots" content="ALL" />
 	
 	<title>{% block pagetitle %}Chinese Dictionary and Learning Tools{% endblock %} | {{ site_name }}</title>	
-	<style type="text/css">
-	   {% include 'static/styles.txt' %}
-	</style>
-	
+
+	{% compress css inline %}
+    <link rel="stylesheet" href="{% static 'css/pure-grids-combo.0.5.0.css' %}">    
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    {% endcompress %}
+    
 	<link rel='shortcut icon' href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
 	
 	<script type="text/javascript">
@@ -39,32 +41,32 @@
        <div id="header-inner" class="centred">
         
         
-        <a href="/" id="logo" alt="home link" title="Home - {{ sitename }}" data-ajax><span></span></a>
-        
+        <form id="search" data-pjax action="{% url 'search' %}" method="post" class="pure-u-16-24">
+            {% csrf_token %}
+            <label for="id_char"></label>
+            <input id="id_char" class="empty pure-u-1" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search for a Chinese word" >
+            <input type="submit" value="Go" id="submit" class="submit button" style="display: none;"/>
+        </form>
+                
         {% url 'user' as user_url %}
         {% url 'page' 'about' as about_url %}
-            <a id="about_link" href="{{ about_url }}" title="about" class="{% if about_url in request.path %}selected{% endif %}" data-ajax>about</a>
+            <a id="about_link" href="{{ about_url }}" title="about" class="pure-u-1-24 all-pad {% if about_url in request.path %}selected{% endif %}" data-ajax>about</a>
         
         
         {% if user.is_authenticated %}
-            <a id="account_link" href="{{ user_url }}" class="{% if user_url in request.path %}selected{% endif %}">
+            <a id="account_link" href="{{ user_url }}" class="pure-u-1-24 all-pad {% if user_url in request.path %}selected{% endif %}">
             your account
             </a>                        
         {% else %}
             {% url 'auth_login' as login_url %}
-            <a id="login_link" href="{{ login_url }}" class="{% if login_url in request.path %}selected{% endif %}" data-ajax>login</a> 
+            <a id="login_link" href="{{ login_url }}" class="pure-u-1-24 all-pad {% if login_url in request.path %}selected{% endif %}" data-ajax>login</a> 
             {% url 'registration_register' as register_url %}
-            <a id="register_link" href="{{ register_url }}" class="{% if register_url in request.path %}selected{% endif %}" data-ajax>register</a>
+            <a id="register_link" href="{{ register_url }}" class="pure-u-1-24 all-pad {% if register_url in request.path %}selected{% endif %}" data-ajax>register</a>
         {% endif %}
         
         
             
-        <form id="search" data-pjax action="{% url 'search' %}" method="post" class="">
-            {% csrf_token %}
-            <label for="id_char"></label>
-            <input id="id_char" class="clearMeFocus empty" title="Search for a Chinese word" name="char" value="" autofocus="autofocus" placeholder="Search for a Chinese word" >
-            <input type="submit" value="Go" id="submit" class="submit button"/>
-        </form>
+        
       </div>
     </div>
     

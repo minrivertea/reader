@@ -122,17 +122,16 @@ hr {
 /* HEADER STYLES */
 
 #header {
-    float: left;
     width: 100%;
-    height: auto;
+    height: ;
     margin: 0 0 30px;
     position: relative;
     background: #f9f9f9;
 }
 
 #header-inner {
-  padding: 0px; 
-  font-size: 13px;
+  padding: 10px 0; 
+  font-size: 0.8em;
 }
 
 #header #logo {
@@ -157,13 +156,12 @@ hr {
 
 #header a, #header .expandable {
     border-right: 1px solid #f1f1f1;
-    float: left;
     padding: 10px 15px;
     position: relative;
 }
 
 #header #about_link, #header #login_link, #header #register_link, #header #account_link {
-  float: right;
+  float: ;
 }
 
 #header a.selected {
@@ -191,25 +189,25 @@ hr {
 
 #header.home #search {
   position: absolute;
-  top: 300px;   
+  top: 300px; 
+  width: 960px;  
 }
 
 #search {
-    float: left;
     position: relative;
-    width: 100%; 
-    margin: 10px 0 0;
+    margin: 0px 0 0;
+    width: 732px;
 }
 
 #search input.submit {
     border: medium none;
     border-radius: 0 5px 5px 0;
     color: #FFFFFF;
-    float: left;
     font-size: 20px;
     height: auto;
     padding: 10px 35px;
     width: auto;
+    display: none;
 }
 
 #search input#id_char {
@@ -217,7 +215,6 @@ hr {
     border: 1px solid #e1e1e1;
     border-radius: 0;
     color: #333333;
-    float: left;
     line-height: 1em;
     margin: 0px;
     overflow: hidden;
@@ -226,55 +223,15 @@ hr {
     height: auto;
     padding: 13px 15px;
     position: relative;
-    width: 82%;
+    width: 700px;
 }
 
 #search input#id_char:focus {
   outline: none;  
 }
 
-#header.small_search #search {
-  width: 75%;
-  float: left;
-  margin: 0;   
-}
-
-#header.small_search #search input#id_char {
-    background: none repeat scroll 0 0 transparent;
-    border: medium none;
-    float: left;
-    font-size: 13px;
-    padding: 19px 10px 17px 40px;
-    width: 80%;
-    color: #999;
-}
-
-#header.small_search #search input#id_char:focus {
-  color: #222;   
-}
-
-#header.small_search #search label[for="id_char"] {
-    background: url("/static/images/sprite.png") no-repeat scroll -28px 1px #f9f9f9;
-    content: " ";
-    display: block;
-    height: 22px;
-    left: 5px;
-    position: absolute;
-    top: 13px;
-    width: 22px;
-    z-index: 1000;
-}
-
-
-#header.small_search #search input.submit {
-    display: none;
-    background: none repeat scroll 0 0 transparent;
-    border-radius: 0;
-    color: #333;
-    float: right;
-    font-size: 13px;
-    padding: 16px 10px;
-    width: 10%;
+#header.home #search input.submit {
+  display: inline-block;   
 }
 
 #header.home #search label.focus {
@@ -289,8 +246,6 @@ hr {
 /* FORMS STYLES */
 
 form {
- float: left;
- width: 100%;
  text-align: left;  
 }
 

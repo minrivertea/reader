@@ -177,8 +177,8 @@ def _group_words(chars, chinese_only=False):
         # initialise a ChineseWord object and add it to our object_list
         the_string = "".join(search_string)
         word = ChineseWord(chars=the_string)
-
         obj_list.append(word)
+        
         
         # tells us how many characters need to be skipped before we start searching again
         # because maybe this word included the subsequent 3 chars, so let's not searhc them

@@ -251,7 +251,7 @@ hr {
   border-right: 1px solid #f1f1f1;
   position: relative;
   text-align: center;
-  font-size: 13px;
+  font-size: 0.8em;
 }
 
 
@@ -280,7 +280,6 @@ hr {
 
 #search {
     position: relative;
-    border-right: 1px solid #f1f1f1;
 }
 
 #search button {
