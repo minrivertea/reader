@@ -55,7 +55,7 @@ class Command(NoArgsCommand):
                 
                 _send_email(
                     recipient = u.email,
-                    subject_line = "It's time to review your vocab!",
+                    subject_line = "Time to review your vocab for today!",
                     template = 'srs/emails/notification.txt',
                     extra_context = {
                         'review_url': review_url,
