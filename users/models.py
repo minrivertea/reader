@@ -74,6 +74,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     test_items_limit = models.IntegerField(default=5)
     review_interval = models.IntegerField(default=1) # days between search and 1st review
     
+    # related to reviews
+    words_reviewed = models.IntegerField(default=0, blank=True, null=True)
+    words_reviewed_again = models.IntegerField(default=0, blank=True, null=True)
+
+    
     # test related stats tracking
     no_answered = models.IntegerField(default=0, blank=True, null=True)
     no_correct = models.IntegerField(default=0, blank=True, null=True)
@@ -264,15 +269,22 @@ class PersonalWordlist(object):
             
             # UPDATE REVIEWED INFORMATION
             if reviewed:
+                
+                # UPDATE SOME GENERIC USER INFO
+                self.user.words_reviewed += 1
+                if w['review_count'] > 0:
+                    self.user.words_reviewed_again += 1
+                self.user.save()
+                
                 w['review_count'] += 1
                 w['review_date'] = time.time()
                 w['next_action'] = 'test'
                 w['next_action_date'] = time.mktime((datetime.now()+timedelta(days=3)).timetuple())
-                            
+                
 
             # UPDATE THE WORD BASED ON A TEST THEY JUST COMPLETED
             if test_results:
-                       
+
                                
                 # DETERMINE WHAT WAS THE MOST RECENT ACTION (TEST OR REVIEW?)
                 if w['test_date'] == '' or w['test_date'] == None: 

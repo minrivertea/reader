@@ -4,10 +4,33 @@
     <li class="wrapper pure-u-1 all-pad">
         <div class="chars">{{ u.email }}</div>
         <div class="pinyin">
-            Personal Words: {{ u.get_personal_words.count }} | 
-            Words Tested: {{ u.no_answered }} | 
-            Correct Answers: {{ u.no_correct }} | 
-            Incorrect Answers: {{ u.no_wrong }}  
+            <table>
+                <tr>
+                    <td width="200px">Personal Words</td>
+                    <td>{{ u.get_personal_words.count }}</td>
+                </tr>
+                
+                <tr>
+                    <td>Language Items Tested:</td>
+                    <td> {{ u.no_answered }}</td>
+                </tr>
+                
+                <tr>
+                    <td>Correct Answers: </td>
+                    <td>{{ u.no_correct }}</td>
+                </tr>
+                
+                <tr>
+                    <td>Incorrect Answers:</td>
+                    <td>{{ u.no_wrong }}</td>
+                </tr>
+                
+                <tr>
+                    <td>Success Rate:</td>
+                    <td>{{ u.get_success_percent|floatformat:"-2" }}%</td>
+                </tr>
+            </table>
+              
         </div>
     </li>
 {% endfor %}

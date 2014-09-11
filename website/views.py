@@ -167,10 +167,12 @@ def home(request):
 @login_required
 @cache_page_nginx 
 def stats(request):
-    if not request.user.is_superuser:
-        return _render(request, '500.html', locals())
+    
+    if request.user.is_superuser:
+        users = User.objects.all()
+    else:
+        users = User.objects.filter(email=request.user.email)
         
-    users = User.objects.all()
     return _render(request, 'website/stats.html', locals())
 
 

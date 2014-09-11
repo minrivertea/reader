@@ -77,11 +77,13 @@ def submit_answer(request):
             testing = ['pinyin', 'meaning']
             
             # let's see if they got it right!
+            
+
             for y in testing:
                 count = 1
                 key = '%s_pass' % y
                 while data[('%s_%s_answer' % (y, count))]:
-                    request.user.no_answered += 1
+                    
                     if data[('%s_%s' % (y, count))] == data[('%s_%s_answer' % (y, count))]:
                         results[key] = True
                         request.user.no_correct += 1
@@ -89,7 +91,7 @@ def submit_answer(request):
                         results[key] = False
                         request.user.no_wrong += 1
                     count += 1
-
+                
             # update the user information
             request.user.save()
             request.user.get_personal_words()._update_word(data['characters'], test_results=results)
