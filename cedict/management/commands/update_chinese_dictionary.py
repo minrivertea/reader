@@ -87,27 +87,31 @@ class Command(NoArgsCommand):
                     meanings = "/".join(new_meanings)
                 
 
-                    
-                    
-                    
+                                        
                 
-                py_key = settings.PINYIN_WORD_KEY % (len(num_pinyin.split(' ')), num_pinyin.replace(' ', '_'))
-                char_key = settings.CHINESE_WORD_KEY % ((len((characters))/3), characters) 
+                char_key = settings.CHINESE_WORD_KEY % ((len((characters))/3), characters)                 
                 
                 # CREATE THE PRONUNCIATION/MEANING PAIR
                 pair = {}
                 pair['pinyin'] = tonal_pinyin
+                pair['pinyin_numbered'] = _normalize_pinyin(numbered_pinyin)
                 pair['meaning'] = meanings
                 pair['measure_words'] = mws
+                
                 
                 
                 # ADD THE PINYIN ENTRY
                 # --------------------
                 
-                if not _search_redis(py_key, lookup=False):
+                py_key = settings.PINYIN_WORD_KEY % _pinyin_to_ascii(numbered_pinyin)
+                if r_server.exists(py_key):
+                    values = json.loads(_search_redis(py_key))
+                    if smart_unicode(characters) not in values:
+                        values.append(characters)
+                else:
                     values = [characters,]
-                    r_server.set(py_key, json.dumps(values))                    
-    
+                
+                r_server.set(py_key, json.dumps(values))                     
     
     
     
