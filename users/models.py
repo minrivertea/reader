@@ -125,7 +125,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         
     def get_review_success_percent(self):
         if self.words_reviewed and self.words_reviewed_again:
-            return ( ( float(self.words_reviewed_again) / float(self.words_reviewed) ) * 100 )
+            n = self.words_reviewed - self.words_reviewed_again
+            return ( ( float(n) / float(self.words_reviewed) ) * 100 )
         
         return None
     
