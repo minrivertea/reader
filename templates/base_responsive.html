@@ -81,7 +81,7 @@
                 {% csrf_token %}
                 <div id="form-inner" class="pure-g">
                     <label for="id_char"></label>
-                    <input type="search" id="id_char" class="pure-u-1 all-pad" title="Search for a Chinese word" name="char" placeholder="Search for a Chinese word" >
+                    <input type="search" id="id_char" class="pure-u-1 all-pad" title="Search for a Chinese word" name="char" placeholder="Search for a Chinese word" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" >
                     <button type="submit" value="Go" id="submit" class="pure-u-2-24 all-pad">Search</button>
                 </div>
             </form>
