@@ -11,6 +11,11 @@
                 </tr>
                 
                 <tr>
+                    <td>Review success rate</td>
+                    <td>{{ u.get_review_success_percent|floatformat:"-2" }}%</td>
+                </tr>
+                
+                <tr>
                     <td>Words reviewed</td>
                     <td> {{ u.words_reviewed }}</td>
                 </tr>
@@ -36,8 +41,8 @@
                 </tr>
                 
                 <tr>
-                    <td>Success Rate:</td>
-                    <td>{{ u.get_success_percent|floatformat:"-2" }}%</td>
+                    <td>Test success Rate:</td>
+                    <td>{{ u.get_test_success_percent|floatformat:"-2" }}%</td>
                 </tr>
             </table>
               
