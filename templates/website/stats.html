@@ -5,9 +5,9 @@
         <div class="chars">{{ u.email }}</div>
         <div class="pinyin">
             Personal Words: {{ u.get_personal_words.count }} | 
-            Words Tested: {{ user.no_answered }} | 
-            Correct Answers: {{ user.no_correct }} | 
-            Incorrect Answers: {{ user.no_wrong }}  
+            Words Tested: {{ u.no_answered }} | 
+            Correct Answers: {{ u.no_correct }} | 
+            Incorrect Answers: {{ u.no_wrong }}  
         </div>
     </li>
 {% endfor %}
