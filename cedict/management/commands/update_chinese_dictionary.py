@@ -43,9 +43,9 @@ class Command(NoArgsCommand):
                 
                 # GATHER ALL THE MAIN VARIABLES
                 new = line.split()
-                num_pinyin = line[(line.index('[')+1):(line.index(']'))]
+                numbered_pinyin = line[(line.index('[')+1):(line.index(']'))]
                 f = ReadingFactory()
-                tonal_pinyin =  f.convert(num_pinyin, 'Pinyin', 'Pinyin',
+                tonal_pinyin =  f.convert(numbered_pinyin, 'Pinyin', 'Pinyin',
                     sourceOptions={'toneMarkType': 'numbers', 'yVowel': 'v',
                     'missingToneMark': 'fifth'})
                 meanings = line[(line.index('/')+1):(line.rindex('/'))]               
