@@ -1,4 +1,5 @@
-{% if words %}
+
+{% if words or additional %}
 
     <ul id="wordlist" class="pure-u-1">
     
@@ -23,7 +24,25 @@
         </li>
         {% endfor %}
     {% endfor %}
+    
+    {% for w in suggested %}
+        {% for x in w.meanings %}
+        <li class="wrapper pure-u-1 all-pad" id="char{{ w.wordset }}" chars="{{ w.chars }}">
+        
+            <a data-pjax href="{% url 'single_word' w.chars %}" class="pure-g">            
+                <span class="next">&#9658;</span>
+                            
+                <div class="chars pure-u ">{{ w.chars }}</div>
+                <div class="pinyin pure-u l-pad">{{ x.pinyin }}</div>
+                <div class="meaning pure-u-1 r-pad">{{ x.meaning|safe }}</div>
+            
+            </a>
+            
+        </li>
+        {% endfor %}
+    {% endfor %}
+    
     </ul>
 {% else %}
-    <p class="big pure-u-1 text-center">Sorry, no results found!</p>
+    <p class="pure-u-1 text-center all-pad">Sorry, no results found!</p>
 {% endif %}

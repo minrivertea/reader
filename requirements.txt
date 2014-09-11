@@ -8,3 +8,4 @@ django-fancy-cache
 South
 django_mobile
 django_compressor
+unidecode

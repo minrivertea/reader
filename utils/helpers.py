@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-import string, unicodedata
 import os
 PROJECT_PATH = os.path.normpath(os.path.dirname(__file__))
+
+import string, unicodedata
+from unidecode import unidecode
 
 from django.conf import settings
 from django.template import RequestContext, TemplateDoesNotExist
@@ -11,10 +13,13 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.utils.encoding import smart_str, smart_unicode
+
 
 from cedict.pinyin import PINYIN_WORDS, AMBIGUOUS_WORDS
 
 from cjklib.reading import *
+
 
 
 #render shortcut
@@ -22,10 +27,8 @@ def _render(request, template, context_dict=None, page=None, **kwargs):
     
     # HANDLE THE REQUEST WITH AJAX
     if request.is_ajax():
-       
         html = render_to_string(template, context_dict or {}, 
             context_instance=RequestContext(request), **kwargs)
-        
         return HttpResponse(html)
         
     else:
@@ -97,55 +100,48 @@ def _is_ambiguous(x):
     return False
 
 
-# RETURNS A NICELY FORMATTED HTML BREADCRUMB
-def _get_crumbs(request):
-    
-    try:
-        crumbs = request.session['crumbs']
-    except:
-        crumbs = ''
-        request.session['crumbs'] = crumbs
-        return crumbs
-    
-    items = []
-    loop = 0
-    objects = crumbs.split(' \ ')
-    for x in objects:
-        try:
-            next = objects[loop+1]
-            url = reverse('single_word', args=[x])
-            string = '<a href="%s">%s</a>' % (url, x)
-        except:
-            string = x
-        items.append(string)
-        loop += 1
-    
-    crumbs_html = ' \ '.join(items) 
-    return crumbs_html
-
 # CHECKS IF THE INCOMING STRING IS PINYIN OR NOT
 def _is_pinyin(x):
+     
+    # just checks if *any* pinyin appears in word, but this is limited   
+    #if any(ext in x for ext in PINYIN_WORDS):
+    #    is_pinyin = True
     
-    for thing in x.split(' '):
-        try:
-            # CLEAN THE PINYIN INTO NUMBERED PINYIN AND THEN STRIP THE NUMBERS
-            # AND THEN COMPARE TO OUR LIST OF PINYIN WORDS            
-            if filter(lambda x: x not in '12345', _clean_pinyin(thing)) in PINYIN_WORDS:
-                return True
-        except:
-            pass      
-
-
+    for i,y in enumerate(PINYIN_WORDS):
+        if y in x:
+            is_pinyin = True
+            for o in x.partition(y):
+                if o != '' and o not in PINYIN_WORDS:
+                    is_pinyin = False
+                    continue  
+        
+            if is_pinyin: 
+                return True   
+     
     return False
 
+def _pinyin_to_ascii(x):
+    
+    # ǖǘǚǜü
+    
+    x = x.replace(u'ǖ', u'v')
+    x = x.replace(u'ǘ', u'v')
+    x = x.replace(u'ǚ', u'v')
+    x = x.replace(u'ǜ', u'v')
+    x = x.replace(u'ü', u'v')
+    x = x.lower() # lowercase everything
+    x = unidecode(smart_unicode(x))# remove tone-marks
+    x = x.translate(None, string.digits) # remove all the numbers
+    x = x.strip().replace(' ', '') # remove any leading/trailing spaces
+    
+    return x
 
-def _clean_pinyin(x):
+
+def _normalize_pinyin(x):
     """
     Filters any incoming pinyin, regardless of what format and then 
     spits out standardised numbered pinyin eg. takes something like 
-    "nǚháizi" and returns "nv3 hai2 zi5". If it gets something that
-    isn't pinyin, it won't handle it. The function calling _clean_pinyin
-    should handle any errors.
+    "nǚháizi" and returns "nv3 hai2 zi5". 
     """
     
     f = ReadingFactory()
@@ -172,6 +168,17 @@ def _clean_pinyin(x):
             targetOptions={'toneMarkType': 'numbers', 'missingToneMark': 'noinfo', 'yVowel': 'v'}
         )
 
+    # LET'S MAKE SURE WE HAVE NICELY SPACED PINYIN
+    if " " not in pinyin:
+        pinyin = pinyin.replace('1', '1 ')
+        pinyin = pinyin.replace('2', '2 ')
+        pinyin = pinyin.replace('3', '3 ')
+        pinyin = pinyin.replace('4', '4 ')
+        pinyin = pinyin.replace('5', '5 ')
+    
+    pinyin = pinyin.strip()
+        
+    
     return pinyin
 
 

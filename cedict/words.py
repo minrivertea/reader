@@ -61,7 +61,7 @@ class ChineseWord(Word):
             self.meanings = x['meanings']
             self.starts_with = x.get('starts_with')
             self.contains = x.get('contains')
-                        
+            
 
     def save():
         pass

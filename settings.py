@@ -120,6 +120,7 @@ SITE_NAME = 'chinesedictionary.io'
 ACCOUNT_ACTIVATION_DAYS = 7
 DICT_FILE_LOCATION = os.path.join(PROJECT_PATH, 'files/cedict_1_0_ts_utf-8_mdbg.txt')
 ENGLISH_WORD_LIST = os.path.join(PROJECT_PATH, 'files/en_wordlist.txt')
+CHINESE_DICTIONARY_DUMP_FILENAME = os.path.join(PROJECT_PATH, 'dumps/chinese_dictionary.txt.gz')
 
 
 # CACHE SETTINGS
@@ -153,7 +154,7 @@ LOGIN_URL = 'auth_login' # this is a named URL not an actual URL
 # ------------------------------------------------------
 
 CHINESE_WORD_KEY = "ZH:%sC:%s" # eg. ZH:2C:好吧 (the middle '2C' means how many characters)
-PINYIN_WORD_KEY = "PY:%sW:%s"
+PINYIN_WORD_KEY = "PY:%s" # eg. PY:buhao
 ENGLISH_WORD_KEY = "EN:%sW:%s"
 MEASURE_WORD_KEY = "MW:%s" # eg. MW:个
 

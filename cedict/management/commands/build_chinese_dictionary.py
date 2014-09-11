@@ -15,6 +15,7 @@ from django.utils.encoding import smart_str, smart_unicode
 
 # import various bits and pieces
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis
+from utils.helpers import _normalize_pinyin, _pinyin_to_ascii
 
 from cjklib import characterlookup
 from cjklib.dictionary import *
@@ -48,10 +49,11 @@ class Command(NoArgsCommand):
     This is all coded into JSON and then dumped as a string into Redis, so that
     we can easily JSON.loads it on the way out and use it nicely.  
     
-    A pinyin entry has a key like "PY:2W:hao3_ba1" is something like this:
+    A pinyin entry has a key like "PY:haoba" is something like this:
     
     {
-       'words': ['好吧', '毫巴',]        
+       '好吧',
+       '毫巴',        
     }
       
     """
@@ -92,9 +94,9 @@ class Command(NoArgsCommand):
                 
                 # GATHER ALL THE MAIN VARIABLES
                 new = line.split()
-                num_pinyin = line[(line.index('[')+1):(line.index(']'))]
+                numbered_pinyin = line[(line.index('[')+1):(line.index(']'))]
                 f = ReadingFactory()
-                tonal_pinyin =  f.convert(num_pinyin, 'Pinyin', 'Pinyin',
+                tonal_pinyin =  f.convert(numbered_pinyin, 'Pinyin', 'Pinyin',
                     sourceOptions={'toneMarkType': 'numbers', 'yVowel': 'v',
                     'missingToneMark': 'fifth'})
                 meanings = line[(line.index('/')+1):(line.rindex('/'))]               
@@ -141,22 +143,27 @@ class Command(NoArgsCommand):
                     
                     
                 
-                py_key = settings.PINYIN_WORD_KEY % (len(num_pinyin.split(' ')), num_pinyin.replace(' ', '_'))
-                char_key = settings.CHINESE_WORD_KEY % ((len((characters))/3), characters) 
+                
+                
+                char_key = settings.CHINESE_WORD_KEY % ((len((characters))/3), characters)                 
                 
                 # CREATE THE PRONUNCIATION/MEANING PAIR
                 pair = {}
                 pair['pinyin'] = tonal_pinyin
+                pair['pinyin_numbered'] = _normalize_pinyin(numbered_pinyin)
                 pair['meaning'] = meanings
                 pair['measure_words'] = mws
+                
                 
                 
                 # ADD THE PINYIN ENTRY
                 # --------------------
                 
-                if _search_redis(py_key, lookup=False):
+                py_key = settings.PINYIN_WORD_KEY % _pinyin_to_ascii(numbered_pinyin)
+                if r_server.exists(py_key):
                     values = json.loads(_search_redis(py_key))
-                    values.append(characters)
+                    if smart_unicode(characters) not in values:
+                        values.append(characters)
                 else:
                     values = [characters,]
                 
@@ -180,6 +187,7 @@ class Command(NoArgsCommand):
                 
                 item_count += 1
                 print item_count
+
                 
                                
         

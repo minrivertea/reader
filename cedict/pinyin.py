@@ -155,7 +155,7 @@ u'ni',
 u'nian',
 u'niang',
 u'nie',
-u'niuu'
+u'niu',
 u'nu',
 u'nü',
 u'nv',  
