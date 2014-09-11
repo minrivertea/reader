@@ -15,6 +15,7 @@ from django.utils.encoding import smart_str, smart_unicode
 
 # import various bits and pieces
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis
+from utils.helpers import _normalize_pinyin, _pinyin_to_ascii
 
 from cjklib import characterlookup
 from cjklib.dictionary import *
