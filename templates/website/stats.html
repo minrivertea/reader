@@ -1,21 +1,9 @@
-{% extends "base.html" %}
 
-{% load django_static %}
-
-{% block extrajs %}
-<script type="text/javascript">
-
-</script>
-{% endblock %}
-
-
-{% block extracss %}
-<style type="text/css">
-
-</style>
-{% endblock %}
-
-
-{% block content %}
-{% include 'website/stats_snippet.html' %}
-{% endblock %}
+<ul id="wordlist" class="pure-g">
+{% for u in users %}
+    <li class="wrapper pure-u-1 all-pad">
+        <div class="chars">{{ u.email }}</div>
+        <div class="pinyin">Personal Words: {{ u.get_personal_words.count }}</div>
+    </li>
+{% endfor %}
+</ul>

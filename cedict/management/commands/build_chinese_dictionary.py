@@ -2,15 +2,10 @@
 # -*- coding: utf8 -*-
 
 from django.conf import settings
-
 from django.core.management.base import NoArgsCommand, CommandError
-from datetime import datetime, timedelta
-
-import uuid
-import json
-import re
 from django.utils.encoding import smart_str, smart_unicode
 
+import json
 
 
 # import various bits and pieces

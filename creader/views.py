@@ -32,7 +32,6 @@ from django.utils.encoding import smart_str, smart_unicode
 
 from utils.helpers import _render, _is_english, _is_punctuation, _is_number, _split_unicode_chrs
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis
-import utils.messages as messages
 
 from cjklib import characterlookup
 from cjklib.dictionary import *
@@ -269,7 +268,6 @@ def text(request, hashkey=None, words=None):
         obj = _search_redis(key)
     
     if not obj:
-        problem = messages.NO_TEXT_FOUND
         if request.is_ajax():
             html = render_to_string('website/problem_snippet.html', locals())
             return HttpResponse(html)

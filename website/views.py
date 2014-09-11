@@ -33,6 +33,7 @@ from creader.views import _group_words
 from website.forms import SearchForm
 from website.signals import *
 from cedict.words import ChineseWord, EnglishWord
+from users.models import User
 
 
 from nginx_memcache.decorators import cache_page_nginx
@@ -121,17 +122,7 @@ def _pinyin_search(request, search_string):
     # CLEAN UP THE INCOMING PINYIN
     clean_string = _normalize_pinyin(search_string)
     ascii_string = _pinyin_to_ascii(search_string)
-       
-    key = settings.PINYIN_WORD_KEY % ascii_string
-    print key
-    
-    # IF THERE'S NO NUMBERS AT ALL IN THE STRING MAKE A NEW KEY:        
-    #if filter(lambda x: x not in '12345', string) == string:
-    #    
-    #    string += '?' # add a wildcard to the end
-    #    string = string.replace(' ', '?_') # replace spaces with underscores and wildcards
-    #    key = settings.PINYIN_WORD_KEY % (len(string.split('_')), string)
-    
+    key = settings.PINYIN_WORD_KEY % ascii_string    
     
     suggested = []
     words = [] 
@@ -141,9 +132,6 @@ def _pinyin_search(request, search_string):
             word = ChineseWord(chars=o)
             for i in word.meanings:
                 
-                print _normalize_pinyin(i['pinyin'])
-                print clean_string
-                
                 # IF THE CLEANED SEARCH STRING AND THE CONVERTED PINYIN MATCH
                 if _normalize_pinyin(i['pinyin']) == clean_string:
                     words.append(word)
@@ -152,12 +140,10 @@ def _pinyin_search(request, search_string):
                 elif not any(ext in clean_string for ext in ['1', '2', '3', '4', '5']):
                     words.append(word)
                 
-                
                 else:
                     suggested.append(word)
     except TypeError:
         pass
-
                  
     return _render(request, 'website/wordlist.html', locals())
     
@@ -177,6 +163,15 @@ def search_starts_with(request, word):
 def home(request):
     return _render(request, 'website/home.html', locals())
 
+
+@login_required
+@cache_page_nginx 
+def stats(request):
+    if not request.user.is_superuser:
+        return _render(request, '500.html', locals())
+        
+    users = User.objects.all()
+    return _render(request, 'website/stats.html', locals())
 
 
 # DISPLAYS A STATIC PAGE LIKE 'ABOUT' OR 'BOOKMARKLET'
