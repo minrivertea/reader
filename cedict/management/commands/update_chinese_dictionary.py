@@ -2,20 +2,16 @@
 # -*- coding: utf8 -*-
 
 from django.conf import settings
-
 from django.core.management.base import NoArgsCommand, CommandError
-from datetime import datetime, timedelta
-
-import uuid
-import json
-import re
 from django.utils.encoding import smart_str, smart_unicode
 
+import json
 
 
 # import various bits and pieces
 from utils.redis_helper import _get_redis, _search_redis, _add_to_redis
 from utils.helpers import _normalize_pinyin, _pinyin_to_ascii
+
 
 from cjklib import characterlookup
 from cjklib.dictionary import *
@@ -29,7 +25,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         # 一事無成 一事无成 [yi1 shi4 wu2 cheng2] /to have achieved nothing/to be a total failure/to get nowhere/
-
+        
         # NOW LETS START
         file = open(settings.DICT_FILE_LOCATION)
         item_count = 0
@@ -41,8 +37,14 @@ class Command(NoArgsCommand):
                 # OPEN REDIS CONNECTION NOW
                 r_server = _get_redis()
                 
+                
                 # GATHER ALL THE MAIN VARIABLES
                 new = line.split()
+                characters = new[1]
+                char_key = settings.CHINESE_WORD_KEY % ((len((characters))/3), characters) 
+                if r_server.exists(char_key):
+                    continue
+                    
                 numbered_pinyin = line[(line.index('[')+1):(line.index(']'))]
                 f = ReadingFactory()
                 tonal_pinyin =  f.convert(numbered_pinyin, 'Pinyin', 'Pinyin',
@@ -54,6 +56,7 @@ class Command(NoArgsCommand):
                 # REMOVE ALL THE UGLY CHARACTERS
                 if '，' in characters:
                     characters = characters.replace('，', '')
+                
                 
                 
                 # GET AND CLEAN THE MEASURE WORD
@@ -89,7 +92,6 @@ class Command(NoArgsCommand):
                 
 
                                         
-                
                 char_key = settings.CHINESE_WORD_KEY % ((len((characters))/3), characters)                 
                 
                 # CREATE THE PRONUNCIATION/MEANING PAIR
@@ -119,6 +121,7 @@ class Command(NoArgsCommand):
                 # ADD THE CHINESE CHARACTER ENTRY
                 # -------------------------------
                 if not r_server.exists(char_key):
+                    print characters
                     values = {
                         'chars': characters,
                         'meanings': [pair,],
