@@ -71,18 +71,13 @@ def search(request, search_string=None, title='Search', words=None):
     if _is_ambiguous(search_string):
         return _problem(request, messages.AMBIGUOUS_WORD)
 
-    # HANDLES A PINYIN SEARCH    
+
     if _is_pinyin(_pinyin_to_ascii(search_string)):
         return _pinyin_search(request, search_string)
     
 
-    # IF THE SEARCH IS ENGLISH, RETURN ENGLISH
     if _is_english(search_string):
-        key = settings.ENGLISH_WORD_KEY % (len(search_string.split(' ')), search_string)
-        if r_server.exists(key):
-            word = EnglishWord(words=search_string)
-            words = word.characters
-        return _render(request, 'website/wordlist.html', locals())
+        return _english_search(request, search_string)
 
 
     # IF THE SEARCH IS OVER 10 CHARACTERS, RETURN A TEXT
@@ -116,6 +111,21 @@ def search(request, search_string=None, title='Search', words=None):
         
     return _render(request, 'website/wordlist.html', locals())
 
+
+def _english_search(request, search_string):
+    
+    r_server = _get_redis()
+    words = []
+    try:
+        key = settings.ENGLISH_WORD_KEY % (len(search_string.split(' ')), search_string.lower())
+        obj = json.loads(r_server.get(key))
+        for x in obj['characters']:
+            words.append(ChineseWord(chars=x))
+    except:
+        # split up the string and search each word individually
+        pass
+  
+    return _render(request, 'website/wordlist.html', locals())
 
 def _pinyin_search(request, search_string):
     

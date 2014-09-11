@@ -44,7 +44,7 @@ class EnglishWord(Word):
             word = json.loads(word)
             self.english = word['english']
             self.characters = []
-            for x in word['characters']:
+            for x in word['chars']:
                 self.characters.append(ChineseWord(chars=x))
         
 

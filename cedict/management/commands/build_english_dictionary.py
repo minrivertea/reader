@@ -111,8 +111,8 @@ class Command(NoArgsCommand):
                     # FOR NOW, JUST ADD ITEMS WITH 2 WORDs
                     if len(ns.split(' ')) <= 3:
                         
-                        key = "EN:%sW:%s" % (len(ns.split(' ')), ns)
-                        
+                        key = "EN:%sW:%s" % (len(ns.split(' ')), ns.lower())
+                        print key
                         if r_server.exists(key):
                             values = json.loads(_search_redis(key))
                             values['characters'].append(characters)
@@ -129,6 +129,9 @@ class Command(NoArgsCommand):
                         
                         item_count += 1
                         print item_count
+                        
+            #if item_count > 20:
+            #    break
                                         
                     
                 
