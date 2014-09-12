@@ -71,10 +71,10 @@ def search(request, search_string=None, title='Search', words=None):
     if _is_ambiguous(search_string):
         return _problem(request, messages.AMBIGUOUS_WORD)
 
-
-    if _is_pinyin(_pinyin_to_ascii(search_string)):
+    pykey = settings.PINYIN_WORD_KEY % _pinyin_to_ascii(search_string)
+    if r_server.exists(pykey):  
         return _pinyin_search(request, search_string)
-    
+
 
     if _is_english(search_string):
         return _english_search(request, search_string)
@@ -108,12 +108,11 @@ def search(request, search_string=None, title='Search', words=None):
         url = reverse('single_word', args=[word])
         return HttpResponseRedirect(url)
     
-        
     return _render(request, 'website/wordlist.html', locals())
 
 
 def _english_search(request, search_string):
-    
+
     r_server = _get_redis()
     words = []
     try:
@@ -132,7 +131,9 @@ def _pinyin_search(request, search_string):
     # CLEAN UP THE INCOMING PINYIN
     clean_string = _normalize_pinyin(search_string)
     ascii_string = _pinyin_to_ascii(search_string)
-    key = settings.PINYIN_WORD_KEY % ascii_string    
+    key = settings.PINYIN_WORD_KEY % ascii_string  
+    
+    print key  
     
     suggested = []
     words = [] 

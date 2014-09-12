@@ -109,6 +109,7 @@ def _is_pinyin(x):
     
     for i,y in enumerate(PINYIN_WORDS):
         if y in x:
+            print x.partition(y)
             is_pinyin = True
             for o in x.partition(y):
                 if o != '' and o not in PINYIN_WORDS:
