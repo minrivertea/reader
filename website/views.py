@@ -121,16 +121,19 @@ def _english_search(request, search_string):
         obj = json.loads(r_server.get(key))
         for x in obj['characters']:
             words.append(ChineseWord(chars=x))
-    except:
+    except TypeError:
         # split up the string and search each word individually
         pass
     
     suggested = []
     for x in search_string.split(' '):
-        key = settings.ENGLISH_WORD_KEY % (len(x.split(' ')), x.lower())
-        obj = json.loads(r_server.get(key))
-        for x in obj['characters']:
-            suggested.append(ChineseWord(chars=x))
+        try:
+            key = settings.ENGLISH_WORD_KEY % (len(x.split(' ')), x.lower())
+            obj = json.loads(r_server.get(key))
+            for x in obj['characters']:
+                suggested.append(ChineseWord(chars=x))
+        except TypeError:
+            pass
   
     return _render(request, 'website/wordlist.html', locals())
 

@@ -88,6 +88,11 @@ a:hover, a:active {
   color: #fff;
 }
 
+.button.green, button.green, a.button.green, input.button.green {
+  background: green;
+  color: #fff;
+}
+
 span.orange, span.pinyin {
   color: #2772b2;     
 }
@@ -208,6 +213,10 @@ hr {
     border: none;
 }
 
+#header #ricon {
+  border-left: 1px solid #f1f1f1;   
+}
+
 #header #ricon.selected {
   border-bottom: 1px solid #f9f9f9;
   z-index: 21; 
@@ -221,13 +230,21 @@ hr {
 #header #ricon button {
   display: inline-block;
   text-align: center;
-  padding: 0;
   background: none;
   border: none;
   color: #c1c1c1;
   font-family: Helvetica, sans-serif;
   font-size: 1.4em;
   font-weight: bold;
+}
+
+#header #ricon button.alert {
+  font-size: 0.7em;
+  color: #fff;
+  background: #D30000;
+  padding: 0.4em;
+  line-height: 1em;
+  border-radius: 2px;   
 }
 
 
@@ -355,7 +372,7 @@ hr {
 }
 
 #overlays > div {
-  display: ;
+  display: none;
   font-size: 0.8em;   
 }
 

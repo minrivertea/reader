@@ -49,7 +49,6 @@
             <li class="pure-g">
                 <a href="{{ about_url }}" title="about" class="pure-u-1 all-pad {% if about_url in request.path %}selected{% endif %}" data-ajax>About</a></li>
         
-        
         {% if user.is_authenticated %}
             <li class="pure-g"><a href="{{ user_url }}" class="pure-u-1 all-pad {% if user_url in request.path %}selected{% endif %}">
             Your account
@@ -89,12 +88,18 @@
             
             
             <!-- RIGHT FLEXIBLE ICON -->
+            <div class="pure-u-4-24 all-pad text-center" id="ricon">
+            
             {% url 'test' as test_url %}
             {% if request.path == test_url %}
-            <div class="pure-u-4-24 all-pad text-center" id="ricon">
                 <button rel="help">?</button>
-            </div>
+            {% else %}
+                {% if request.user.items_to_review %}
+                    <button rel="alerts" class="alert">{{ request.user.items_to_review|add:request.user.items_to_test }}</button>
+                {% endif %}
             {% endif %}
+            
+            </div>
             <!-- END -->
         
         
@@ -104,10 +109,23 @@
     
     <div id="overlays" class="pure-g all-pad">
         <div id="help" class="pure-u-1">
-            
             <p><strong>How do I type pinyin tones?</strong><br/>
             Type numbered Pinyin (eg. "hao3") and it will automatically convert to tonal pinyin (eg. "hǎo").</p>
+        </div>
+        
+        <div id="alerts" class="pure-u-1">
             
+            <p class="pure-u-1 text-center">You've got words that need testing/review!</p>
+            
+            <div class="pure-g">
+            {% if request.user.items_to_review %}
+                <a class="button green pure-u-1-2 all-pad text-center" href="{% url 'review_new' %}">Review {{ request.user.items_to_review }} words</a>
+            {% endif %}
+            
+            {% if request.user.items_to_test %}
+                <a class="button pure-u-1-2 all-pad text-center" href="{% url 'test' %}">Test {{ request.user.items_to_test }} words</a>
+            {% endif %}
+            </div>
         </div>
     </div>
         
@@ -129,7 +147,6 @@
 
 		$(document).ready( function() {
             
-            
             /// SLIDEOUT MENU ON MOBILE
             var jPM = $.jPanelMenu({
                 duration: 150,    
@@ -140,6 +157,7 @@
             /// TRIGGERS FLEXIBLE RIGHT-ICON IN HEADER
             $('#header #ricon button').click( function() {
                 $('#overlays').toggle();
+                $('#overlays #'+$(this).attr('rel')).toggle();
                 $(this).parent('div').toggleClass('selected');   
             });
 
@@ -154,14 +172,12 @@
             function checkHeader() {
             	
             	$('#header').removeClass('home');
-            	
             	if ( isInArray(window.location.pathname, noHeaderURLs) ) {
             	   $('#header').addClass('home');  
-            	} else {
-                    /// do something else
             	}
             }
             
+            /// SETUP THE AUTO PINYIN SEARCH FIELDS
             $('input#id_char').pinyin();
             $('input.pinyin').pinyin();
             
@@ -201,6 +217,7 @@
               $('#loading').show();
               checkHeader();
               jPM.close();
+              $('#overlays, #overlays > div').hide();
             });
             
             // ACTIONS WHEN PJAX IS FINISHED (REGARDLESS OF OUTCOME)

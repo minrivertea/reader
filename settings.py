@@ -76,6 +76,7 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS += (
      'django.core.context_processors.request',
+     'django.contrib.messages.context_processors.messages',
      'context_processors.common',
      'django_mobile.context_processors.flavour',
 )
