@@ -71,8 +71,8 @@ def search(request, search_string=None, title='Search', words=None):
     if _is_ambiguous(search_string):
         return _problem(request, messages.AMBIGUOUS_WORD)
 
-    pykey = settings.PINYIN_WORD_KEY % _pinyin_to_ascii(search_string)
-    if r_server.exists(pykey):  
+
+    if r_server.exists((settings.PINYIN_WORD_KEY % _pinyin_to_ascii(search_string))):  
         return _pinyin_search(request, search_string)
 
 
@@ -115,6 +115,7 @@ def _english_search(request, search_string):
 
     r_server = _get_redis()
     words = []
+    
     try:
         key = settings.ENGLISH_WORD_KEY % (len(search_string.split(' ')), search_string.lower())
         obj = json.loads(r_server.get(key))
@@ -123,6 +124,13 @@ def _english_search(request, search_string):
     except:
         # split up the string and search each word individually
         pass
+    
+    suggested = []
+    for x in search_string.split(' '):
+        key = settings.ENGLISH_WORD_KEY % (len(x.split(' ')), x.lower())
+        obj = json.loads(r_server.get(key))
+        for x in obj['characters']:
+            suggested.append(ChineseWord(chars=x))
   
     return _render(request, 'website/wordlist.html', locals())
 
@@ -132,9 +140,7 @@ def _pinyin_search(request, search_string):
     clean_string = _normalize_pinyin(search_string)
     ascii_string = _pinyin_to_ascii(search_string)
     key = settings.PINYIN_WORD_KEY % ascii_string  
-    
-    print key  
-    
+        
     suggested = []
     words = [] 
     r_server = _get_redis()    
@@ -155,7 +161,8 @@ def _pinyin_search(request, search_string):
                     suggested.append(word)
     except TypeError:
         pass
-                 
+    
+                     
     return _render(request, 'website/wordlist.html', locals())
     
 
