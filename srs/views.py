@@ -93,6 +93,7 @@ def submit_answer(request):
                     count += 1
                 
             # update the user information
+            request.user.items_to_test -= 1
             request.user.save()
             request.user.get_personal_words()._update_word(data['characters'], test_results=results)
                         

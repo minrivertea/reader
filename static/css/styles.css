@@ -238,15 +238,17 @@ hr {
   font-weight: bold;
 }
 
-#header #ricon button.alert {
-  font-size: 0.7em;
-  color: #fff;
-  background: #D30000;
-  padding: 0.4em;
-  line-height: 1em;
-  border-radius: 2px;   
+span.redalert {
+    background: none repeat scroll 0 0 #d30000;
+    border-radius: 3px;
+    color: #fff;
+    font-family: Arial,sans-serif;
+    font-size: 9px;
+    padding: 0.2em 0.3em;
+    position: absolute;
+    right: -5px;
+    top: -5px;
 }
-
 
 
 #jPanelMenu-menu {
@@ -261,6 +263,12 @@ hr {
 #jPanelMenu-menu ul li a {
   border-bottom: 1px solid #f1f1f1;
   padding-left: 2em;
+  position: relative;
+}
+
+#jPanelMenu-menu ul li a span.redalert {
+  position: relative;
+  top: -2px;
 }
 
 

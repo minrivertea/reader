@@ -50,15 +50,33 @@
                 <a href="{{ about_url }}" title="about" class="pure-u-1 all-pad {% if about_url in request.path %}selected{% endif %}" data-ajax>About</a></li>
         
         {% if user.is_authenticated %}
-            <li class="pure-g"><a href="{{ user_url }}" class="pure-u-1 all-pad {% if user_url in request.path %}selected{% endif %}">
-            Your account
-            </a></li>
+            <li class="pure-g">
+                <a href="{{ user_url }}" class="pure-u-1 all-pad {% if user_url in request.path %}selected{% endif %}">
+                Your account
+                </a>
+            </li>
+            {% if flavour == 'mobile' %}
+                <li class="pure-g">
+                    <a href="{% url 'test' %}" class="pure-u-1 all-pad">
+                        Take a test
+                        <span class="redalert">{{ request.user.items_to_test }}</span>
+                    </a> 
+                </li>
+                
+                <li class="pure-g">
+                    <a href="{% url 'review_new' %}" class="pure-u-1 all-pad">
+                        Review vocabulary
+                        <span class="redalert">{{ request.user.items_to_review }}</span> 
+                    </a> 
+                </li>
+            {% endif %}
         {% else %}
             {% url 'auth_login' as login_url %}
             <li class="pure-g"><a id="login_link" href="{{ login_url }}" class="pure-u-1 all-pad {% if login_url in request.path %}selected{% endif %}" data-ajax>Login</a> </li>
             {% url 'registration_register' as register_url %}
             <li class="pure-u-1"><a id="register_link" href="{{ register_url }}" class="pure-u-1 all-pad {% if register_url in request.path %}selected{% endif %}" data-ajax>Register</a></li>
         {% endif %}
+           
         </ul>
     
     </nav>
@@ -69,7 +87,14 @@
         
             <!-- LEFT MENU ICON -->
             <div class="pure-u-4-24 all-pad text-center" id="menu">
-                <button class="menu-trigger"></button>
+                <button class="menu-trigger">
+                    {% if request.user.items_to_review or request.user.items_to_test %}
+                        <span class="redalert">
+                            {{ request.user.items_to_review|add:request.user.items_to_test }}
+                        </span>
+                    {% endif %}
+                </button>
+                
             </div>
             <!-- END -->
         
@@ -92,11 +117,7 @@
             
             {% url 'test' as test_url %}
             {% if request.path == test_url %}
-                <button rel="help">?</button>
-            {% else %}
-                {% if request.user.items_to_review %}
-                    <button rel="alerts" class="alert">{{ request.user.items_to_review|add:request.user.items_to_test }}</button>
-                {% endif %}
+                <button rel="help">?</button>                
             {% endif %}
             
             </div>
@@ -112,21 +133,7 @@
             <p><strong>How do I type pinyin tones?</strong><br/>
             Type numbered Pinyin (eg. "hao3") and it will automatically convert to tonal pinyin (eg. "hǎo").</p>
         </div>
-        
-        <div id="alerts" class="pure-u-1">
-            
-            <p class="pure-u-1 text-center">You've got words that need testing/review!</p>
-            
-            <div class="pure-g">
-            {% if request.user.items_to_review %}
-                <a class="button green pure-u-1-2 all-pad text-center" href="{% url 'review_new' %}">Review {{ request.user.items_to_review }} words</a>
-            {% endif %}
-            
-            {% if request.user.items_to_test %}
-                <a class="button pure-u-1-2 all-pad text-center" href="{% url 'test' %}">Test {{ request.user.items_to_test }} words</a>
-            {% endif %}
-            </div>
-        </div>
+       
     </div>
         
     <div id="container" class="pure-g"> 

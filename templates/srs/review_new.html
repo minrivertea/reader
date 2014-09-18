@@ -3,47 +3,30 @@
 
     function bindActions() {
         
-        /// unbind all actions
+        /// UNBIND EVERYTHING FOR SAFETY
         $('#wordlist.test .action').unbind();
         
-        /// bind specific links
+        /// REBIND SPECIFIC LINKS
         $('#wordlist.test .action.okay').bind('click', wordOK);
-        
-        $('#wordlist.test .action.exchange').bind('click', wordExchange);        
     } ;
 
     function wordOK() {
-            var thisLink = $(this)
-            $.ajax({
-                url: thisLink.attr('href'),
-                success: function(data) {
-                    
-                    /// nicely slideup the element and remove from DOM
-                    thisLink.parent('li').slideUp(300, function() {
-                        thisLink.parent('li').remove();
-                    });
-                },
-            });        
-            return false;
-    } ;
-    
-    function wordExchange() {
-        var thisLink = $(this);
+        var thisLink = $(this)
         $.ajax({
             url: thisLink.attr('href'),
-            success: function(html) {
+            success: function(data) {
+
+                /// DECREASE THE NOTIFICATION COUNT
+                $('.menu-trigger .redalert').html( parseInt( $('.menu-trigger .redalert').html(), 10)-1) ;
                 
-                /// nicely replace the current LI with the new html
-                thisLink.parent('li').fadeOut(200, function() {
-                    thisLink.parent('li').replaceWith(html);
-                    bindActions(); 
+                /// SLIDEUP AND REMOVE ELEMENT FROM DOM
+                thisLink.parent('li').slideUp(300, function() {
+                    thisLink.parent('li').remove();
                 });
                 
-                
-            }, 
-        });
-        
-        return false;    
+            },
+        });        
+        return false;
     } ;
 
 
