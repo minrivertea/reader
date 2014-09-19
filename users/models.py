@@ -190,9 +190,9 @@ class PersonalWordlist(object):
                 if v['next_action'] != action:
                     continue
                 
-            #if timestamp:                
-            #    if v['next_action_date'] > timestamp:
-            #        continue
+            if timestamp:                
+                if v['next_action_date'] > timestamp:
+                    continue
 
             items.append(v)
              
