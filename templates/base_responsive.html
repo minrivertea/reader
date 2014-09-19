@@ -56,19 +56,25 @@
                 </a>
             </li>
             {% if flavour == 'mobile' %}
+                
+                {% if request.user.items_to_test %}
                 <li class="pure-g">
                     <a href="{% url 'test' %}" class="pure-u-1 all-pad">
                         Take a test
                         <span class="redalert">{{ request.user.items_to_test }}</span>
                     </a> 
                 </li>
+                {% endif %}
                 
+                {% if request.user.items_to_review %}
                 <li class="pure-g">
                     <a href="{% url 'review_new' %}" class="pure-u-1 all-pad">
                         Review vocabulary
                         <span class="redalert">{{ request.user.items_to_review }}</span> 
                     </a> 
                 </li>
+                {% endif %}
+                
             {% endif %}
         {% else %}
             {% url 'auth_login' as login_url %}
