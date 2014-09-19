@@ -97,12 +97,12 @@
 
   {% if items %}
   
-        <div class="test_item pure-u-1 l-pad r-pad text-center">
-            You've finished your test items for today. Pat yourself on the back!
-        </div>
+    <div class="test_item">
+        <p class="pure-u-1 text-center all-pad">You've finished your test items for today. Pat yourself on the back!</p>
+    </div>
+    
     {% for x in items %}
         <div class="test_item pure-u-1 l-pad r-pad">{{ x|safe }}</div>
-        
     {% endfor %}
     
     
