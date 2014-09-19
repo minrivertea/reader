@@ -35,6 +35,8 @@ class Command(NoArgsCommand):
             items = u.get_personal_words().get_items()
             review_count = 0
             re_review_count = 0
+            
+            
             for x in items:
                 review_count += int(x['review_count'])
                 if int(x['review_count']) > 0:
@@ -42,6 +44,10 @@ class Command(NoArgsCommand):
 
             u.words_reviewed += review_count
             u.words_reviewed_again += re_review_count
+                        
+            
+            
+            
             u.save()
                         
             

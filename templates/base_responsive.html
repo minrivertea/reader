@@ -237,7 +237,6 @@
               
               $('input#id_char').select();
               $('input.pinyin').pinyin();
-              bindClickAnswer();
             });
             
             /// ACTIONS AFTER PJAX HAS LOADED THE CONTENT IN THE PAGE
@@ -290,64 +289,9 @@
                 }
             });
             
-            
-            
-            /// TEST STUFF            
 
-            function removeTestItem(item) {
-                item.delay(1500).fadeOut(300, function() {
-                    item.remove(); 
-                });
-            }
-            
-            function sendTestResults(params) {
-                /// sends test results to server via AJAX
-                $.ajax({
-                   url: "{% url 'submit_answer' %}",
-                   type: 'POST',
-                   data: params,
-                   success: function() {
-                        /// do nothing...
-                   }, 
-                });  
-            }
-            
-            
-            function bindClickAnswer() {
-                $('.test_item button').click( function() {
-           
-                    removeTestItem($(this).parents('.test_item'));
-                    
-                    $(this).removeClass('empty');
-                    
-                    $(this).parents('.test_item').find('button').attr('disabled', '');
-                    
-                    var statusBar = $(this).parents('.test_item').find('.statusbar')
-            
-                    if ( $(this).attr('data-correct') == 'true' ) {
-                        statusBar.html('Nice work, you got it right!');
-                        var params = {
-                                'testing': $(this).attr('data-testing'), 
-                                'chars': $(this).attr('data-chars'),
-                                'correct': 'true',
-                        };
-                        sendTestResults(params);
-                    } else {
-                        statusBar.html("Sorry, that's not the right answer");
-                    }
-                    
-                    
-                });
-                
-                $('test_item button.skip').click( function() {
-                    removeTestItem($(this).parents('.test_item'));   
-                });
-                    
-            }        
-            
 
             checkHeader();
-            bindClickAnswer();
                       
 		});
 		
