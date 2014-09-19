@@ -151,7 +151,6 @@
     
 	<script type="text/javascript">
 
-
 		$(document).ready( function() {
             
             /// SLIDEOUT MENU ON MOBILE
@@ -232,6 +231,7 @@
               
               $('input#id_char').select();
               $('input.pinyin').pinyin();
+              bindClickAnswer();
             });
             
             /// ACTIONS AFTER PJAX HAS LOADED THE CONTENT IN THE PAGE
@@ -254,49 +254,94 @@
               event.preventDefault()
             })
             
-                        
-            /// HANDLES SUBMITTING A TEST QUESTION VIA AJAX
-            $('form.test').submit( function() {
-                var thisForm = $(this);
-                
+            
+            // CSRF HELPER FUNCTIONS
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+            
+            
+            
+            /// TEST STUFF            
+
+            function removeTestItem(item) {
+                item.delay(1500).fadeOut(300, function() {
+                    item.remove(); 
+                });
+            }
+            
+            function sendTestResults(params) {
+                /// sends test results to server via AJAX
                 $.ajax({
-                    url: thisForm.attr('action'),
-                    data: thisForm.serialize(),
-                    type: 'POST',
-                    success: function(status) {
-                        thisForm.parents('div.test_item').slideUp(300, function() {
-                            thisForm.parents('div.test_item').remove();   
-                        });
-                    },
+                   url: "{% url 'submit_answer' %}",
+                   type: 'POST',
+                   data: params,
+                   success: function() {
+                        /// do nothing...
+                   }, 
+                });  
+            }
+            
+            
+            function bindClickAnswer() {
+                $('.test_item button').click( function() {
+           
+                    removeTestItem($(this).parents('.test_item'));
+                    
+                    $(this).removeClass('empty');
+                    
+                    $(this).parents('.test_item').find('button').attr('disabled', '');
+                    
+                    var statusBar = $(this).parents('.test_item').find('.statusbar')
+            
+                    if ( $(this).attr('data-correct') == 'true' ) {
+                        statusBar.html('Nice work, you got it right!');
+                        var params = {
+                                'testing': $(this).attr('data-testing'), 
+                                'chars': $(this).attr('data-chars'),
+                                'correct': 'true',
+                        };
+                        sendTestResults(params);
+                    } else {
+                        statusBar.html("Sorry, that's not the right answer");
+                    }
+                    
+                    
                 });
                 
-                return false;
-                
-            });
-            
-            $('.test a.skip').click( function() {
-                
-                var thisItem = $(this).parents('div.test_item');
-                thisItem.slideUp(300, function() {
-                    thisItem.remove();   
+                $('test_item button.skip').click( function() {
+                    removeTestItem($(this).parents('.test_item'));   
                 });
-                return false; 
-            });
-
-            
-            /// TEST STUFF
-            $('.test_item a.next').click( function() {
-                
-                $(this).parent('div.pinyin').slideUp(100);
-                $(this).parent('.pinyin').next('div').show();
-                               
-                return false; 
-            });
-
-            
+                    
+            }        
             
 
             checkHeader();
+            bindClickAnswer();
                       
 		});
 		

@@ -232,14 +232,27 @@ class PersonalWordlist(object):
                         
             # assume this word hasn't been tested and not passed anything
             values['test_date'] = None
-            values['test_count'] = 0
-            values['test_pass'] = 0
+            # values['test_count'] = 0
+            # values['test_pass'] = 0
+            
             values['character_pass'] = False
+            values['character_test_count'] = 0
+            values['character_test_level'] = 0
             values['character_pass_count'] = 0
+            
+            
             values['pinyin_pass'] = False
+            values['pinyin_test_count'] = 0
+            values['pinyin_test_level'] = 0
             values['pinyin_pass_count'] = 0
+            
+            
             values['meaning_pass'] = False
+            values['meaning_test_count'] = 0
+            values['meaning_test_level'] = 0
             values['meaning_pass_count'] = 0
+            
+            
             
             # schedule a review 1 day later
             values['next_action'] = 'review'
@@ -271,10 +284,9 @@ class PersonalWordlist(object):
             
             w = wordlist[word]
                 
-            # update the number of times the word has been viewed
+            # UPDATE VIEW COUNT
             if view_count:
                 w['view_count'] += 1
-            
             
             # UPDATE REVIEWED INFORMATION
             if reviewed:
@@ -292,9 +304,8 @@ class PersonalWordlist(object):
                 
 
             # UPDATE THE WORD BASED ON A TEST THEY JUST COMPLETED
-            if test_results:
-
-                               
+            if test_results:                
+                                               
                 # DETERMINE WHAT WAS THE MOST RECENT ACTION (TEST OR REVIEW?)
                 if w['test_date'] == '' or w['test_date'] == None: 
                     lad = w['review_date'] # last_action_date
@@ -304,28 +315,22 @@ class PersonalWordlist(object):
                     lad = w['test_date']
                 
                 
-                # MARK THE PINYIN/MEANING PASS ITEMS ACCORDINGLY
-                passed = True
-                for k,v in test_results.iteritems():
-                    w[k] = v
-                     
-                    # UPDATE THE COUNT FOR EACH ITEM EG. pinyin_pass_count                   
-                    count = w.setdefault(('%s_count' % k), 0)
-                    w[('%s_count' % k)] += count + 1
+                # PASS/FAIL INDEPENDENT STATS
+                t = test_results['testing']
+                w['test_date'] = time.time()  
+                w[("%s_test_count" % t)] = int(w.get(("%s_test_count" % t), 0)) + 1
+                
+                
+                # PASS
+                if test_results['correct'] == 'true':
+                    w[("%s_pass" % t)] = True
+                    w[("%s_pass_count" % t)] = int(w.get(("%s_pass_count" % t), 0)) + 1
                     
-                    if v == False:
-                        passed = False
-                    
-                    
-                if passed == False:
-                    # FAILED TEST, SETUP A NEW REVIEW TOMORROW
-                    tomorrow = datetime.now() + timedelta(days=1)
-                    w['next_action'] = 'review'
-                    w['next_action_date'] = time.mktime((tomorrow).timetuple())
+                    # INCREMENT TESTING LEVEL! IMPORTANT
+                    w[("%s_test_level" % t)] = int(w.get(("%s_test_level" % t), 0)) + 1
                     
                     
-                else:                
-                    # PASSED TEST, SETUP A NEW TEST LATER
+                    # SETUP NEW TEST DATES
                     # Next test date = Today + ( (Suggested Test Date - Review date ) * Coefficient )
                     ld = datetime.fromtimestamp(float(lad))
                     sd = datetime.fromtimestamp(w['next_action_date'])
@@ -334,11 +339,31 @@ class PersonalWordlist(object):
 
                     w['next_action'] = 'test'
                     w['next_action_date'] = time.mktime((nd).timetuple())
-                    w['test_pass'] = int(w.get('test_pass', 0)) + 1                    
-                      
+                    
+                    self.user.no_correct += 1
                 
-                w['test_count'] = int(w.get('test_count', 0)) + 1    
-                w['test_date'] = time.time()  
+                
+                # FAIL   
+                else:
+                    
+                    # DECREMENT TESTING LEVEL?! IMPORTANT                    
+                    if w[("%s_pass" % t)] == False:
+                        # only if this is the 2nd subsequent fail will we decrement their testing level.
+                        w[("%s_test_level" % t)] = int(w.get(("%s_test_level" % t), 0)) - 1
+
+                    w[("%s_pass" % t)] = False
+                    
+                    
+                    
+                    # SETUP A NEW REVIEW
+                    tomorrow = datetime.now() + timedelta(days=1)
+                    w['next_action'] = 'review'
+                    w['next_action_date'] = time.mktime((tomorrow).timetuple())
+                    
+                    self.user.no_wrong += 1
+                
+                self.user.items_to_test -= 1
+                self.user.save()   
                 
             self._update_list(wordlist)
             

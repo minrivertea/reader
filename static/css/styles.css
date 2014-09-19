@@ -214,7 +214,8 @@ hr {
 }
 
 #header #ricon {
-  border-left: 1px solid #f1f1f1;   
+  border-left: 1px solid #f1f1f1;
+  position: relative;   
 }
 
 #header #ricon.selected {
@@ -236,6 +237,10 @@ hr {
   font-family: Helvetica, sans-serif;
   font-size: 1.4em;
   font-weight: bold;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }
 
 span.redalert {
@@ -246,8 +251,9 @@ span.redalert {
     font-size: 9px;
     padding: 0.2em 0.3em;
     position: absolute;
-    right: -5px;
+    right: 3px;
     top: -5px;
+    font-weight: bold;
 }
 
 
@@ -269,6 +275,7 @@ span.redalert {
 #jPanelMenu-menu ul li a span.redalert {
   position: relative;
   top: -2px;
+  right: -5px;
 }
 
 
@@ -647,12 +654,12 @@ label.focus {
 }
 
 .test_item .chars {
-    font-size: 5em;
-    margin: 20px 0 0px 0;
+    font-size: 4em;
+    margin: 15px 0 0px 0;
 }
 
-.test_item p.help {
-  font-size: 0.7em;
+.test_item .help {
+  font-size: 0.8em;
   color: #999;
 }
 
@@ -661,7 +668,7 @@ label.focus {
 }
 
 .test_item .pinyin {
-  background: #f9f9f9;   
+  font-size: 1.8em;
 }
 
 .test_item .pinyin input[type="text"] {
@@ -672,9 +679,6 @@ label.focus {
   line-height: 1.4em;
 }
 
-.test_item .pinyin ::
-
-
 .test_item div.item > div:last-child td {
   border-bottom: none;   
 }
@@ -684,56 +688,27 @@ label.focus {
 }
 
 
-.test_item .item .meaning {
-  height: 100%;
-  border-left: 10px solid transparent;
+.test_item .meaning {
+  width: 100%;
+  text-align: center;
 }
 
-.test_item .meaning label {
+.test_item .meaning button {
   position: relative;
-  position: relative;
-  font-size: 0.8em; 
-  color: #c1c1c1;
-  padding-left: 13%;
+  font-size: 1.1em;
+  margin: 0 0 10px 0;
+  border: 1px solid #e1e1e1;
+}
+
+.test_item .meaning button.empty {
+  background: none;
+  color: #333;
 }
 
 
-.test_item .meaning:not(#foo) > input[type="radio"] {
-    opacity: 0;
-    position: absolute;   
-}
-
-.test_item .meaning:not(#foo) > label:hover {
-    cursor: pointer;
-    background: #f9f9f9;   
-}
-
-.test_item .meaning:not(#foo) > input[type="radio"] + label {
-    background: #fff;
-}
-
-.test_item .meaning:not(#foo) > input[type="radio"] + label:hover {
-    color: #555;
-}
-
-.test_item .meaning:not(#foo) > input[type="radio"]:checked + label {
-  background: #f9f9f9;
-  color: #333;    
-}
-
-.test_item .meaning:not(#foo) > input[type="radio"]:checked + label:before {
-  content: " ";
-  display: block;
-  height: 10px;
-  width: 10px;
-  position: absolute;
-  left: 15px;
-  background: #2772b2;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  border-radius: 5px;
-  z-index: 10;
+.test_item .meaning button.disabled {
+  opacity: 0.5em;
+  cursor: not-allowed;   
 }
 
 /* END TEST STYLES */

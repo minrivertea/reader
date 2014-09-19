@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 # python
 import time
+import random
 
 from cedict.words import ChineseWord
 from utils.helpers import _render
@@ -41,17 +42,37 @@ def test(request):
     items = []
     count = 1
     for x in words:
-                  
-        # IS THIS THE FIRST TEST
+
+        templates = []
+        max_level = 1
+        testing = ['pinyin', 'characters', 'meaning']        
+        
+        for t in testing:
+            
+            if x.get(('%s_pass' % t), False):
+                level = int( x.get(('%s_test_level' % t), 0)) + 1
+            else:
+                level = x.get(('%s_test_level' % t), 0)
+            
+            if level > max_level:
+                level = max_level
+                
+            templates.append('srs/tests/%s_%s.html' % (t, level))
+            
+
         word = ChineseWord(chars=x['chars'])
         word.id = count
         for m in word.meanings:
             
-            chinese_word = ChineseWord()._get_random(number=1, chars=x['chars'])['meanings'][0]['meaning']
+            chinese_word = ChineseWord()._get_random(number=1, chars=x['chars'])
             
-            m['alternative_meaning'] = chinese_word
+            m['alternative_meaning'] = chinese_word['meanings'][0]['meaning']
+            m['alternative_pinyin'] = chinese_word['meanings'][0]['pinyin']
+            m['alternative_characters'] = chinese_word['chars']
             
-        html = render_to_string('srs/tests/first_test.html', {'word': word, 'form': SubmitAnswerForm()}, context_instance=RequestContext(request))
+        
+        template = random.choice(templates)    
+        html = render_to_string(template, {'word': word, 'form': SubmitAnswerForm()}, context_instance=RequestContext(request))
         
                     
 
@@ -67,45 +88,18 @@ def test(request):
 def submit_answer(request):
     
     if request.method == 'POST':
-        form = SubmitAnswerForm(request.POST)
-        if form.is_valid():
-                       
-            # setup some variables
-            data = form.cleaned_data
-            results = {}
-            results['character_pass'] = True
-            testing = ['pinyin', 'meaning']
-            
-            # let's see if they got it right!
-            
-
-            for y in testing:
-                count = 1
-                key = '%s_pass' % y
-                while data[('%s_%s_answer' % (y, count))]:
-                    
-                    if data[('%s_%s' % (y, count))] == data[('%s_%s_answer' % (y, count))]:
-                        results[key] = True
-                        request.user.no_correct += 1
-                    else:
-                        results[key] = False
-                        request.user.no_wrong += 1
-                    count += 1
-                
-            # update the user information
-            request.user.items_to_test -= 1
-            request.user.save()
-            request.user.get_personal_words()._update_word(data['characters'], test_results=results)
-                        
-                                
-            if request.is_ajax():
-                return HttpResponse('OK')
         
-        else:
-            # BUG: THIS SHOULD RETURN OR DO SOMETHING
-            print form.errors
-            print "invalid form"
-    
-    
-    
+        request.user.get_personal_words()._update_word(request.POST['chars'], test_results=request.POST)            
+                            
+        if request.is_ajax():
+            return HttpResponse('OK')
+        
     return HttpResponse()
+    
+    
+    
+    
+    
+    
+    
+    
