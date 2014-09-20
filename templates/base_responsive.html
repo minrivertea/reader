@@ -57,20 +57,20 @@
             </li>
             {% if flavour == 'mobile' %}
                 
-                {% if request.user.items_to_test %}
+                {% if test_notifications %}
                 <li class="pure-g">
                     <a href="{% url 'test' %}" class="pure-u-1 all-pad">
                         Take a test
-                        <span class="redalert">{{ request.user.items_to_test }}</span>
+                        <span class="redalert">{{ test_notifications }}</span>
                     </a> 
                 </li>
                 {% endif %}
                 
-                {% if request.user.items_to_review %}
+                {% if review_notifications %}
                 <li class="pure-g">
                     <a href="{% url 'review_new' %}" class="pure-u-1 all-pad">
                         Review vocabulary
-                        <span class="redalert">{{ request.user.items_to_review }}</span> 
+                        <span class="redalert">{{ review_notifications }}</span> 
                     </a> 
                 </li>
                 {% endif %}
@@ -94,9 +94,9 @@
             <!-- LEFT MENU ICON -->
             <div class="pure-u-4-24 all-pad text-center" id="menu">
                 <button class="menu-trigger">
-                    {% if request.user.items_to_review or request.user.items_to_test %}
+                    {% if total_notifications %}
                         <span class="redalert">
-                            {{ request.user.items_to_review|add:request.user.items_to_test }}
+                            {{ total_notifications }}
                         </span>
                     {% endif %}
                 </button>
@@ -259,9 +259,6 @@
             })
             
             
-            
-            
-
 
             checkHeader();
                       

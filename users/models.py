@@ -77,14 +77,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     # related to reviews
     words_reviewed = models.IntegerField(default=0, blank=True, null=True)
     words_reviewed_again = models.IntegerField(default=0, blank=True, null=True)
-    items_to_review = models.IntegerField(default=0, blank=True, null=True)
     
 
     # test related stats tracking
     no_answered = models.IntegerField(default=0, blank=True, null=True)
     no_correct = models.IntegerField(default=0, blank=True, null=True)
     no_wrong = models.IntegerField(default=0, blank=True, null=True)
-    items_to_test = models.IntegerField(default=0, blank=True, null=True)
     
 
     USERNAME_FIELD = 'email'
