@@ -188,9 +188,9 @@ class PersonalWordlist(object):
                 if v['next_action'] != action:
                     continue
                 
-            #if timestamp:                
-            #    if v['next_action_date'] > timestamp:
-            #        continue
+            if timestamp:                
+                if v['next_action_date'] > timestamp:
+                    continue
 
             items.append(v)
              
@@ -343,9 +343,7 @@ class PersonalWordlist(object):
                 
                 # FAIL   
                 else:
-                    
-                    print "I failed?!"
-                    
+                                        
                     # DECREMENT TESTING LEVEL?! IMPORTANT                    
                     if w[("%s_pass" % t)] == False:
                         # only if this is the 2nd subsequent fail will we decrement their testing level.
