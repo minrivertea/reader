@@ -26,11 +26,10 @@ def common(request):
     
         test_items = request.session.get('TEST_NOTIFICATIONS', len(request.user.get_test_items()))
         review_items = request.session.get('TEST_NOTIFICATIONS', len(request.user.get_review_items()))
-        
     
-    context['review_notifications'] = review_items
-    context['test_notifications'] = test_items
-    context['total_notifications'] = test_items + review_items
+        context['review_notifications'] = review_items
+        context['test_notifications'] = test_items
+        context['total_notifications'] = test_items + review_items
         
     
 

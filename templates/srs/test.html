@@ -106,7 +106,7 @@
 
   {% if items %}
     {% csrf_token %}
-    <div class="test_item">
+    <div class="test_item pure-g">
         <p class="pure-u-1 text-center all-pad">You've finished your test items for today. Pat yourself on the back!</p>
     </div>
     
@@ -116,7 +116,9 @@
     
     
   {% else %}
-    <p class="pure-u-1 text-center l-pad r-pad">You've got no items to test right now</p>
+    <div class="test_item pure-g">
+        <p class="pure-u-1 text-center l-pad r-pad">You've got no items to test right now</p>
+    </div>
   {% endif %}
     
     
