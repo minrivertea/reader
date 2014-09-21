@@ -22,11 +22,10 @@
     
     {% for c in test.choices %}
                       
-        <button id="" data-answer="{{ test.answer }}" data-testing="pinyin" data-chars="{{ test.chars }}" class="pure-u-1 all-pad empty {{ test.testing }}">{{ c }}</button>
+        <button id="" data-answer="{{ test.answer }}" data-testing="{{ test.testing }}" data-chars="{{ test.chars }}" class="pure-u-1 all-pad empty {{ test.testing }}">{{ c }}</button>
     
     {% endfor %}
-    
-                
+               
 </div>
 
 

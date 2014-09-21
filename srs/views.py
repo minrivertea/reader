@@ -93,7 +93,6 @@ def test(request):
                 test['main'] = word.chars
                 test['other'] = m['meaning']
                 test['answer'] = m['pinyin']
-                
                 test['choices'].append(m['pinyin_numbered'])
                 
                 

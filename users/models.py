@@ -320,6 +320,7 @@ class PersonalWordlist(object):
                 
                 # PASS
                 if test_results['correct'] == 'true':
+                                        
                     w[("%s_pass" % t)] = True
                     w[("%s_pass_count" % t)] = int(w.get(("%s_pass_count" % t), 0)) + 1
                     
