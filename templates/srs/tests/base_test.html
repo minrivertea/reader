@@ -1,0 +1,38 @@
+
+
+<div class="chars pure-u-1 text-center">
+    <span class="{% if test.main|length > 3 %}{% if test.main|length > 6 %}xx-small{% else %}x-small{% endif %}{% endif %}">
+        {{ test.main }}
+    </span>
+</div>
+
+
+<span class="pure-u-1 text-center pinyin">
+    {{ test.other }}
+</span>
+
+
+<hr/>
+   
+
+<span class="help statusbar pure-u-1 text-center b-pad">Tap the right answer</span>
+
+    
+<div class="choices pure-g">
+    
+    {% for c in test.choices %}
+                      
+        <button id="" data-answer="{{ test.answer }}" data-testing="pinyin" data-chars="{{ test.chars }}" class="pure-u-1 all-pad empty {{ test.testing }}">{{ c }}</button>
+    
+    {% endfor %}
+    
+                
+</div>
+
+
+
+<div class="pinyin pure-g" style="display:none;">
+        <input type="hidden" name="pinyin_{{ forloop.counter }}_answer" value="{{ y.pinyin }}" />
+        <input class="pinyin all-pad pure-u-1 text-center" name="pinyin_{{forloop.counter }}" id="id_pinyin_{{ forloop.counter }}" type="text" placeholder="How do you pronounce this character?" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>  
+</div>
+

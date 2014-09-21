@@ -165,6 +165,7 @@ MEASURE_WORD_KEY = "MW:%s" # eg. MW:个
 # ------------------------------------------------------
 
 DEFAULT_REVIEW_TEST_INTERVAL = 3 # days
+MAX_TEST_LEVEL = 1
 
 
 

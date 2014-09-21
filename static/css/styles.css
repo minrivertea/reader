@@ -688,25 +688,24 @@ label.focus {
 }
 
 
-.test_item .meaning {
-  width: 100%;
-  text-align: center;
+.test_item .choices {
+
 }
 
-.test_item .meaning button {
+.test_item .choices button {
   position: relative;
   font-size: 1.1em;
   margin: 0 0 10px 0;
   border: 1px solid #e1e1e1;
 }
 
-.test_item .meaning button.empty {
+.test_item .choices button.empty {
   background: none;
   color: #333;
 }
 
 
-.test_item .meaning button.disabled {
+.test_item .choices button.disabled {
   opacity: 0.5em;
   cursor: not-allowed;   
 }

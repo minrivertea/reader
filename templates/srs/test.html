@@ -68,7 +68,8 @@
         
         var statusBar = $(this).parents('.test_item').find('.statusbar')
 
-        if ( $(this).attr('data-correct') == 'true' ) {
+
+        if ( $(this).html() == $(this).attr('data-answer') ) { 
             statusBar.html('Nice work, you got it right!');
             var params = {
                     'testing': $(this).attr('data-testing'), 
@@ -85,10 +86,18 @@
     function clickSkip() {
         removeTestItem($(this).parents('.test_item')); 
     };
+    
+
+    function convertPinyin() {
+        $('.choices button.pinyin').each( function() {
+            $( this ).html( pinyinJs.convert( $(this).html() ) );    
+        });    
+    }
    
 
     $(document).ready( function() {
-        bindTestButtons(); 
+        bindTestButtons();
+        convertPinyin(); 
     });
     
 </script>
@@ -96,7 +105,7 @@
 
 
   {% if items %}
-  
+    {% csrf_token %}
     <div class="test_item">
         <p class="pure-u-1 text-center all-pad">You've finished your test items for today. Pat yourself on the back!</p>
     </div>

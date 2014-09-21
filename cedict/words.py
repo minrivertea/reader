@@ -69,7 +69,7 @@ class ChineseWord(Word):
     def __unicode__(self):
         return self.chars
     
-    def _get_random(self, number=1, chars=None, length='*'):
+    def _get_random(self, number=1, chars=None, length='*', pinyin=None):
         """ Returns random words the same length as the character provided """
         
         if chars:

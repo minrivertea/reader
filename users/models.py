@@ -115,7 +115,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_test_items(self):
         return self.get_personal_words().get_items(test=True, timestamp=time.time())
     
-    def get_review_items(self):
+    def get_review_items(self):        
         return self.get_personal_words().get_items(review=True, timestamp=time.time())
     
     def get_test_success_percent(self):
@@ -188,13 +188,12 @@ class PersonalWordlist(object):
                 if v['next_action'] != action:
                     continue
                 
-            if timestamp:                
-                if v['next_action_date'] > timestamp:
-                    continue
+            #if timestamp:                
+            #    if v['next_action_date'] > timestamp:
+            #        continue
 
             items.append(v)
              
-                    
         return items
        
     def _add_word(self, word):
@@ -325,7 +324,9 @@ class PersonalWordlist(object):
                     w[("%s_pass_count" % t)] = int(w.get(("%s_pass_count" % t), 0)) + 1
                     
                     # INCREMENT TESTING LEVEL! IMPORTANT
-                    w[("%s_test_level" % t)] = int(w.get(("%s_test_level" % t), 0)) + 1
+                    current_level = int(w.get(("%s_test_level" % t), 0))                    
+                    if current_level < settings.MAX_TEST_LEVEL:
+                        w[("%s_test_level" % t)] = current_level + 1
                     
                     
                     # SETUP NEW TEST DATES
@@ -337,17 +338,19 @@ class PersonalWordlist(object):
 
                     w['next_action'] = 'test'
                     w['next_action_date'] = time.mktime((nd).timetuple())
-                    
-                    self.user.no_correct += 1
-                
+                                    
                 
                 # FAIL   
                 else:
                     
+                    print "I failed?!"
+                    
                     # DECREMENT TESTING LEVEL?! IMPORTANT                    
                     if w[("%s_pass" % t)] == False:
                         # only if this is the 2nd subsequent fail will we decrement their testing level.
-                        w[("%s_test_level" % t)] = int(w.get(("%s_test_level" % t), 0)) - 1
+                        current_level = int(w.get(("%s_test_level" % t), 0))
+                        if current_level > 0:
+                            w[("%s_test_level" % t)] = current_level - 1
 
                     w[("%s_pass" % t)] = False
                     
@@ -358,10 +361,7 @@ class PersonalWordlist(object):
                     w['next_action'] = 'review'
                     w['next_action_date'] = time.mktime((tomorrow).timetuple())
                     
-                    self.user.no_wrong += 1
                 
-                self.user.items_to_test -= 1
-                self.user.save()   
                 
             self._update_list(wordlist)
             
