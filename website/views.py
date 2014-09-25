@@ -69,7 +69,8 @@ def search(request, search_string=None, title='Search', words=None):
 
     # HANDLES AN AMBIGUOUS SEARCH
     if _is_ambiguous(search_string):
-        return _problem(request, messages.AMBIGUOUS_WORD)
+        message = messages.AMBIGUOUS_WORD
+        return render(request, 'problem.html', locals())
 
 
     if r_server.exists((settings.PINYIN_WORD_KEY % _pinyin_to_ascii(search_string))):  

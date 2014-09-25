@@ -110,10 +110,7 @@ def personal_word_reviewed(request, word):
     
     wordlist = PersonalWordlist(request.user.email)
     wordlist._update_word(word, reviewed=True)
-    
-    request.user.items_to_review -= 1
-    request.user.save()
-    
+        
     if request.is_ajax():
         
         snippet = "<li>OK, you'll be tested on this word soon!</li>"
